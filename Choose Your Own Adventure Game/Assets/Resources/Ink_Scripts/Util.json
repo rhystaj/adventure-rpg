@@ -1,0 +1,1 @@
+﻿{"inkVersion":16,"root":["done",{"openStoryPath":[{"temp=":"scenarioScriptName"},{"temp=":"destinationNodeName"},"^> A path to ",["G>","ev",{"VAR?":"destinationNodeName"},"out","/ev","G<",null],"^ becomes avaliable with scenario: ",["G>","ev",{"VAR?":"scenarioScriptName"},"out","/ev","G<",null],"^.","\n",{"#f":3}],"#f":3}],"listDefs":{}}

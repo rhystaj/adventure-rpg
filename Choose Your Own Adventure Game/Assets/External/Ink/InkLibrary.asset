@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc234ab28a32840f5adfb84a075bc023, type: 3}
+  m_Name: InkLibrary
+  m_EditorClassIdentifier: 
+  inkLibrary:
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 1460e815e969b43b8a83a7caa8b48c27, type: 3}
+    jsonAsset: {fileID: 4900000, guid: 6cf48bb6d89824cc69e35b43f9a1aca6, type: 3}
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 5861a4f605db70b45b32a737c280ce60, type: 3}
+    jsonAsset: {fileID: 4900000, guid: 495be35cdb9c633419ab0672a02fb4fe, type: 3}
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 103ba216696123e48ba60afc5bf7f6c0, type: 3}
+    jsonAsset: {fileID: 4900000, guid: 7168dbe4cdda7804793c8a121e70b19e, type: 3}
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 115072893d5998949b8e7041d519d7af, type: 3}
+    jsonAsset: {fileID: 4900000, guid: dd9a6b7d16b80d44381d13f4f531ea9b, type: 3}
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: d26edc721fe06dc4ab79820618dc79d9, type: 3}
+    jsonAsset: {fileID: 4900000, guid: 8788e316029aaf949bf0f5e039c97b22, type: 3}
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 806e8544c91857b419db3873664f6941, type: 3}
+    jsonAsset: {fileID: 4900000, guid: 50c53acc712230f4b96ee2ba83dd6606, type: 3}
+  compilationStack: []

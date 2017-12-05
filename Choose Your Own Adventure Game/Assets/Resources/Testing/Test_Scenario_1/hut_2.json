@@ -1,0 +1,1 @@
+﻿{"inkVersion":16,"root":["^You arrive at the hut. It is locked.","\n","^You try the key you found in the woods.","\n","^The door opens and you enter.","\n","^TO BE CONTINUED...","\n","^maybe","\n","^.","\n","ev",{"x()":"endGame"},"pop","/ev","\n","done",{"endGame":["^(Game complete)","\n",{"#f":3}],"#f":3}],"listDefs":{}}
