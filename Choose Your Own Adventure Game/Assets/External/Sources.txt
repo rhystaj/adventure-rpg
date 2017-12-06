@@ -1,7 +1,3 @@
 Ink Unity Integration
 Inkle
 https://www.assetstore.unity3d.com/en/#!/content/60055
-
-Path Movement
-You Contribute Games
-http://www.youcontributegames.com/pathmovementtutorial-asset/
