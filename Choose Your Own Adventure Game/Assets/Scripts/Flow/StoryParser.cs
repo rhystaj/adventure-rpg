@@ -6,7 +6,7 @@ using Ink.Runtime;
 /**
  * Keeps track of progession through a story coded in Ink (exported to JSON) and displays it on a HUD.
  */ 
-public abstract class StoryDisplay : ScriptParser{
+public abstract class StoryDisplay {
 
     private Story story; //The Ink story being parsed from the text.
     private Canvas canvas; //The GUI the story will be drawn to.
