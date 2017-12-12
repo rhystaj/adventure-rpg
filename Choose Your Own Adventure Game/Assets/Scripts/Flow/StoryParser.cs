@@ -6,7 +6,7 @@ using Ink.Runtime;
 /**
  * Keeps track of progession through a story coded in Ink (exported to JSON) and displays it on a HUD.
  */ 
-public abstract class StoryDisplay {
+public abstract class StoryDisplay : ScriptParser{
 
     private Story story; //The Ink story being parsed from the text.
     private Canvas canvas; //The GUI the story will be drawn to.
@@ -35,7 +35,7 @@ public abstract class StoryDisplay {
      * If there is still text to parse in this branch, draw it to the screen and return true if the most recent text to be  
      * drawn is the last text in the branch.
      */ 
-    protected bool Next()
+    public bool Next()
     {
 
         if (lastTextDrawn) //If the last text in the branch has already been drawn.
