@@ -117,7 +117,7 @@ public abstract class Codex : MonoBehaviour {
         public override void Retrieve(Codex codex)
         {
             if (retrieved) return;
-            codex.OpenDirectory(this, contents);
+            codex.OpenDirectory(this);
         }
 
         public override void Return(Codex codex)
