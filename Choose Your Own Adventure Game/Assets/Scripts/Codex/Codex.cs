@@ -47,7 +47,7 @@ public abstract class Codex : MonoBehaviour {
     {
         [SerializeField] protected string nodeName;
 
-        protected Codex codex;
+        protected bool retrieved; //Whether or not the node has been retrieved.
 
         private CodexDirectory parentNode;
 
@@ -65,14 +65,15 @@ public abstract class Codex : MonoBehaviour {
         }
 
         /**
-         * Get the information from the node.
-         */ 
-        public abstract void Retrieve();
+         * Implementation in subclasses get the information from the node. In this case return false 
+         */
+        public abstract void Retrieve(Codex codex);
+
 
         /**
          * Hide the information from the node.
          */ 
-        public abstract void Return();
+        public abstract void Return(Codex codex);
 
     }
 
@@ -105,14 +106,18 @@ public abstract class Codex : MonoBehaviour {
             return false;
         }
 
-        public override void Retrieve()
+        public override void Retrieve(Codex codex)
         {
+            if (retrieved) return;
             codex.OpenDirectory(this, contents);
         }
 
-        public override void Return()
+        public override void Return(Codex codex)
         {
-            foreach (CodexNode node in contents) node.Return(); //Recursively return all children.
+
+            if (!retrieved) return;
+
+            foreach (CodexNode node in contents) node.Return(codex); //Recursively return all children.
             codex.CloseDirectory(this);
         }
 
@@ -126,13 +131,15 @@ public abstract class Codex : MonoBehaviour {
     {
         [SerializeField] TextAsset script; //The text for the entry.
 
-        public override void Retrieve()
+        public override void Retrieve(Codex codex)
         {
+            if (retrieved) return;
             codex.OpenEntry(this, script.text);
         }
 
-        public override void Return()
-        {   
+        public override void Return(Codex codex)
+        {
+            if (!retrieved) return;
             codex.CloseEntry(this);
         }
     }
