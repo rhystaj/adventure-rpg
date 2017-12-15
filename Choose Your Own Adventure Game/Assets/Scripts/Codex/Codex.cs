@@ -96,7 +96,7 @@ public abstract class Codex : MonoBehaviour {
         /**
          * Retrieve a list of the directory's children.
          */ 
-        private List<CodexNode> GetChildren()
+        public List<CodexNode> GetChildren()
         {
             return new List<CodexNode>(contents);
         }
