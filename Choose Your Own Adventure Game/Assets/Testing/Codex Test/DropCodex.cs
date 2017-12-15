@@ -10,12 +10,12 @@ public class DropCodex : Codex
 {
     public override void Display()
     {
-        throw new NotImplementedException();
+        base.Display();
     }
 
     public override void Hide()
     {
-        throw new NotImplementedException();
+        base.Hide();
     }
 
     protected override void CloseDirectory(CodexDirectory directory)
