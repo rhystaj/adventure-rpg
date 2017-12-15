@@ -53,9 +53,10 @@ public abstract class Codex : MonoBehaviour {
 
         /**
          * Set the parent of the node to the given node, if the current node is contained within the given parent.
-         */ 
-        public bool SetParent(CodexDirectory parent) {
-            if(parent.NodeInDirectory(this))
+         */
+        public bool SetParent(CodexDirectory parent)
+        {
+            if (parent.NodeInDirectory(this))
             {
                 parentNode = parent;
                 return true;
@@ -111,8 +112,10 @@ public abstract class Codex : MonoBehaviour {
 
         public override void Return()
         {
+            foreach (CodexNode node in contents) node.Return(); //Recursively return all children.
             codex.CloseDirectory(this);
         }
+
     }
 
     /**
@@ -129,7 +132,7 @@ public abstract class Codex : MonoBehaviour {
         }
 
         public override void Return()
-        {
+        {   
             codex.CloseEntry(this);
         }
     }
