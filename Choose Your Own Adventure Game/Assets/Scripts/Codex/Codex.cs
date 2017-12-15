@@ -45,7 +45,7 @@ public abstract class Codex : MonoBehaviour {
      */
     public abstract class CodexNode : ScriptableObject
     {
-        [SerializeField] protected string nodeName;
+        public string nodeName;
 
         protected bool retrieved; //Whether or not the node has been retrieved.
 
