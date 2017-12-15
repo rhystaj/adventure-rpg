@@ -24,9 +24,25 @@ public abstract class Codex : MonoBehaviour {
 
     }
 
-    protected abstract void OpenDirectory(CodexNode subnodes);
+    /**
+     * Show the information in the given directory.
+     */ 
+    protected abstract void OpenDirectory(CodexDirectory directory, CodexNode subnodes);
 
-    protected abstract void OpenEntry(TextAsset script);
+    /**
+     * Show the given entry.
+     */ 
+    protected abstract void OpenEntry(CodexEntry entry, string text);
+
+    /**
+     * Hide the information from the given directory.
+     */
+    protected abstract void CloseDirectory(CodexDirectory directory);
+
+    /**
+     * Hide the information from thr given entry.
+     */
+    protected abstract void CloseEntry(CodexEntry entry);
 
     /**
      * An node in the tree of data.
@@ -52,7 +68,12 @@ public abstract class Codex : MonoBehaviour {
         /**
          * Get the information from the node.
          */ 
-        protected abstract void Retrieve();
+        public abstract void Retrieve();
+
+        /**
+         * Hide the information from the node.
+         */ 
+        public abstract void Return();
 
     }
 
@@ -85,7 +106,12 @@ public abstract class Codex : MonoBehaviour {
             return false;
         }
 
-        protected override void Retrieve()
+        public override void Retrieve()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Return()
         {
             throw new NotImplementedException();
         }
@@ -99,7 +125,12 @@ public abstract class Codex : MonoBehaviour {
     {
         [SerializeField] TextAsset script; //The text for the entry.
 
-        protected override void Retrieve()
+        public override void Retrieve()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Return()
         {
             throw new NotImplementedException();
         }
