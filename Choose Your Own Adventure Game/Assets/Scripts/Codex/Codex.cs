@@ -12,19 +12,13 @@ public abstract class Codex : MonoBehaviour {
 
     /**
      * Show the information in the codex.
-     */ 
-    public void Display()
-    {
-
-    }
+     */
+    public abstract void Display();
 
     /**
      * Hide the information in the codex.
-     */ 
-    public void Hide()
-    {
-
-    }
+     */
+    public abstract void Hide();
 
     /**
      * Show the information in the given directory.
