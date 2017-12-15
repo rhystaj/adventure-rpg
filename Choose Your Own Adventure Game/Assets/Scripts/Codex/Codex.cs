@@ -23,7 +23,7 @@ public abstract class Codex : MonoBehaviour {
     /**
      * Show the information in the given directory.
      */ 
-    protected abstract void OpenDirectory(CodexDirectory directory, CodexNode[] subnodes);
+    protected abstract void OpenDirectory(CodexDirectory directory);
 
     /**
      * Show the given entry.
@@ -91,6 +91,14 @@ public abstract class Codex : MonoBehaviour {
             //Make this the parent of each of the given nodes.
             foreach (CodexNode node in contents)
                 node.SetParent(this);
+        }
+
+        /**
+         * Retrieve a list of the directory's children.
+         */ 
+        private List<CodexNode> GetChildren()
+        {
+            return new List<CodexNode>(contents);
         }
 
         /**
