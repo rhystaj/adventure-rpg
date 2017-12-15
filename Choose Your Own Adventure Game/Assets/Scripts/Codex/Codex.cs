@@ -13,18 +13,12 @@ public abstract class Codex : MonoBehaviour {
     /**
      * Show the information in the codex.
      */
-    public virtual void Display()
-    {
-        rootDirectory.Retrieve();
-    }
+    public abstract void Display();
 
     /**
      * Hide the information in the codex.
      */
-    public virtual void Hide()
-    {
-        rootDirectory.Return();
-    }
+    public abstract void Hide();
 
     /**
      * Show the information in the given directory.
