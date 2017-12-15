@@ -8,7 +8,7 @@ using UnityEngine;
  */
 public abstract class Codex : MonoBehaviour {
 
-    [SerializeField] CodexDirectory rootDirectory; //Directory node that is the ansestor of all other nodes.
+    [SerializeField] protected CodexDirectory rootDirectory; //Directory node that is the ansestor of all other nodes.
 
     /**
      * Show the information in the codex.
