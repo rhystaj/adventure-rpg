@@ -8,6 +8,8 @@ using UnityEngine;
  */
 public abstract class Codex : MonoBehaviour {
 
+    [SerializeField] CodexDirectory rootDirectory; //Directory node that is the ansestor of all other nodes.
+
     /**
      * Show the information in the codex.
      */ 
@@ -27,7 +29,7 @@ public abstract class Codex : MonoBehaviour {
     /**
      * Show the information in the given directory.
      */ 
-    protected abstract void OpenDirectory(CodexDirectory directory, CodexNode subnodes);
+    protected abstract void OpenDirectory(CodexDirectory directory, CodexNode[] subnodes);
 
     /**
      * Show the given entry.
@@ -50,6 +52,8 @@ public abstract class Codex : MonoBehaviour {
     public abstract class CodexNode : ScriptableObject
     {
         [SerializeField] protected string nodeName;
+
+        protected Codex codex;
 
         private CodexDirectory parentNode;
 
@@ -108,12 +112,12 @@ public abstract class Codex : MonoBehaviour {
 
         public override void Retrieve()
         {
-            throw new NotImplementedException();
+            codex.OpenDirectory(this, contents);
         }
 
         public override void Return()
         {
-            throw new NotImplementedException();
+            codex.CloseDirectory(this);
         }
     }
 
@@ -127,12 +131,12 @@ public abstract class Codex : MonoBehaviour {
 
         public override void Retrieve()
         {
-            throw new NotImplementedException();
+            codex.OpenEntry(this, script.text);
         }
 
         public override void Return()
         {
-            throw new NotImplementedException();
+            codex.CloseEntry(this);
         }
     }
 
