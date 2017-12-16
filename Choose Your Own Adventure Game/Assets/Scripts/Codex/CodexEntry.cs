@@ -14,11 +14,17 @@ public class CodexEntry : CodexNode
     {
         if (retrieved) return;
         codex.OpenEntry(this, script.text);
+
+        retrieved = true;
+
     }
 
     public override void Return(Codex codex)
     {
         if (!retrieved) return;
         codex.CloseEntry(this);
+
+        retrieved = false;
+
     }
 }

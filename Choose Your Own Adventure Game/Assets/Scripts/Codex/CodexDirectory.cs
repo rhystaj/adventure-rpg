@@ -16,6 +16,8 @@ public class CodexDirectory : CodexNode
         //Make this the parent of each of the given nodes.
         foreach (CodexNode node in contents)
             node.SetParent(this);
+
+        retrieved = false;
     }
 
     /**
@@ -41,8 +43,14 @@ public class CodexDirectory : CodexNode
 
     public override void Retrieve(Codex codex)
     {
+
+        Debug.Log(retrieved);
+
         if (retrieved) return;
         codex.OpenDirectory(this);
+
+        retrieved = true;
+
     }
 
     public override void Return(Codex codex)
@@ -52,6 +60,8 @@ public class CodexDirectory : CodexNode
 
         foreach (CodexNode node in contents) node.Return(codex); //Recursively return all children.
         codex.CloseDirectory(this);
+
+        retrieved = false;
     }
 
 }

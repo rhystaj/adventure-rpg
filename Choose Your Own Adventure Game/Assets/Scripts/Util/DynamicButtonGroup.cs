@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class DynamicButtonGroup : MonoBehaviour {
 
     private enum VerticalAlignment { top = 0, centre = 1, bottom = 2 };
-    private enum HorizontalAlignment { left = 0, centre = 0, right = 2};
+    private enum HorizontalAlignment { left = 0, centre = 1, right = 2};
 
     [SerializeField] Button buttonBase; //The base button to be cloned.
     [SerializeField] Vector2 buttonRelativeDifferences; //The x and y distances between buttons.
@@ -49,6 +49,10 @@ public class DynamicButtonGroup : MonoBehaviour {
     {
         for (int i = 0; i < numberOfOptions; i++)
         {
+
+            RectTransform parentTransform = GetComponent<RectTransform>();
+
+  
 
             //Calculate horizontal and vertical offsets based on the given alignment values.
             float horizontalOffset = buttonRelativeDifferences.x * numberOfOptions / 2 * (float)horizontalAlignment;

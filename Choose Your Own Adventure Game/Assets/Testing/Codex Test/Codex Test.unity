@@ -1191,7 +1191,7 @@ MonoBehaviour:
   buttonBase: {fileID: 114906681426850850, guid: 728584175d3791a4aae87802f1473a74,
     type: 2}
   buttonRelativeDifferences: {x: 0, y: 50}
-  verticalAlignment: 0
+  verticalAlignment: -1
   horizontalAlignment: 0
 --- !u!224 &1600073041
 RectTransform:

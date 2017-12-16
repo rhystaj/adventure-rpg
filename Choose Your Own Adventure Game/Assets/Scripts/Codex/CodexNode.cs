@@ -9,7 +9,7 @@ public abstract class CodexNode : ScriptableObject
 {
     public string nodeName;
 
-    protected bool retrieved; //Whether or not the node has been retrieved.
+    protected bool retrieved = false; //Whether or not the node has been retrieved.
 
     private CodexDirectory parentNode;
 

@@ -28,7 +28,7 @@ public class DropCodex : Codex
     }
 
     public override void CloseDirectory(CodexDirectory directory)
-    {
+    { 
         optionsGroup.Clear();
     }
 
@@ -39,6 +39,8 @@ public class DropCodex : Codex
 
     public override void OpenDirectory(CodexDirectory directory)
     {
+        Debug.Log("Opening: " + directory.nodeName);
+
         int count = 0;
         foreach(CodexNode node in directory.GetChildren())
         {
