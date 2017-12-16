@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Name: dir_Technologies
   m_EditorClassIdentifier: 
   nodeName: Technologies
-  contents: []
+  contents:
+  - {fileID: 11400000, guid: 4cea7997ce41598488ecec68bdac3efe, type: 2}
+  - {fileID: 11400000, guid: abf205aefe56f5846afbec2666827e02, type: 2}
