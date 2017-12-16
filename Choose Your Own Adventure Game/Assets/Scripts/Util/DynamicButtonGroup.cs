@@ -78,6 +78,8 @@ public class DynamicButtonGroup : MonoBehaviour {
             DestroyImmediate(button.gameObject);
 
         buttons.Clear();
+
+        numberOfOptions = 0;
     }
 
 }
