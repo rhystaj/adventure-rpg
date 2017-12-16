@@ -46,8 +46,7 @@ public class ScenarioManager : BasicStoryInit {
         displayCanvas.gameObject.SetActive(true);
         navigationManager.enabled = false;
 
-        display = new Scenario(text, displayCanvas, location, displayText, nextButton, optionsOrigin,
-                                       buttonBase, buttonRelativeDifferences, OnScenarioEnd);
+        display = new Scenario(text, displayCanvas, location, displayText, nextButton, optionsGroup, OnScenarioEnd);
     }
 
     /**
@@ -74,8 +73,8 @@ public class ScenarioManager : BasicStoryInit {
         private Dictionary<MapNode, string> scenarioAtLocation = new Dictionary<MapNode, string>();
 
         public Scenario(string storyText, Canvas canvas, MapNode location, Text displayText, Button nextButton,
-                        Transform optionsOrigin, Button buttonBase, Vector2 buttonRelativeDifferences, Action OnScenarioEnd) :
-            base(storyText, canvas, displayText, nextButton, optionsOrigin, buttonBase, buttonRelativeDifferences)
+                        DynamicButtonGroup optionsGroup, Action OnScenarioEnd) :
+            base(storyText, canvas, displayText, nextButton,optionsGroup)
         {
             this.location = location;
             this.OnScenarioEnd = OnScenarioEnd;

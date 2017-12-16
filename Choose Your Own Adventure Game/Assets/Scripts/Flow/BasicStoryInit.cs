@@ -8,15 +8,13 @@ public class BasicStoryInit : MonoBehaviour {
     [SerializeField] protected TextAsset storyFile; //The file the story in being loaded from.
     [SerializeField] protected Text displayText; //The text object where the story will be displayed.
     [SerializeField] protected Button nextButton; //The button used to progress the story.
-    [SerializeField] protected Transform optionsOrigin; //The transform used to determine the placement of the buttons.
-    [SerializeField] protected Button buttonBase; //The base button to be cloned.
-    [SerializeField] protected Vector2 buttonRelativeDifferences; //The x and y distances between buttons.
+    [SerializeField] protected DynamicButtonGroup optionsGroup;
 
     protected BasicStoryDisplay display;
 
     protected virtual void Awake()
     {
-        display = new BasicStoryDisplayWithNextButton(storyFile.text, null, displayText, nextButton, optionsOrigin, buttonBase, buttonRelativeDifferences);
+        display = new BasicStoryDisplayWithNextButton(storyFile.text, null, displayText, nextButton, optionsGroup);
     }
 
     /**

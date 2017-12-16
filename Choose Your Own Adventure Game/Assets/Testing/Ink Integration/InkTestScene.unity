@@ -178,6 +178,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 508025366}
+  - component: {fileID: 508025367}
   m_Layer: 5
   m_Name: Progression_Button_Group
   m_TagString: Untagged
@@ -204,6 +205,22 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000011444, y: -157.7}
   m_SizeDelta: {x: -602.6, y: 175.4}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &508025367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 508025365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c401234739141438f2d2fe7d3e0f0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonBase: {fileID: 114906681426850850, guid: 728584175d3791a4aae87802f1473a74,
+    type: 2}
+  buttonRelativeDifferences: {x: 0, y: 50}
+  verticalAlignment: 1
+  horizontalAlignment: 0
 --- !u!1 &638245846
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,10 +251,7 @@ MonoBehaviour:
   storyFile: {fileID: 4900000, guid: 6cf48bb6d89824cc69e35b43f9a1aca6, type: 3}
   displayText: {fileID: 1053483318}
   nextButton: {fileID: 1634865579}
-  optionsOrigin: {fileID: 508025366}
-  buttonBase: {fileID: 114906681426850850, guid: 728584175d3791a4aae87802f1473a74,
-    type: 2}
-  buttonRelativeDifferences: {x: 0, y: 50}
+  optionsGroup: {fileID: 508025367}
 --- !u!4 &638245848
 Transform:
   m_ObjectHideFlags: 0

@@ -8,26 +8,18 @@ using UnityEngine.UI;
 public class BasicStoryDisplay : StoryDisplay
 {
     private Text displayText; //The text object where the story will be displayed.
-    private Transform optionsOrigin; //The transform used to determine the placement of the buttons.
-    private Button buttonBase; //The base button to be cloned.
-    private Vector2 buttonRelativeDifferences; //The x and y distances between buttons.
+    private DynamicButtonGroup optionsDisplay; //The button group that will display the options.
 
     private string textBeingDisplayed = ""; //The story text being displayed on the screen at any given point. 
-    private List<Button> optionButtons; //All buttons representing an option.
 
     /**
      * Constructor
      */ 
-    public BasicStoryDisplay(string storyText, Canvas canvas, Text displayText, Transform optionsOrigin,
-        Button buttonBase, Vector2 buttonRelativeDifferences) : 
+    public BasicStoryDisplay(string storyText, Canvas canvas, Text displayText, DynamicButtonGroup optionsDisplay) : 
         base(storyText, canvas) {
 
         this.displayText = displayText;
-        this.optionsOrigin = optionsOrigin;
-        this.buttonBase = buttonBase;
-        this.buttonRelativeDifferences = buttonRelativeDifferences;
-
-        optionButtons = new List<Button>();
+        this.optionsDisplay = optionsDisplay;
 
         base.Next();
 
@@ -62,25 +54,9 @@ public class BasicStoryDisplay : StoryDisplay
 
     protected override void DisplayOption(int optionNumber, int totalOptions, string text, Canvas canvas, StoryDisplay parser)
     {
-
-        //Create the new button from the prefab and configure position in regards to parent (button origin).
-        Button newButton = UnityEngine.Object.Instantiate(buttonBase, Vector3.zero, Quaternion.identity, optionsOrigin);
-        newButton.transform.localPosition = new Vector3(
-            optionNumber * buttonRelativeDifferences.x - buttonRelativeDifferences.x * totalOptions / 2,
-            optionNumber * buttonRelativeDifferences.y - buttonRelativeDifferences.y * totalOptions / 2,
-            newButton.transform.localPosition.z //Don't change z.
-        );
-
-
-        //Configure button as an option button.
-        newButton.GetComponentInChildren<Text>().text = text;
-        newButton.onClick.AddListener(delegate () {
-            Debug.Log("Selecting Option " + optionNumber);
-            OnSelectOption(optionNumber);
-        });
-        newButton.name = text;
-        optionButtons.Add(newButton);
-
+        Debug.Log(optionsDisplay);
+        optionsDisplay.AddOption(optionNumber, text, () => { OnSelectOption(optionNumber); });
+        optionsDisplay.DrawGroup();
     }
 
     /**
@@ -95,19 +71,10 @@ public class BasicStoryDisplay : StoryDisplay
         textBeingDisplayed = "";
         displayText.text = textBeingDisplayed;
 
-        Debug.Log("optionButtons.Count = " + optionButtons.Count);
-
-        foreach (Button b in optionButtons)
-        { //Remove all current buttons on screen.
-            Debug.Log(b);
-            UnityEngine.Object.DestroyImmediate(b.gameObject);
-        }
-
-        optionButtons.Clear();
-
-
         //Select the option in the story parser.
         FollowPath(optionNumber);
+
+        optionsDisplay.Clear();
 
     }
 

@@ -14,9 +14,8 @@ public class BasicStoryDisplayWithNextButton : BasicStoryDisplay
     /**
      * Constructor
      */ 
-    public BasicStoryDisplayWithNextButton(string storyText, Canvas canvas, Text displayText, Button nextButton, 
-                                           Transform optionsOrigin, Button buttonBase, Vector2 buttonRelativeDifferences) : 
-        base(storyText, canvas, displayText, optionsOrigin, buttonBase, buttonRelativeDifferences) {
+    public BasicStoryDisplayWithNextButton(string storyText, Canvas canvas, Text displayText, Button nextButton, DynamicButtonGroup optionsGroup) : 
+        base(storyText, canvas, displayText, optionsGroup) {
 
         this.nextButton = nextButton;
         this.nextButton.gameObject.SetActive(true);
