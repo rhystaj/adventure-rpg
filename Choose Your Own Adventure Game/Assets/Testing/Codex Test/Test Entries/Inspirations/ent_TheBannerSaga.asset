@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Name: ent_TheBannerSaga
   m_EditorClassIdentifier: 
   nodeName: The Banner Saga
-  script: {fileID: 0}
+  script: {fileID: 4900000, guid: 7067b3ebf2c03584fbbb35a9b73d6ccb, type: 3}

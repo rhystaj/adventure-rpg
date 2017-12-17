@@ -13,6 +13,11 @@ public abstract class CodexNode : ScriptableObject
 
     private CodexDirectory parentNode;
 
+    private void OnEnable()
+    {
+        retrieved = false;
+    }
+
     /**
      * Set the parent of the node to the given node, if the current node is contained within the given parent.
      */

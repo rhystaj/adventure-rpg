@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Name: ent_Saylor
   m_EditorClassIdentifier: 
   nodeName: Saylor
-  script: {fileID: 0}
+  script: {fileID: 4900000, guid: d0f388d642f6f5049b56266d6b4da51e, type: 3}

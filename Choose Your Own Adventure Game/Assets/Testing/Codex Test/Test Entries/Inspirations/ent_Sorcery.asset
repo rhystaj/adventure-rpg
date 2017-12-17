@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Name: ent_Sorcery
   m_EditorClassIdentifier: 
   nodeName: Sorcery
-  script: {fileID: 0}
+  script: {fileID: 4900000, guid: cd441bc5c54a80744acdeedd76dae719, type: 3}

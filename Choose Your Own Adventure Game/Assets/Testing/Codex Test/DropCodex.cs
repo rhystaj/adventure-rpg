@@ -11,9 +11,12 @@ public class DropCodex : Codex
 {
     [SerializeField] Dropdown categoryDropdown; //The dropdown menu that will show the options for categories.
     [SerializeField] DynamicButtonGroup optionsGroup; //The button group where the entry options will be displayed.
+    [SerializeField] Text textDisplay;
 
     private List<CodexNode> categories; //The list (in the order they appear) on entries in the dropdown.
     private int currentOption = 0;
+
+    private CodexNode openEntry;
 
     private void Start()
     {
@@ -34,7 +37,7 @@ public class DropCodex : Codex
 
     public override void CloseEntry(CodexEntry entry)
     {
-        throw new NotImplementedException();
+        textDisplay.text = "";
     }
 
     public override void OpenDirectory(CodexDirectory directory)
@@ -44,7 +47,11 @@ public class DropCodex : Codex
         int count = 0;
         foreach(CodexNode node in directory.GetChildren())
         {
-            optionsGroup.AddOption(count++, node.nodeName, () => { });
+            optionsGroup.AddOption(count++, node.nodeName, () => {
+                if (openEntry != null) openEntry.Return(this); 
+                node.Retrieve(this);
+                openEntry = node;
+            });
         }
 
         optionsGroup.DrawGroup();
@@ -53,7 +60,7 @@ public class DropCodex : Codex
 
     public override void OpenEntry(CodexEntry entry, string text)
     {
-        throw new NotImplementedException();
+        textDisplay.text = text;
     }
 
     /**

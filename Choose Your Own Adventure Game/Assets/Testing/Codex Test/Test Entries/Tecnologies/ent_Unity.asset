@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d91483f87c75543a0d881f596c9a70, type: 3}
   m_Name: ent_Unity
   m_EditorClassIdentifier: 
-  nodeName: 
-  script: {fileID: 0}
+  nodeName: Unity
+  script: {fileID: 4900000, guid: 4eb44e61a6e29c341ade9a9b62ba2955, type: 3}

@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d91483f87c75543a0d881f596c9a70, type: 3}
   m_Name: ent_Ink
   m_EditorClassIdentifier: 
-  nodeName: 
-  script: {fileID: 0}
+  nodeName: Ink
+  script: {fileID: 4900000, guid: e13daa7d6195f49488c75438ba1ccab3, type: 3}
