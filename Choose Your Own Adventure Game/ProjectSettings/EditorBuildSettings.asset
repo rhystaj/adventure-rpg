@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Testing/Exploration/Exploration_Test_Scene.unity
     guid: b1b8fec1281bff14d96b616138c68af6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Testing/Test Scenario 1/Test_Scenario_1.unity
     guid: ffaeb5c6884941f4f8837cfc94972fdd
+  - enabled: 1
+    path: Assets/Testing/Codex Test/Codex Test.unity
+    guid: e09d1502640f64b4e9a30411100bb421
