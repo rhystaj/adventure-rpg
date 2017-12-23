@@ -5,7 +5,7 @@ using UnityEngine;
 /**
  * The settings for a particular combat scenario.
  */ 
-public class CombatScenario : MonoBehaviour {
+public class CombatScenario : ScriptableObject {
 
 	
 
