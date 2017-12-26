@@ -55,7 +55,7 @@ public class CombatScenarioEditor : Editor {
 
             for (int start = row * targetScenario.columnsPerSide; i - start < targetScenario.columnsPerSide; i++)
                 targetScenario.enemyConfiguration[i] = (Unit)EditorGUILayout.ObjectField(targetScenario.enemyConfiguration[i],
-                                                                                   typeof(Unit), true, GUILayout.Width(UNIT_FIELD_WIDTH));
+                                                                                   typeof(Unit), false, GUILayout.Width(UNIT_FIELD_WIDTH));
 
             GUILayout.EndHorizontal();
 
