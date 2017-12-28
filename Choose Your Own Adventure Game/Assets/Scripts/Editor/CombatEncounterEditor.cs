@@ -5,17 +5,18 @@ using UnityEditor;
 
 /**
  * The custom inspector for CombatScenario
- */ 
-[CustomEditor(typeof(CombatScenario))]
-public class CombatScenarioEditor : Editor {
+ */
+[CustomEditor(typeof(CombatEncounter))]
+public class CombatEncounterEditor : Editor
+{
 
     const int UNIT_FIELD_WIDTH = 100;
 
-    private CombatScenario targetScenario; //The CombatScenario being modified by the editor.
+    private CombatEncounter targetScenario; //The CombatScenario being modified by the editor.
 
     private void OnEnable()
     {
-        targetScenario = (CombatScenario)target;
+        targetScenario = (CombatEncounter)target;
     }
 
     override public void OnInspectorGUI()
@@ -33,7 +34,7 @@ public class CombatScenarioEditor : Editor {
         while (targetScenario.enemyConfiguration.Count > targetScenario.rows * targetScenario.columnsPerSide)
             targetScenario.enemyConfiguration.Remove(null);
 
-        
+
         GUILayout.Space(10);
         DrawEnemyUnitPositionSelection();
 
@@ -48,7 +49,7 @@ public class CombatScenarioEditor : Editor {
         EditorGUILayout.LabelField("Enemy Positions", EditorStyles.boldLabel);
 
         int i = 0;
-        for(int row = 0; row < targetScenario.rows; row++)
+        for (int row = 0; row < targetScenario.rows; row++)
         {
 
             GUILayout.BeginHorizontal();

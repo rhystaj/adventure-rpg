@@ -5,9 +5,10 @@ using UnityEditor;
 
 /**
  * The settings for a particular combat scenario.
- */ 
+ */
 [CreateAssetMenu]
-public class CombatScenario : ScriptableObject {
+public class CombatEncounter : ScriptableObject
+{
 
     [Header("Dimensions")]
     public int columnsPerSide; //The number of columns on each of the TWO sides of the board, i.e. the actual number of colums will be double.
