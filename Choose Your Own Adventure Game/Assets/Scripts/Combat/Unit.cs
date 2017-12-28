@@ -19,8 +19,6 @@ public class Unit : ScriptableObject {
     [SerializeField] Sprite neutralSprite;
     [SerializeField] Sprite attakingSprite;
     [SerializeField] Sprite talkingDamageSprite;
-    
-    [HideInInspector] public float health;
 
     public int Alignment { get { return alignment; } }
 
