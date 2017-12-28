@@ -29,8 +29,6 @@ public class Unit : ScriptableObject {
         if (maxHealth < 0) maxHealth = 0;
         if (effectiveness < 0) effectiveness = 0;
 
-        health = maxHealth;
-
     }
 
     public bool UseInstrument(Unit target){
