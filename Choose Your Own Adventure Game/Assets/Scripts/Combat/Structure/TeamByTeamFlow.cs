@@ -28,7 +28,7 @@ public class TeamByTeamFlow : CombatFlow {
         public override Turn take(Unit subject)
         {
 
-            if (!AvaliableUnits.Contains(subject)) return this; //Do nothing if the unit is not able to move.
+            if (!CanMove(subject)) return this; //Do nothing if the unit is not able to move.
 
             //Remove the unit that has just moved from the list of avaliable units.
             HashSet<Unit> nextAvaliableUnits = new HashSet<Unit>(AvaliableUnits);
