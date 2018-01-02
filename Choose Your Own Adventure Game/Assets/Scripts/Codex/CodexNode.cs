@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Assertions;
 
 /**
 * An node in the tree of data.
@@ -10,6 +9,7 @@ public abstract class CodexNode : ScriptableObject
     public string nodeName;
 
     protected bool retrieved = false; //Whether or not the node has been retrieved.
+    public bool Retrieved { get { return retrieved;  } }
 
     private CodexDirectory parentNode;
 
@@ -23,13 +23,27 @@ public abstract class CodexNode : ScriptableObject
      */
     public bool SetParent(CodexDirectory parent)
     {
+        //Preconditions
+        Assert.IsNotNull(parent, "The 'parent' argument should not be null.");
+
+        bool result = false;
         if (parent.NodeInDirectory(this))
         {
             parentNode = parent;
-            return true;
+            result = true;
         }
-        return false;
+
+        //Postconditions
+        Assert.AreEqual<CodexDirectory>(parentNode, parent, "The 'parentNode' field should be set to the 'parent' argument.");
+        Assert.IsTrue(ClassInvariantsHold());
+
+        return result;
     }
+
+    /**
+     * Returns whether the given CodexDirectory node is a parent of the node.
+     */ 
+    public bool HasParent(CodexDirectory parent) { return parent == parentNode; }
 
     /**
      * Implementation in subclasses get the information from the node. In this case return false 
@@ -41,5 +55,17 @@ public abstract class CodexNode : ScriptableObject
      * Hide the information from the node.
      */
     public abstract void Return(Codex codex);
+
+
+    //Assertion methods.
+    private bool ClassInvariantsHold()
+    {
+
+        //If this node has a parent, its parent should contain it.
+        Assert.IsFalse(parentNode != null && !parentNode.NodeInDirectory(this), name + "should be in the directory " + parentNode.name);
+
+        return true;
+
+    }
 
 }
