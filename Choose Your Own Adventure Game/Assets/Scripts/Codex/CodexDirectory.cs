@@ -32,7 +32,6 @@ public class CodexDirectory : CodexNode
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
         Assert.IsFalse(retrieved, "Retrieved should initiall be false.");
-        Assert.IsTrue(ThisParentOfAllContentNodes());
     }
 
     /**
@@ -119,6 +118,7 @@ public class CodexDirectory : CodexNode
     private bool ClassInvariantsHold()
     {
         Assert.AreEqual(contents, contentsOnEnable, "The list of entries should never be changed at runtime.");
+        Assert.IsTrue(ThisParentOfAllContentNodes());
 
         return true;
     }
