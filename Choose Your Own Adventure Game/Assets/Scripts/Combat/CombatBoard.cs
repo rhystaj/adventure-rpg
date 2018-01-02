@@ -3,8 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /**
- * The board, for a single combat encounter, on which the units are placed.
+ * Visualises combat data and takes user input.
  */ 
 public class CombatBoard : MonoBehaviour {
-    
+
+    public CombatEncounter enconter;
+    public
+
+    /**
+     * Draw units to the board and start the enounter.
+     */ 
+    public void DrawEncounterAndStart()
+    {
+
+    }
+
 }
