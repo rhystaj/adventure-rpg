@@ -14,11 +14,22 @@ public abstract class CombatFlow {
     //Returns the units avaliable for the current turn.
     protected HashSet<Unit> UnitsAvaliableForTurn { get { return new HashSet<Unit>(currentTurn.AvaliableUnits); } }
 
-    public void TakeTurn()
+    public void TakeTurn(Unit subject)
     {
-        currentTurn = currentTurn.take();
+        currentTurn = currentTurn.take(subject);
     }
 
+    /**
+     * Determines whether the given unit can move during the current turn.
+     */ 
+    public bool CanMoveDuringCurrentTurn(Unit unit)
+    {
+        return currentTurn.CanMove(unit);
+    }
+
+    /**
+     * Represents a single turn.
+     */ 
     protected abstract class Turn
     {
         private int team;
@@ -38,9 +49,12 @@ public abstract class CombatFlow {
          */ 
         public abstract Turn take(Unit subject);
 
+        /**
+         * Determins whether the given unit can move during the turn.
+         */ 
         public bool CanMove(Unit unit)
         {
-            return avaliableUnits 
+            return avaliableUnits.Contains(unit);
         }
 
     }
