@@ -24,7 +24,7 @@ public abstract class CodexNode : ScriptableObject
     public bool SetParent(CodexDirectory parent)
     {
         //Preconditions
-        Assert.IsNotNull(parent, "The 'parent' argument should not be null.");
+        Assert.IsNotNull(parent, "Precondition Fail: The 'parent' argument should not be null.");
 
         bool result = false;
         if (parent.NodeInDirectory(this))
@@ -34,7 +34,7 @@ public abstract class CodexNode : ScriptableObject
         }
 
         //Postconditions
-        Assert.AreEqual<CodexDirectory>(parentNode, parent, "The 'parentNode' field should be set to the 'parent' argument.");
+        Assert.AreEqual<CodexDirectory>(parentNode, parent, "Postcondition Fail: The 'parentNode' field should be set to the 'parent' argument.");
         Assert.IsTrue(ClassInvariantsHold());
 
         return result;
@@ -62,7 +62,7 @@ public abstract class CodexNode : ScriptableObject
     {
 
         //If this node has a parent, its parent should contain it.
-        Assert.IsFalse(parentNode != null && !parentNode.NodeInDirectory(this), name + "should be in the directory " + parentNode.name);
+        Assert.IsFalse(parentNode != null && !parentNode.NodeInDirectory(this), "Postcondition Fail: " + name + "should be in the directory " + parentNode.name);
 
         return true;
 

@@ -21,7 +21,7 @@ public class CodexDirectory : CodexNode
         Assert.IsTrue(RecordContents());
 
         //Preconditions
-        Assert.IsNotNull(contents, "Contents should not be null.");
+        Assert.IsNotNull(contents, "Precondition Fail: Contents should not be null.");
 
         //Make this the parent of each of the given nodes.
         foreach (CodexNode node in contents)
@@ -31,7 +31,7 @@ public class CodexDirectory : CodexNode
 
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
-        Assert.IsFalse(retrieved, "Retrieved should initiall be false.");
+        Assert.IsFalse(retrieved, "Postcondition Fail: Retrieved should initiall be false.");
     }
 
     /**
@@ -73,7 +73,7 @@ public class CodexDirectory : CodexNode
     {
 
         //Preconditions
-        Assert.IsNotNull(codex, "The given codex should not be null");
+        Assert.IsNotNull(codex, "Precondition Fail: The given codex should not be null");
 
         if (!retrieved)
         {
@@ -83,7 +83,7 @@ public class CodexDirectory : CodexNode
 
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
-        Assert.IsTrue(true, "The field 'retrieved' should be true after this method has been called.");
+        Assert.IsTrue(true, "Postcondition Fail: The field 'retrieved' should be true after this method has been called.");
 
     }
 
@@ -91,7 +91,7 @@ public class CodexDirectory : CodexNode
     {
 
         //Preconditions
-        Assert.IsNotNull(codex, "The given codex should not be null");
+        Assert.IsNotNull(codex, "Precondition Fail: The given codex should not be null");
 
         if (retrieved)
         {
@@ -104,7 +104,7 @@ public class CodexDirectory : CodexNode
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
         Assert.IsTrue(AllChildernNotRetrieved());
-        Assert.IsFalse(retrieved, "The field 'retrieved' should be false after this method has been called.");
+        Assert.IsFalse(retrieved, "Postcondition Fail: The field 'retrieved' should be false after this method has been called.");
 
     }
 
@@ -117,7 +117,7 @@ public class CodexDirectory : CodexNode
 
     private bool ClassInvariantsHold()
     {
-        Assert.AreEqual(contents, contentsOnEnable, "The list of entries should never be changed at runtime.");
+        Assert.AreEqual(contents, contentsOnEnable, "Postcondition Fail: The list of entries should never be changed at runtime.");
         Assert.IsTrue(ThisParentOfAllContentNodes());
 
         return true;
@@ -126,14 +126,14 @@ public class CodexDirectory : CodexNode
     private bool ThisParentOfAllContentNodes()
     {
         foreach (CodexNode node in contents)
-            Assert.IsTrue(node.HasParent(this), name + "should be the parent of " + node.name);
+            Assert.IsTrue(node.HasParent(this), "Postcondition Fail: " + name + "should be the parent of " + node.name);
         return true;
     }
 
     private bool AllChildernNotRetrieved()
     {
         foreach (CodexNode node in contents)
-            Assert.IsFalse(node.Retrieved, node.name + "should not be retrieved.");
+            Assert.IsFalse(node.Retrieved, "Postcondition Fail: " + node.name + "should not be retrieved.");
         return true;
     }
 

@@ -20,7 +20,7 @@ public class CodexEntry : CodexNode
     public override void Retrieve(Codex codex) {
 
         //Preconditions
-        Assert.IsNotNull(codex, "The 'codex' argument should not be null.");
+        Assert.IsNotNull(codex, "Precondition Fail: The 'codex' argument should not be null.");
 
         if (!retrieved) {
             codex.OpenEntry(this, script.text);
@@ -29,7 +29,7 @@ public class CodexEntry : CodexNode
 
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
-        Assert.IsTrue(retrieved, "The field 'retieved' should be true.");
+        Assert.IsTrue(retrieved, "Postcondition Fail: The field 'retieved' should be true.");
         
     }
 
@@ -37,7 +37,7 @@ public class CodexEntry : CodexNode
     {
 
         //Preconditions
-        Assert.IsNotNull(codex, "The 'codex' argument should not be null.");
+        Assert.IsNotNull(codex, "Precondition Fail: The 'codex' argument should not be null.");
 
         if (retrieved) {
             codex.CloseEntry(this);
@@ -46,7 +46,7 @@ public class CodexEntry : CodexNode
 
         //Postcondition
         Assert.IsTrue(ClassInvariantsHold());
-        Assert.IsFalse(retrieved, "The field 'retieved' should be False.");
+        Assert.IsFalse(retrieved, "Postcondition Fail: The field 'retieved' should be False.");
 
     }
 
@@ -60,7 +60,7 @@ public class CodexEntry : CodexNode
 
     private bool ClassInvariantsHold()
     {
-        Assert.AreEqual<string>(scriptOnEnable, script.text, "The contents of the node should not change at runtime.");
+        Assert.AreEqual(scriptOnEnable, script.text, "Postcondition Fail: The contents of the node should not change at runtime.");
 
         return true;
     }
