@@ -114,7 +114,7 @@ public class BasicStoryDisplay : StoryDisplay
     {
 
         //Preconditions
-        Assert.IsTrue(optionNumber > 0, "Precondition Fail: The argument 'optionNumber' should be greater than 0.");
+        Assert.IsTrue(optionNumber >= 0, "Precondition Fail: The argument 'optionNumber' should be greater than 0.");
         Assert.IsNotNull(displayText, "Precondition Fail: 'displayText' should not be null.");
 
         //Clear display to show next part of the story.
