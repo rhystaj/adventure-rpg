@@ -179,7 +179,7 @@ public abstract class StoryDisplay {
         return true;
     }
 
-    private bool ClassInvariantsHold()
+    protected virtual bool ClassInvariantsHold()
     {
         Assert.IsTrue(story == storyOnConstruction, "Postcondition Fail: The object referenced by 'story' should not change at runtime.");
         Assert.IsTrue(canvas == canvasOnConstruction, "Postcondition Fail: The object referenced by 'canvas' should not change at runtime.");
