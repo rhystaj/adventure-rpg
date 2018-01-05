@@ -36,8 +36,8 @@ public class BasicStoryDisplay : StoryDisplay
         //Assertion only setup.
         Assert.IsTrue(RecordValues());
         Assert.IsTrue(ClassInvariantsHold());
-        Assert.IsNotNull(displayText, "Postcondition Fail: The field 'displayText' should not be null.");
-        Assert.IsNotNull(optionsDisplay, "Postcondition Fail: The field 'optionsDisplay should not be null'");
+        Assert.IsNotNull(this.displayText, "Postcondition Fail: The field 'displayText' should not be null.");
+        Assert.IsNotNull(this.optionsDisplay, "Postcondition Fail: The field 'optionsDisplay should not be null'");
 
     }
     
