@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Assertions;
 
 public class BasicStoryInit : MonoBehaviour {
 
@@ -12,9 +13,33 @@ public class BasicStoryInit : MonoBehaviour {
 
     protected BasicStoryDisplay display;
 
+    //Assertion fields
+    private string storyTextOnAwake;
+    private Text displayTextOnAwake;
+    private Button nextButtonOnAwake;
+    private DynamicButtonGroup optionsGroupOnAwake;
+    private BasicStoryDisplay displayOnAwake;
+
     protected virtual void Awake()
     {
+
+        //Preconditions
+        Assert.IsNotNull(storyFile, "Precondition Fail: 'storyFile' should not be null.");
+        Assert.IsNotNull(displayText, "Precondition Fail: 'display' should not be null.");
+        Assert.IsNotNull(nextButton, "Precondition Fail: 'nextButton' should not be null.");
+        Assert.IsNotNull(optionsGroup, "Precondition Fail: 'optionsGroup' should not be null");
+
+
         display = new BasicStoryDisplayWithNextButton(storyFile.text, null, displayText, nextButton, optionsGroup);
+
+
+        //Assertion only setup
+        Assert.IsTrue(RecordVaraibles());
+
+
+        //Postconditions
+        Assert.IsNotNull(display, "Postcondition Fail: The field 'display' should not be null.");
+
     }
 
     /**
@@ -22,8 +47,45 @@ public class BasicStoryInit : MonoBehaviour {
      */
     public void ContinueStory()
     {
-        Debug.Log("Next");
+
+        //Preconditions
+        Assert.IsNotNull(display, "Precondition Fail: The field 'display' is not null");
+
+
         display.Next();
+
+
+        //Postconditions
+        Assert.IsTrue(ClassInvariantsHold());
+
+    }
+
+
+    //Assertion methods
+    private bool RecordVaraibles()
+    {
+
+        storyTextOnAwake = storyFile.text;
+        displayTextOnAwake = displayText;
+        nextButtonOnAwake = nextButton;
+        optionsGroupOnAwake = optionsGroup;
+        displayOnAwake = display;
+
+        return true;
+
+    }
+
+    private bool ClassInvariantsHold()
+    {
+
+        Assert.AreEqual(storyFile.text, storyTextOnAwake, "Postcondition Fail: The text in story file should not change at runtime.");
+        Assert.IsTrue(displayText == displayTextOnAwake, "Postcondition Fail: The object referenced by 'displayText' should not change at runtime.");
+        Assert.IsTrue(nextButton == nextButtonOnAwake, "Postcondition Fail: The object referenced by 'nextButton' should not change at runtime.");
+        Assert.IsTrue(optionsGroup == optionsGroupOnAwake, "Postcondition Fail: The object referenced by 'optionsGroup' should not change at runtime.");
+        Assert.IsTrue(display == displayOnAwake, "Postcondition Fail: The object referenced by 'displayOnAwake' should not change at runtime.");
+
+        return true;
+
     }
 
 }
