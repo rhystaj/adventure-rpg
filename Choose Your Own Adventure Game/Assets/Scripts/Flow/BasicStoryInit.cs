@@ -69,7 +69,6 @@ public class BasicStoryInit : MonoBehaviour {
         displayTextOnAwake = displayText;
         nextButtonOnAwake = nextButton;
         optionsGroupOnAwake = optionsGroup;
-        displayOnAwake = display;
 
         return true;
 
@@ -82,7 +81,6 @@ public class BasicStoryInit : MonoBehaviour {
         Assert.IsTrue(displayText == displayTextOnAwake, "Postcondition Fail: The object referenced by 'displayText' should not change at runtime.");
         Assert.IsTrue(nextButton == nextButtonOnAwake, "Postcondition Fail: The object referenced by 'nextButton' should not change at runtime.");
         Assert.IsTrue(optionsGroup == optionsGroupOnAwake, "Postcondition Fail: The object referenced by 'optionsGroup' should not change at runtime.");
-        Assert.IsTrue(display == displayOnAwake, "Postcondition Fail: The object referenced by 'displayOnAwake' should not change at runtime.");
 
         return true;
 
