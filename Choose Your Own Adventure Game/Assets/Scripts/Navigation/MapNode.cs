@@ -49,10 +49,22 @@ public class MapNode : MonoBehaviour {
 
     }
 
-    //Make all paths from this node untraversable.
+    /**
+     * Make all paths from this node untraversable.
+     */
     public void CloseAllPaths()
     {
         foreach (MovementPath path in pathTo.Values) path.traversable = false;
+    }
+
+    /**
+     * Returns true if there is a traversable path leading out from the node.
+     */
+    public bool HasTraversableExit()
+    {
+        foreach (MovementPath path in pathTo.Values)
+            if (path.traversable) return true;
+        return false;
     }
 
     /**
