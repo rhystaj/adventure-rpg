@@ -36,8 +36,8 @@ public class Piece : MonoBehaviour {
 
 
         //  Notify the node at the end of the path that it has been reached.
-        if (path.reverseEnumeration) path.Start.NotifyReached();
-        else path.End.NotifyReached();
+        if (path.reverseEnumeration) path.StartNode.NotifyReached();
+        else path.EndNode.NotifyReached();
 
     }
 

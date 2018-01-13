@@ -29,15 +29,15 @@ public class MapNode : MonoBehaviour {
         foreach(MovementPath path in pathsFrom)
         {
             //Get the map node components which should be assigned to nodes at either ends of the path.
-            MapNode pathStart = path.Start.GetComponent<MapNode>();
-            MapNode pathEnd = path.End.GetComponent<MapNode>();
+            MapNode pathStart = path.StartNode.GetComponent<MapNode>();
+            MapNode pathEnd = path.EndNode.GetComponent<MapNode>();
 
 
             //Both the start and end nodes should have a map node component - throw an error if this is not the case.
             if (pathStart == null)
-                throw new Exception(path.Start.name + "should have a MapNode compenet assigned to it, as it is the start of a path.");
+                throw new Exception(path.StartNode.name + "should have a MapNode compenet assigned to it, as it is the start of a path.");
             if(pathEnd == null)
-                throw new Exception(path.End.name + 
+                throw new Exception(path.EndNode.name + 
                                     "should have a MapNode component assigned to it, as it is the end of a path.");
 
 
@@ -138,8 +138,8 @@ public class MapNode : MonoBehaviour {
 
 
             //Set the movement direction of the path based on which end the target node is on.
-            if (endNode == path.End.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = false;
-            else if (endNode == path.Start.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = true;
+            if (endNode == path.EndNode.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = false;
+            else if (endNode == path.StartNode.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = true;
 
 
             result = pathTo[endNode];
