@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class MapNode : MonoBehaviour {
 
@@ -14,9 +14,17 @@ public class MapNode : MonoBehaviour {
     public static event NodeInteraction NodeSelected; //    An event that is fired when a node is selected.
     public static event NodeInteraction NodeReached; //     An event that is fired when the node is reached by the player.
 
+
+    //Assertion Fields
+    private Dictionary<MapNode, MovementPath> pathToOnStart;
+
     private void Start()
     {
-           
+
+        //Preconditions
+        Assert.IsNotNull(pathsFrom, "Precondition Fail: The field 'pathsFrom' should not be null");
+
+
         //Populate the pathsTo dictionary with the nodes at the ends of the paths in pathsFrom, mapped to thier respective paths.
         foreach(MovementPath path in pathsFrom)
         {
@@ -41,11 +49,15 @@ public class MapNode : MonoBehaviour {
             else
                 throw new Exception(path.name + "should not be assigned as a path from " + name + ", as it does not start or end with it.");
 
-            Debug.Assert((pathTo.ContainsKey(pathStart) || pathTo.ContainsKey(pathEnd)) && !pathTo.ContainsKey(this),
+            Assert.IsTrue((pathTo.ContainsKey(pathStart) || pathTo.ContainsKey(pathEnd)) && !pathTo.ContainsKey(this),
                          "The pathTo field of" + name + "should contain the node at the other end of the path " + path.name + " and not itself");
-            Debug.Assert(pathTo.ContainsValue(path), "The pathTo field of" + name + "should contain the path " + path.name);
+            Assert.IsTrue(pathTo.ContainsValue(path), "The pathTo field of" + name + "should contain the path " + path.name);
 
         }
+
+
+        //Postconditions
+        Assert.IsTrue(ClassInvariantsHold());
 
     }
 
@@ -54,7 +66,13 @@ public class MapNode : MonoBehaviour {
      */
     public void CloseAllPaths()
     {
+
         foreach (MovementPath path in pathTo.Values) path.traversable = false;
+
+
+        //Postconditions
+        Assert.IsTrue(ClassInvariantsHold());
+
     }
 
     /**
@@ -62,9 +80,24 @@ public class MapNode : MonoBehaviour {
      */
     public bool HasTraversableExit()
     {
+
+        bool result = false;
+
         foreach (MovementPath path in pathTo.Values)
-            if (path.traversable) return true;
-        return false;
+        {
+            if (path.traversable)
+            {
+                result = true;
+                break;
+            }
+        }
+
+
+        //Postconditons
+        Assert.IsTrue(ClassInvariantsHold());
+
+        return result;
+
     }
 
     /**
@@ -72,28 +105,52 @@ public class MapNode : MonoBehaviour {
      */ 
     public MapNode GetNeighbourWithName(string name)
     {
+
+        //Preconditions
+        Assert.IsNotNull(name, "Precondtion Fail: The argument 'name' should not be null.");
+
+
+        MapNode result = null;
+
         foreach (MapNode node in pathTo.Keys)
-            if (node.name.Equals(name)) return node;
-        return null;
+            if (node.name.Equals(name)) result = node;
+
+
+        //Postconditions
+        Assert.IsTrue(ClassInvariantsHold());
+
+        return result;
+
     }
 
     /**
      * Returns the path between the current and selected map node, with the configured movement direction.
-     */ 
+     */
     public MovementPath GetPathTo(MapNode endNode)
     {
 
+        MovementPath result = null;
+
         //Ensure the required node has an associated path and retrieve it.
-        if (!pathTo.ContainsKey(endNode)) return null;
-        MovementPath path = pathTo[endNode];
+        if (pathTo.ContainsKey(endNode)) {
+
+            MovementPath path = pathTo[endNode];
 
 
-        //Set the movement direction of the path based on which end the target node is on.
-        if (endNode == path.End.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = false;
-        else if (endNode == path.Start.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = true;
+            //Set the movement direction of the path based on which end the target node is on.
+            if (endNode == path.End.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = false;
+            else if (endNode == path.Start.GetComponent<MapNode>()) pathTo[endNode].reverseEnumeration = true;
 
-        
-        return pathTo[endNode];
+
+            result = pathTo[endNode];
+
+        }
+
+        //Postconditions
+        Assert.IsTrue(ClassInvariantsHold());
+
+        return result;
+
     }
 
     /**
@@ -101,12 +158,46 @@ public class MapNode : MonoBehaviour {
      */ 
     public void NotifyReached()
     {
-        if(NodeReached != null) NodeReached(this);
+
+        NodeReached(this);
+
+
+        //Postconditions
+        Assert.IsTrue(ClassInvariantsHold());
+
     }
 
     private void OnMouseDown()
     {
-        if(NodeSelected != null) NodeSelected(this);   
+
+        if(NodeSelected != null) NodeSelected(this);
+
+
+        //Preconditions
+        Assert.IsTrue(ClassInvariantsHold());
+
+    }
+
+
+    //Assertion Methods
+    private bool RecordVariables()
+    {
+
+        //Deep clone pathsTo.
+        pathToOnStart = new Dictionary<MapNode, MovementPath>();
+        foreach (MapNode node in pathTo.Keys) pathToOnStart.Add(node, pathTo[node]);
+
+        return true;
+
+    }
+
+    private bool ClassInvariantsHold()
+    {
+
+        Assert.AreEqual(pathTo, pathToOnStart, "Postcondition Fail: The values in pathTo should not change at runtime.");
+
+        return true;
+
     }
 
 }
