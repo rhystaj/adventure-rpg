@@ -14,6 +14,7 @@ public class CodexDirectory : CodexNode
 
     //Assetion fields.
     private CodexNode[] contentsOnEnable; //Represents the configuration of the contents array on enable.
+    private bool canCheckInvariants;
 
     private void OnEnable()
     {
@@ -37,6 +38,9 @@ public class CodexDirectory : CodexNode
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
         Assert.IsFalse(retrieved, "Postcondition Fail: Retrieved should initiall be false.");
+
+        canCheckInvariants = true;
+
     }
 
     /**
@@ -126,6 +130,8 @@ public class CodexDirectory : CodexNode
 
     private bool ClassInvariantsHold()
     {
+
+        if (!canCheckInvariants) return true;
 
         for (int i = 0; i < contents.Length; i++)
             Assert.IsTrue(contents[i] == contentsOnEnable[i], 
