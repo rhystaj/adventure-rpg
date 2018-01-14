@@ -29,6 +29,11 @@ public class CodexDirectory : CodexNode
 
         retrieved = false;
 
+
+        //Assertion only setup
+        Assert.IsTrue(RecordContents());
+
+
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
         Assert.IsFalse(retrieved, "Postcondition Fail: Retrieved should initiall be false.");
@@ -111,13 +116,20 @@ public class CodexDirectory : CodexNode
     //Assertion Methods
     private bool RecordContents()
     {
+
+        contentsOnEnable = new CodexNode[contents.Length];
         Array.Copy(contents, contentsOnEnable, contents.Length);
+
         return true;
+
     }
 
     private bool ClassInvariantsHold()
     {
-        Assert.AreEqual(contents, contentsOnEnable, "Postcondition Fail: The list of entries should never be changed at runtime.");
+
+        for (int i = 0; i < contents.Length; i++)
+            Assert.IsTrue(contents[i] == contentsOnEnable[i], 
+                "Postcondition Fail: contents[" + i + "] ("+ contents[i] + ") has changed from its value on enable (" + contentsOnEnable[i] + ").");
         Assert.IsTrue(ThisParentOfAllContentNodes());
 
         return true;
