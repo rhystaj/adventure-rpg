@@ -1,1 +1,0 @@
-An open-source scripting language for narrative design. Has easy integration with Unity.

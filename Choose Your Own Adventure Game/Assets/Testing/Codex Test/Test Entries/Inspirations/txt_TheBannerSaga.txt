@@ -1,1 +1,0 @@
-A turn-based tactical game which also used the Ink language.
