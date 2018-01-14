@@ -40,12 +40,12 @@ public class ScenarioManager : BasicStoryInit {
         Assert.IsNotNull(navigationManager, "Precondition Fail: 'navigationManager' should not be null.");
         Assert.IsNotNull(displayCanvas, "Precondition Fail: 'displayCanvas' should not be null");
 
+        
+        //Assertion only setup
+        Assert.IsTrue(RecordVaraibles());
+
 
         ShowScenarioText(storyFile.text, navigationManager.startingLocation);
-
-
-        //Assertion only setup
-        Assert.IsTrue(RecordVariables());
 
 
         //Postconditions
@@ -302,8 +302,10 @@ public class ScenarioManager : BasicStoryInit {
 
 
     //Assertion methods
-    private bool RecordVariables()
+    protected override bool RecordVaraibles()
     {
+
+        base.RecordVaraibles();
 
         navigationManagerOnSceneLoad = navigationManager;
         displayCanvasOnSceneLoad = displayCanvas;
@@ -312,8 +314,10 @@ public class ScenarioManager : BasicStoryInit {
 
     }
 
-    private bool ClassInvariantsHold()
+    protected override bool ClassInvariantsHold()
     {
+
+        base.ClassInvariantsHold();
 
         Assert.IsTrue(navigationManager == navigationManagerOnSceneLoad,
                       "Postcondition Fail: The object referenced by 'navigationManager' should not be changed during runtime.");

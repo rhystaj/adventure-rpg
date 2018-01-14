@@ -30,14 +30,15 @@ public class BasicStoryInit : MonoBehaviour {
         Assert.IsNotNull(optionsGroup, "Precondition Fail: 'optionsGroup' should not be null");
 
 
-        display = new BasicStoryDisplayWithNextButton(storyFile.text, null, displayText, nextButton, optionsGroup);
-
-
         //Assertion only setup
         Assert.IsTrue(RecordVaraibles());
 
 
+        display = new BasicStoryDisplayWithNextButton(storyFile.text, null, displayText, nextButton, optionsGroup);
+
+
         //Postconditions
+        Assert.IsTrue(ClassInvariantsHold());
         Assert.IsNotNull(display, "Postcondition Fail: The field 'display' should not be null.");
 
     }
@@ -62,7 +63,7 @@ public class BasicStoryInit : MonoBehaviour {
 
 
     //Assertion methods
-    private bool RecordVaraibles()
+    protected virtual bool RecordVaraibles()
     {
 
         storyTextOnAwake = storyFile.text;
@@ -74,7 +75,7 @@ public class BasicStoryInit : MonoBehaviour {
 
     }
 
-    private bool ClassInvariantsHold()
+    protected virtual bool ClassInvariantsHold()
     {
 
         Assert.AreEqual(storyFile.text, storyTextOnAwake, "Postcondition Fail: The text in story file should not change at runtime.");

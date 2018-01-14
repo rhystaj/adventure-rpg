@@ -24,17 +24,21 @@ public class BasicStoryDisplay : StoryDisplay
         //Preconditions
         Assert.IsNotNull(displayText, "Precondition Fail: The 'displayText' argument should not be null.");
         Assert.IsNotNull(optionsDisplay, "PreconditionFail: The 'optionsDisplay' argument should not be null.");
-
+  
         
         //Set field values.
         this.displayText = displayText;
         this.optionsDisplay = optionsDisplay;
 
+        
+        //Assertion only setup
+        Assert.IsTrue(RecordValues());
+
+
         base.Next();
 
 
-        //Assertion only setup.
-        Assert.IsTrue(RecordValues());
+        //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
         Assert.IsNotNull(this.displayText, "Postcondition Fail: The field 'displayText' should not be null.");
         Assert.IsNotNull(this.optionsDisplay, "Postcondition Fail: The field 'optionsDisplay should not be null'");
@@ -142,16 +146,19 @@ public class BasicStoryDisplay : StoryDisplay
     {
         displayTextOnConstruction = displayText;
         optionsDisplayOnConstruction = optionsDisplay;
+
         return true;
     }
 
-    protected override bool ClassInvariantsHold()
+    protected new bool ClassInvariantsHold()
     {
-        base.ClassInvariantsHold();
+
         Assert.IsTrue(displayText == displayTextOnConstruction,
-                      "Postcondition Fail: The object referenced by 'displayText' should not be changed at runtime.");
+                      "Postcondition Fail: The object referenced by 'displayText' should not be changed at runtime. \n" + 
+                      "It is currently: " + displayText + ", when it should be " + displayTextOnConstruction + ".");
         Assert.IsTrue(optionsDisplay == optionsDisplayOnConstruction,
                       "Postcondition Fail: The object referenced by 'optionsDisplay' should not be changed at runtime.");
         return true;
+
     }
 }

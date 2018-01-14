@@ -56,6 +56,11 @@ public class MapNode : MonoBehaviour {
         }
 
 
+
+        //Assertion only setup
+        Assert.IsTrue(RecordVariables());
+
+
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
 
@@ -182,7 +187,7 @@ public class MapNode : MonoBehaviour {
     //Assertion Methods
     private bool RecordVariables()
     {
-
+        
         //Deep clone pathsTo.
         pathToOnStart = new Dictionary<MapNode, MovementPath>();
         foreach (MapNode node in pathTo.Keys) pathToOnStart.Add(node, pathTo[node]);
@@ -194,7 +199,20 @@ public class MapNode : MonoBehaviour {
     private bool ClassInvariantsHold()
     {
 
-        Assert.AreEqual(pathTo, pathToOnStart, "Postcondition Fail: The values in pathTo should not change at runtime.");
+        //Ensure the keys and thier respective values in path start don't change, if they have been set in start.
+        if (pathToOnStart != null)
+        {
+            foreach (MapNode node in pathTo.Keys)
+                Assert.IsTrue(pathToOnStart.ContainsKey(node),
+                    "Postcondition Fail: pathTo contains " + node + " which was not added on Start");
+            foreach (MapNode node in pathToOnStart.Keys)
+                Assert.IsTrue(pathTo.ContainsKey(node),
+                       "Postcondition Fail: " + node + ", which was added on Start, is no longer contained in pathTo.");
+            foreach (MapNode node in pathTo.Keys)
+                Assert.IsTrue(pathTo[node] == pathToOnStart[node],
+                    "Postcondition Fail " + node + " which was mapped to the value " + pathToOnStart[node] + " on Start, " +
+                    "is now mapped to the value " + pathTo[node]);
+        }
 
         return true;
 

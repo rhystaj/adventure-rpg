@@ -78,9 +78,9 @@ public class BasicStoryDisplayWithNextButton : BasicStoryDisplay
         return true;
     }
 
-    protected override bool ClassInvariantsHold()
+    protected new bool ClassInvariantsHold()
     {
-        base.ClassInvariantsHold();
+        
         Assert.IsTrue(nextButton == nextButtonOnConstruction,
                       "Postcondition Fail: The object referenced by 'nextButton' should not be changed at runtime.");
         return true;
