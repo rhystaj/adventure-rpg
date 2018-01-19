@@ -8,7 +8,6 @@ using UnityEngine;
 public class CombatBoard : MonoBehaviour {
 
     public CombatEncounter enconter;
-    public
 
     /**
      * Draw units to the board and start the enounter.

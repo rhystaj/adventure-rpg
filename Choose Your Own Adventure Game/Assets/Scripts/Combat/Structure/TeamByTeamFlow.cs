@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 /**
  * A combat flow that has each team able to move one of thier units once, before the other moves.
+ * Most likey will not be used.
  */ 
 public class TeamByTeamFlow : CombatFlow {
 
