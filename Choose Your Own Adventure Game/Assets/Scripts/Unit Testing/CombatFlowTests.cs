@@ -9,8 +9,8 @@ public class CombatFlowTests {
 
     /**
      * Ensures that a unit can move in a turn in which it is listed in avaliable units.
-     */ 
-	[Test]
+     */
+    [Test]
     public void AUnitInAvaliableUnitsCanMove()
     {
 
@@ -25,5 +25,25 @@ public class CombatFlowTests {
         Assert.IsTrue(testFlow.CanMoveDuringCurrentTurn(targetUnit));
 
     }
+
+    /**
+     * Ensures that a unit can't move in a turn in which it is not listed in avaliable units.
+     */
+    [Test]
+    public void AUnitNotInAvaliableUnitsCantMove()
+    {
+
+        Unit targetUnit = new Unit(Substitute.For<Instrument>(), 23, 4, 1);
+        HashSet<Unit> avalaibleUnits = new HashSet<Unit>(new Unit[] {
+            new Unit(Substitute.For<Instrument>(), 6, 7, 8),
+            new Unit(Substitute.For<Instrument>(), 23, 5, 1)
+        });
+        CombatFlow testFlow = new SingleEmptyTurnMockCombatFlow(1, avalaibleUnits);
+
+        Assert.IsTrue(testFlow.CanMoveDuringCurrentTurn(targetUnit));
+
+    }
+
+    
 
 }
