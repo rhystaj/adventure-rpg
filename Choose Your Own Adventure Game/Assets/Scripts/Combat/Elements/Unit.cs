@@ -14,6 +14,7 @@ public class Unit : MonoBehaviour {
     public float maxHealth; //The max health points of the unit.
     public float effectiveness; //The unit's ability with thier instrument.
     public int alignment; //The team this unit belongs to.
+    public int turnCooldown; //The number of turns after this unit has been used before they can be used again.
     [Space(10)]
 
     [Header("Graphics")]
