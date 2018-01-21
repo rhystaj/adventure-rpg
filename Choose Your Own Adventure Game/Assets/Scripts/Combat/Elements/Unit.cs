@@ -26,6 +26,8 @@ public class Unit : MonoBehaviour {
 
     private SpriteRenderer spriteRenderer;
 
+
+    public float health; //The health of the unit.
     public int Alignment { get { return alignment; } }
 
     /**
@@ -55,9 +57,14 @@ public class Unit : MonoBehaviour {
         if (spriteRenderer == null) Debug.LogError("The unit " + name + " does not have a renderer attatched.");
         spriteRenderer.sprite = neutralSprite;
 
+        
         //Ensure stats aren't negative.
         if (maxHealth < 0) maxHealth = 0;
         if (effectiveness < 0) effectiveness = 0;
+
+
+        health = maxHealth;
+
 
     }
 
