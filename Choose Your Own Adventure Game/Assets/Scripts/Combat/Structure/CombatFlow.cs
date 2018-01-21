@@ -12,7 +12,7 @@ public abstract class CombatFlow {
     public int CurrentTeam { get { return currentTurn.Team; } } //Returns the team taking the current turn.
 
     //Returns the units avaliable for the current turn.
-    protected HashSet<Unit> UnitsAvaliableForTurn { get { return new HashSet<Unit>(currentTurn.AvaliableUnits); } }
+    public HashSet<Unit> UnitsAvaliableForTurn { get { return new HashSet<Unit>(currentTurn.AvaliableUnits); } }
 
     public void TakeTurn(Unit subject)
     {
