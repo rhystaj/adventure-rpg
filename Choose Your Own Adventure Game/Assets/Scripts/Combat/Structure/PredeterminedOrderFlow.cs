@@ -54,7 +54,20 @@ public class PredeterminedOrderFlow : CombatFlow {
 
 
             this.teamsAndOrders = teamsAndOrders;
+
+
+            //Record the first unit of each team.
             teamNextUnitNodes = new LinkedListNode<Unit>[teamsAndOrders.Count];
+
+            LinkedListNode<LinkedList<Unit>> currentTeamNode = teamsAndOrders.First;
+            for(int i = 0; i < teamNextUnitNodes.Length; i++)
+            {
+
+                teamNextUnitNodes[i] = currentTeamNode.Value.First;
+
+                currentTeamNode = currentTeamNode.Next;
+
+            }
 
 
             //Assertion only setup
@@ -66,11 +79,9 @@ public class PredeterminedOrderFlow : CombatFlow {
             Assert.IsNotNull(teamsAndOrders, "Postcondition Fail: The argument 'teamsAndOrders' should not be null.");
             Assert.IsNotNull(teamNextUnitNodes, "Postcondition Fail: The argument 'teamNextUnitNodes' should not be null.");
             Assert.AreEqual(teamNextUnitNodes.Length, teamsAndOrders.Count,
-                "Precondition Fail: teamNextUnitNodes should be the same length as teamsAndOrders.");
-            Assert.IsTrue(new List<LinkedListNode<Unit>>(teamNextUnitNodes).TrueForAll(
-                node => node == node.List.First
-            ), "Postcondition Fail: Each node in teamNextUnitNodes should be the first in thier list.");
-                //teamNextUnitNodes should have each of the first nodes of the teams in teams and orders, in that order.
+                            "Postcondition Fail: teamNextUnitNodes should be the same length as teamsAndOrders.");
+            Assert.IsTrue(TeamNextUnitNodesHasTheFistUnitOfEachTeamInOrder(),
+                          "Postcondition Fail: teamNextUnitNodes should have the first node of each of the teams, in order.");
             
 
         }
@@ -145,6 +156,25 @@ public class PredeterminedOrderFlow : CombatFlow {
                 capture.AddLast(new LinkedList<Unit>(team));
 
             return true;
+
+        }
+
+        private bool TeamNextUnitNodesHasTheFistUnitOfEachTeamInOrder()
+        {
+
+            LinkedListNode<LinkedList<Unit>> currentTeam = teamsAndOrders.First;
+
+            foreach(LinkedListNode<Unit> node in teamNextUnitNodes)
+            {
+
+                if (node != currentTeam.Value.First) return false;
+
+                currentTeam = currentTeam.Next;
+
+            }
+
+            return true;
+
 
         }
 
