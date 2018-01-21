@@ -30,21 +30,6 @@ public class Unit : MonoBehaviour {
     public float health; //The health of the unit.
     public int Alignment { get { return alignment; } }
 
-    /**
-     * Constructor
-     * Used to create Units for testing purposes that will not be instantiated in the scene.
-     */ 
-     public Unit(Instrument instrument, float maxHealth, float effectiveness, int alignment)
-    {
-
-        this.instrument = instrument;
-        this.maxHealth = maxHealth;
-        this.effectiveness = effectiveness;
-        this.alignment = alignment;
-
-    }
-
-
     private void OnEnable()
     {
 
@@ -72,4 +57,23 @@ public class Unit : MonoBehaviour {
         return instrument.Use(this, target);
     }
 
+
+    //For testing.
+    /**
+     * Create an instantiate a new unit, not attatched to any specific object, with the given properties.
+     */ 
+    public static Unit InstantiateMock(Instrument instument, int maxHealth, int effectiveness, int alignment, int turnCooldown)
+    {
+
+        Unit newUnit = new GameObject().AddComponent<Unit>();
+
+        newUnit.instrument = instument;
+        newUnit.maxHealth = maxHealth;
+        newUnit.effectiveness = effectiveness;
+        newUnit.alignment = alignment;
+        newUnit.turnCooldown = turnCooldown;
+
+        return newUnit;
+
+    }
 }
