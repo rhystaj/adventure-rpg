@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine.Assertions;
 
 /**
@@ -65,7 +64,13 @@ public class PredeterminedOrderFlow : CombatFlow {
             //Postconditions
             Assert.IsTrue(ClassInvaraintsHold());
             Assert.IsNotNull(teamsAndOrders, "Postcondition Fail: The argument 'teamsAndOrders' should not be null.");
-            Assert.IsNotNull(teamNextUnitNodes, "Postcondition Fail: The argument 'teamIndexes' should not be null.");
+            Assert.IsNotNull(teamNextUnitNodes, "Postcondition Fail: The argument 'teamNextUnitNodes' should not be null.");
+            Assert.AreEqual(teamNextUnitNodes.Length, teamsAndOrders.Count,
+                "Precondition Fail: teamNextUnitNodes should be the same length as teamsAndOrders.");
+            Assert.IsTrue(new List<LinkedListNode<Unit>>(teamNextUnitNodes).TrueForAll(
+                node => node == node.List.First
+            ), "Postcondition Fail: Each node in teamNextUnitNodes should be the first in thier list.");
+                //teamNextUnitNodes should have each of the first nodes of the teams in teams and orders, in that order.
             
 
         }
@@ -77,13 +82,15 @@ public class PredeterminedOrderFlow : CombatFlow {
             Assert.IsNotNull(subject, "Precondition Fail: The argument 'subject' should not be null.");
 
 
-            //Create a new turn with the new team data.
+            //Variable recording for assertions.
+            LinkedList<LinkedList<Unit>> teamsAndOrdersAtStart;
+            Assert.IsTrue(SetToCloneOfTeamsAndOrders(out teamsAndOrdersAtStart));
+
+
+            //Determine the next team to go - i.e the next team with their next unit to move with more than 0 health..
             int nextTeam = Team + 1 < teamsAndOrders.Count ? Team + 1 : 0;
             while (teamNextUnitNodes[nextTeam].Value.health <= 0)
                 nextTeam = Team + 1 < teamsAndOrders.Count ? Team + 1 : 0;
-
-            Turn newTurn = new AlternatingPredeterminedOrderTurn(nextTeam, new HashSet<Unit>(new Unit[] { teamNextUnitNodes[nextTeam].Value }),
-                                                                 teamsAndOrders);
 
 
             //Find the next node with a unit in the team that had more than 0 health, or set it to the same node if node exists.
@@ -97,12 +104,12 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             //Postconditions
             Assert.IsTrue(ClassInvaraintsHold());
-            Assert.IsTrue(newTurn.Team >= 0 && newTurn.Team < teamsAndOrders.Count,
-                          "Postcondition Fail: The next team number (" + newTurn.Team + ") should be valid - i.e greater at least 0, and smaller than the " +
+            Assert.IsTrue(nextTeam >= 0 && nextTeam < teamsAndOrders.Count,
+                          "Postcondition Fail: The next team number (" + nextTeam + ") should be valid - i.e greater at least 0, and smaller than the " +
                           "number of teams (" + teamsAndOrders.Count + ").");
-            Assert.IsTrue(Team < teamsAndOrders.Count - 1 || newTurn.Team == 0,
+            Assert.IsTrue(Team < teamsAndOrders.Count - 1 || nextTeam == 0,
                           "Postcondition Fail: If the previous team's number was the higest, the current team should be 0)");
-            Assert.IsTrue(Team == teamsAndOrders.Count - 1 || newTurn.Team == Team + 1,
+            Assert.IsTrue(Team == teamsAndOrders.Count - 1 || nextTeam == Team + 1,
                           "Postcondition Fail: If the previous team's number wasn't the higest, the current team should be one more than the previous.");
             Assert.IsTrue(currentNode.Next == null || teamNextUnitNodes[Team] == currentNode.Next,
                           "Postcondition Fail: The node for the current team should now be the node with the team's next unit, if the current node" +
@@ -110,8 +117,11 @@ public class PredeterminedOrderFlow : CombatFlow {
             Assert.IsTrue(currentNode.Next != null || teamNextUnitNodes[Team] == currentNode.List.First);
             Assert.IsFalse(teamNextUnitNodes[nextTeam].Value.health <= 0,
                            "Postcondition Fail: The avaliable unit for next turn should not have 0 health.");
+            Assert.IsTrue(TeamAndOrdersReaminsUnchanged(teamsAndOrdersAtStart),
+                          "Precondition Fail: 'teamsAndOrders' should remain unchanged.");
 
-            return newTurn;
+            return new AlternatingPredeterminedOrderTurn(nextTeam, new HashSet<Unit>(new Unit[] { teamNextUnitNodes[nextTeam].Value }),
+                                                         teamsAndOrders);
 
         }
 
@@ -122,6 +132,44 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             teamsAndOrdersOnConstruction = teamsAndOrders;
             teamIndexesOnConstruction = teamNextUnitNodes;
+
+            return true;
+
+        }
+
+        private bool SetToCloneOfTeamsAndOrders(out LinkedList<LinkedList<Unit>> capture)
+        {
+
+            capture = new LinkedList<LinkedList<Unit>>();
+            foreach (LinkedList<Unit> team in teamsAndOrders)
+                capture.AddLast(new LinkedList<Unit>(team));
+
+            return true;
+
+        }
+
+        private bool TeamAndOrdersReaminsUnchanged(LinkedList<LinkedList<Unit>> teamsAndOrdersClone)
+        {
+
+            LinkedListNode<LinkedList<Unit>> currentTeamNode = teamsAndOrders.First;
+
+            foreach(LinkedList<Unit> team in teamsAndOrders)
+            {
+
+                LinkedListNode<Unit> currentUnitNode = currentTeamNode.Value.First;
+
+                foreach (Unit unit in team)
+                {
+
+                    if (unit != currentUnitNode.Value) return false;
+
+                    currentUnitNode = currentUnitNode.Next;
+
+                }
+
+                currentTeamNode = currentTeamNode.Next;
+
+            }
 
             return true;
 
