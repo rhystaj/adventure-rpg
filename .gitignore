@@ -32,7 +32,5 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-Choose Your Own Adventure Game/Assets/InitTestScene636522083162146776.unity
-Choose Your Own Adventure Game/Assets/InitTestScene636522086244337635.unity
-Choose Your Own Adventure Game/Assets/InitTestScene636523003153207742.unity
-Choose Your Own Adventure Game/Assets/InitTestScene636523026125163091.unity
+
+*InitTestScene*.unity
