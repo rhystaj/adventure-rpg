@@ -57,23 +57,4 @@ public class Unit : MonoBehaviour {
         return instrument.Use(this, target);
     }
 
-
-    //For testing.
-    /**
-     * Create an instantiate a new unit, not attatched to any specific object, with the given properties.
-     */ 
-    public static Unit InstantiateMock(Instrument instument, int maxHealth, int effectiveness, int alignment, int turnCooldown)
-    {
-
-        Unit newUnit = new GameObject().AddComponent<Unit>();
-
-        newUnit.instrument = instument;
-        newUnit.maxHealth = maxHealth;
-        newUnit.effectiveness = effectiveness;
-        newUnit.alignment = alignment;
-        newUnit.turnCooldown = turnCooldown;
-
-        return newUnit;
-
-    }
 }
