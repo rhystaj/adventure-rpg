@@ -9,65 +9,65 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1440649226732276}
+  m_RootGameObject: {fileID: 1548313570920176}
   m_IsPrefabParent: 1
---- !u!1 &1440649226732276
+--- !u!1 &1548313570920176
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4570797128268536}
-  - component: {fileID: 212140301197965442}
-  - component: {fileID: 114275117670469272}
+  - component: {fileID: 4882680054260696}
+  - component: {fileID: 212666274359616876}
+  - component: {fileID: 114605368656459548}
   m_Layer: 0
-  m_Name: Mock Unit Base
+  m_Name: Flow Test Mock Unit 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4570797128268536
+--- !u!4 &4882680054260696
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1440649226732276}
+  m_GameObject: {fileID: 1548313570920176}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.32086462, y: -0.4826939, z: 0}
+  m_LocalPosition: {x: -3.461959, y: -1.9088064, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114275117670469272
+--- !u!114 &114605368656459548
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1440649226732276}
+  m_GameObject: {fileID: 1548313570920176}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0fbe8a15b8e23943942f16f5085809e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   instrument: {fileID: 11400000, guid: e8700b479a6615c40a27cff644d30f74, type: 2}
-  maxHealth: 0
-  effectiveness: 0
-  alignment: 0
-  turnCooldown: 0
+  maxHealth: 50
+  effectiveness: 30
+  alignment: 1
+  turnCooldown: 10
   neutralSprite: {fileID: 0}
   attakingSprite: {fileID: 0}
   talkingDamageSprite: {fileID: 0}
   position: 0
   health: 0
---- !u!212 &212140301197965442
+--- !u!212 &212666274359616876
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1440649226732276}
+  m_GameObject: {fileID: 1548313570920176}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0

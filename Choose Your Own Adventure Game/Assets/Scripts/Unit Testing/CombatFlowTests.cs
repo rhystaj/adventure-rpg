@@ -7,6 +7,8 @@ using System.Collections.Generic;
 
 public class CombatFlowTests {
 
+    public const string FLOW_TEST_UNITS_PATH = "Testing/Mock Prefabs/Combat/Units/Flow Test Units";
+
     /**
      * Ensures that a unit can move in a turn in which it is listed in avaliable units.
      */
@@ -14,11 +16,11 @@ public class CombatFlowTests {
     public void AUnitInAvaliableUnitsCanMove()
     {
 
-        Unit targetUnit = new Unit(Substitute.For<Instrument>(), 23, 4, 1);
+        Unit targetUnit = GetFlowTestUnit("Flow Test Mock Unit 1");
         HashSet<Unit> avalaibleUnits = new HashSet<Unit>(new Unit[] {
             targetUnit,
-            new Unit(Substitute.For<Instrument>(), 6, 7, 8),
-            new Unit(Substitute.For<Instrument>(), 23, 5, 1)
+            GetFlowTestUnit("Flow Test Mock Unit 2"),
+            GetFlowTestUnit("Flow Test Mock Unit 3")
         });
         CombatFlow testFlow = new SingleEmptyTurnMockCombatFlow(1, avalaibleUnits);
 
@@ -33,17 +35,24 @@ public class CombatFlowTests {
     public void AUnitNotInAvaliableUnitsCantMove()
     {
 
-        Unit targetUnit = new Unit(Substitute.For<Instrument>(), 23, 4, 1);
+        Unit targetUnit = GetFlowTestUnit("Flow Test Mock Unit 1");
         HashSet<Unit> avalaibleUnits = new HashSet<Unit>(new Unit[] {
-            new Unit(Substitute.For<Instrument>(), 6, 7, 8),
-            new Unit(Substitute.For<Instrument>(), 23, 5, 1)
+            GetFlowTestUnit("Flow Test Mock Unit 2"),
+            GetFlowTestUnit("Flow Test Mock Unit 3")
         });
         CombatFlow testFlow = new SingleEmptyTurnMockCombatFlow(1, avalaibleUnits);
 
-        Assert.IsTrue(testFlow.CanMoveDuringCurrentTurn(targetUnit));
+        Assert.IsFalse(testFlow.CanMoveDuringCurrentTurn(targetUnit));
 
     }
 
     
+    public static Unit GetFlowTestUnit(string name)
+    {
+
+        GameObject prefab = Resources.Load<GameObject>(FLOW_TEST_UNITS_PATH + "/" + name);
+        return GameObject.Instantiate(prefab).GetComponent<Unit>();
+
+    }
 
 }

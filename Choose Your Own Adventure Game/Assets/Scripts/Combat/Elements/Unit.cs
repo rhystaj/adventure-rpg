@@ -59,23 +59,4 @@ public class Unit : MonoBehaviour {
         return instrument.Use(this, target);
     }
 
-    public static Unit InstantiateMock(Instrument instrument, float maxHealth, float effectiveness, int alignment, int turnCooldown)
-    {
-
-        //  Create a clone from the mock unit prefab.
-        GameObject mockBase = Resources.Load<GameObject>(MOCK_BASE_PATH);
-        Unit newUnit = Instantiate(mockBase).GetComponent<Unit>();
-
-        
-        //  Set the properties of the clonne to given ones.
-        if (instrument != null) newUnit.instrument = instrument;
-        newUnit.maxHealth = maxHealth;
-        newUnit.effectiveness = effectiveness;
-        newUnit.alignment = alignment;
-        newUnit.turnCooldown = turnCooldown;
-
-        return newUnit;
-
-    }
-
 }
