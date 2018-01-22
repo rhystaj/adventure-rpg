@@ -68,7 +68,7 @@ public class Unit : MonoBehaviour {
 
         
         //  Set the properties of the clonne to given ones.
-        newUnit.instrument = instrument;
+        if (instrument != null) newUnit.instrument = instrument;
         newUnit.maxHealth = maxHealth;
         newUnit.effectiveness = effectiveness;
         newUnit.alignment = alignment;
