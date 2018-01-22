@@ -6,8 +6,10 @@ using UnityEngine.Assertions;
 /**
  * A piece that can be placed on the board during combat.
  */
-[CreateAssetMenu]
 public class Unit : MonoBehaviour {
+
+    //The path to the prefab used as a base for construted mock objects for testing.
+    public const string MOCK_BASE_PATH = "Testing/Mock Prefabs/Combat/Mock Unit Base"; 
 
     [Header("Stats")]
     public Instrument instrument; //The main item the unit uses when moving.
@@ -27,7 +29,7 @@ public class Unit : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
 
 
-    public float health; //The health of the unit.
+    [HideInInspector] public float health; //The health of the unit.
     public int Alignment { get { return alignment; } }
 
     private void OnEnable()
@@ -55,6 +57,25 @@ public class Unit : MonoBehaviour {
 
     public bool UseInstrument(Unit target){
         return instrument.Use(this, target);
+    }
+
+    public static Unit InstantiateMock(Instrument instrument, float maxHealth, float effectiveness, int alignment, int turnCooldown)
+    {
+
+        //  Create a clone from the mock unit prefab.
+        GameObject mockBase = Resources.Load<GameObject>(MOCK_BASE_PATH);
+        Unit newUnit = Instantiate(mockBase).GetComponent<Unit>();
+
+        
+        //  Set the properties of the clonne to given ones.
+        newUnit.instrument = instrument;
+        newUnit.maxHealth = maxHealth;
+        newUnit.effectiveness = effectiveness;
+        newUnit.alignment = alignment;
+        newUnit.turnCooldown = turnCooldown;
+
+        return newUnit;
+
     }
 
 }
