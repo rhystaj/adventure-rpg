@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System.Collections;
 using NSubstitute;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class PredeterminedOrderFlowTests : MonoBehaviour {
 
@@ -17,21 +18,22 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
         Unit[,] mockTeams = new Unit[,]
         {
             {
-                new Unit(Substitute.For<Instrument>(), 3, 3, 1),
-                new Unit(Substitute.For<Instrument>(), 3, 2, 1),
-                new Unit(Substitute.For<Instrument>(), 2, 3, 1)
+                CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 1"),
+                CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 2"),
+                CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 3")
             },
 
             {
-                new Unit(Substitute.For<Instrument>(), 3, 3, 2),
-                new Unit(Substitute.For<Instrument>(), 3, 2, 2),
-                new Unit(Substitute.For<Instrument>(), 2, 3, 2)
+               CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 4"),
+               CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 5"),
+               CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 6")
             },
 
+
             {
-                new Unit(Substitute.For<Instrument>(), 3, 3, 3),
-                new Unit(Substitute.For<Instrument>(), 3, 2, 3),
-                new Unit(Substitute.For<Instrument>(), 2, 3, 3)
+                CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 7"),
+                CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 8"),
+                CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 9")
             }
 
         };
@@ -51,6 +53,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
         }
 
         Debug.Log("testUnits.Count: " + testUnits.Count);
+
 
     }
 
