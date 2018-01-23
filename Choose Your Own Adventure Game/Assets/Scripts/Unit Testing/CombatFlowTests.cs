@@ -65,8 +65,10 @@ public class CombatFlowTests {
         testFlow.TakeTurn(targetUnit);
 
 
-        Assert.IsTrue(prevAvaliableUnits.Equals(testFlow.UnitsAvaliableForTurn) && prevTeamNumber == testFlow.CurrentTeam,
-                      "The turn should not change when a unit that can't move is given.");
+        Assert.IsTrue(prevAvaliableUnits.SetEquals(testFlow.UnitsAvaliableForTurn),
+                      "The avaliable units should not change when a unit that can't move is given.");
+        Assert.IsTrue(prevTeamNumber == testFlow.CurrentTeam,
+                      "The turn number should not change when a unit that can't move is given.");
 
     }
 
