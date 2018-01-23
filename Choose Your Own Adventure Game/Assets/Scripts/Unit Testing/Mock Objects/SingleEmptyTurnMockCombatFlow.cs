@@ -18,7 +18,7 @@ public class SingleEmptyTurnMockCombatFlow : CombatFlow {
 
         public EmptyTurn(int team, HashSet<Unit> avaliableUnits) : base(team, avaliableUnits){ /* No addition functionality needed */ }
 
-        public override Turn take(Unit subject) { return this; /* Is a mock, so does nothing. */ }
+        protected override Turn ProduceNextTurn(Unit subject) { return this; /* Is a mock, so does nothing. */ }
 
     }
 

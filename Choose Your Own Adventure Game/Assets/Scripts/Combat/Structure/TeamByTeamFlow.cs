@@ -23,7 +23,7 @@ public class TeamByTeamFlow : CombatFlow {
             this.teams = new List<List<Unit>>(teams);
         }
 
-        public override Turn take(Unit subject)
+        protected override Turn ProduceNextTurn(Unit subject)
         {
 
             if (!CanMove(subject)) return this; //Do nothing if the unit is not able to move.

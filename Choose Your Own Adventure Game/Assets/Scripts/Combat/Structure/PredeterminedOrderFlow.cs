@@ -86,11 +86,11 @@ public class PredeterminedOrderFlow : CombatFlow {
 
         }
 
-        public override Turn take(Unit subject)
+        protected override Turn ProduceNextTurn(Unit turnTaker)
         {
 
             //Preconditions
-            Assert.IsNotNull(subject, "Precondition Fail: The argument 'subject' should not be null.");
+            Assert.IsNotNull(turnTaker, "Precondition Fail: The argument 'subject' should not be null.");
 
 
             //Variable recording for assertions.

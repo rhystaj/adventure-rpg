@@ -46,7 +46,30 @@ public class CombatFlowTests {
 
     }
 
-    
+    [Test]
+    public void ANewTurnIsNotReturnedWhenAUnitThatCantMoveIsGiven()
+    {
+
+        Unit targetUnit = GetFlowTestUnit("Flow Test Mock Unit 1");
+        HashSet<Unit> avalaibleUnits = new HashSet<Unit>(new Unit[] {
+            GetFlowTestUnit("Flow Test Mock Unit 2"),
+            GetFlowTestUnit("Flow Test Mock Unit 3")
+        });
+
+        CombatFlow testFlow = new SingleEmptyTurnMockCombatFlow(1, avalaibleUnits);
+
+
+        HashSet<Unit> prevAvaliableUnits = testFlow.UnitsAvaliableForTurn;
+        int prevTeamNumber = testFlow.CurrentTeam;
+
+        testFlow.TakeTurn(targetUnit);
+
+
+        Assert.IsTrue(prevAvaliableUnits.Equals(testFlow.UnitsAvaliableForTurn) && prevTeamNumber == testFlow.CurrentTeam,
+                      "The turn should not change when a unit that can't move is given.");
+
+    }
+
     public static Unit GetFlowTestUnit(string name)
     {
 

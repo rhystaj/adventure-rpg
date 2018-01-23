@@ -47,7 +47,15 @@ public abstract class CombatFlow {
         /**
          * Have the unit take the turn, if they are allowed to.
          */ 
-        public abstract Turn take(Unit subject);
+        public Turn take(Unit subject)
+        {
+
+            if (CanMove(subject)) return ProduceNextTurn(subject);
+            else return this;
+
+        }
+
+        protected abstract Turn ProduceNextTurn(Unit turnTaker);
 
         /**
          * Determins whether the given unit can move during the turn.
