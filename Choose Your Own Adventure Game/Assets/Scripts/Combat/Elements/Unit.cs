@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -6,7 +7,7 @@ using UnityEngine.Assertions;
 /**
  * A piece that can be placed on the board during combat.
  */
-public class Unit : MonoBehaviour {
+public class Unit : MonoBehaviour, IEquatable<Unit> {
 
     //The path to the prefab used as a base for construted mock objects for testing.
     public const string MOCK_BASE_PATH = "Testing/Mock Prefabs/Combat/Mock Unit Base"; 
@@ -59,4 +60,8 @@ public class Unit : MonoBehaviour {
         return instrument.Use(this, target);
     }
 
+    public bool Equals(Unit other)
+    {
+        return name.Equals(other.name);
+    }
 }
