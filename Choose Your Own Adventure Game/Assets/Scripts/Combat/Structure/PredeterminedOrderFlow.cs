@@ -16,19 +16,20 @@ public class PredeterminedOrderFlow : CombatFlow {
         Assert.IsTrue(new List<LinkedList<Unit>>(teamsAndOrders).TrueForAll(list => list.Count > 0),
                       "Precondition Fail: Every team in teams and orders should have at least one member.");
 
+        Debug.Log("Constructor");
+
         //Record the first unit of each team.
         LinkedListNode<Unit>[] teamNextUnitNodes = new LinkedListNode<Unit>[teamsAndOrders.Count];
 
-        LinkedListNode<LinkedList<Unit>> currentTeamNode = teamsAndOrders.First;
-        for (int i = 0; i < teamNextUnitNodes.Length; i++)
-        {
-
-            teamNextUnitNodes[i] = currentTeamNode.Value.First;
-
-            currentTeamNode = currentTeamNode.Next;
-
+        int i = 0;
+        foreach (LinkedList<Unit> team in teamsAndOrders)
+        { 
+            teamNextUnitNodes[i] = team.First;
+            i++;
         }
 
+
+        Debug.Log("teamNextUnitNodes: " + TestingUtil.PrintsItemsAs(teamNextUnitNodes, n => n.Value.ToString() ));
 
         //Create an initial turn with the first team and unit.
         currentTurn = new AlternatingPredeterminedOrderTurn(0, new HashSet<Unit>(new Unit[] { teamsAndOrders.First.Value.First.Value }), 
@@ -37,6 +38,8 @@ public class PredeterminedOrderFlow : CombatFlow {
 
         //Postconditions
         Assert.IsNotNull(currentTurn, "Postcondition Fail: The inherited field 'currentTurn' should not be null.");
+        Assert.IsTrue(TeamNextUnitNodesHasTheFirstUnitOfEachTeamInOrder(teamNextUnitNodes, teamsAndOrders),
+                          "Postcondition Fail: teamNextUnitNodes should have the first node of each of the teams, in order.");
 
 
     }
@@ -73,8 +76,6 @@ public class PredeterminedOrderFlow : CombatFlow {
             this.teamsAndOrders = teamsAndOrders;
             this.teamNextUnitNodes = teamNextUnitNodes;
 
-            
-
 
             //Assertion only setup
             Assert.IsTrue(RecordFinalVariables());
@@ -86,8 +87,6 @@ public class PredeterminedOrderFlow : CombatFlow {
             Assert.IsNotNull(teamNextUnitNodes, "Postcondition Fail: The argument 'teamNextUnitNodes' should not be null.");
             Assert.AreEqual(teamNextUnitNodes.Length, teamsAndOrders.Count,
                             "Postcondition Fail: teamNextUnitNodes should be the same length as teamsAndOrders.");
-            Assert.IsTrue(TeamNextUnitNodesHasTheFistUnitOfEachTeamInOrder(),
-                          "Postcondition Fail: teamNextUnitNodes should have the first node of each of the teams, in order.");
             
 
         }
@@ -120,7 +119,8 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             teamNextUnitNodes[Team] = newNode;
 
-            Debug.Log("teamNextUnitNodes: " + TestingUtil.PrintsItemsOf(teamNextUnitNodes));
+            Debug.Log("teamNextUnitNodes: " + TestingUtil.PrintsItemsAs(teamNextUnitNodes, n => n.Value.ToString()));
+
 
             //Postconditions
             Assert.IsTrue(ClassInvaraintsHold());
@@ -172,25 +172,6 @@ public class PredeterminedOrderFlow : CombatFlow {
 
         }
 
-        private bool TeamNextUnitNodesHasTheFistUnitOfEachTeamInOrder()
-        {
-
-            LinkedListNode<LinkedList<Unit>> currentTeam = teamsAndOrders.First;
-
-            foreach(LinkedListNode<Unit> node in teamNextUnitNodes)
-            {
-
-                if (node != currentTeam.Value.First) return false;
-
-                currentTeam = currentTeam.Next;
-
-            }
-
-            return true;
-
-
-        }
-
         private bool TeamAndOrdersReaminsUnchanged(LinkedList<LinkedList<Unit>> teamsAndOrdersClone)
         {
 
@@ -229,6 +210,25 @@ public class PredeterminedOrderFlow : CombatFlow {
             return true;
 
         }
+
+    }
+
+    private bool TeamNextUnitNodesHasTheFirstUnitOfEachTeamInOrder(LinkedListNode<Unit>[] teamNextUnitNodes, LinkedList<LinkedList<Unit>> teamsAndOrders)
+    {
+
+        LinkedListNode<LinkedList<Unit>> currentTeam = teamsAndOrders.First;
+
+        foreach (LinkedListNode<Unit> node in teamNextUnitNodes)
+        {
+
+            if (node != currentTeam.Value.First) return false;
+
+            currentTeam = currentTeam.Next;
+
+        }
+
+        return true;
+
 
     }
 
