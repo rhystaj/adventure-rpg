@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 /**
@@ -15,13 +16,28 @@ public class PredeterminedOrderFlow : CombatFlow {
         Assert.IsTrue(new List<LinkedList<Unit>>(teamsAndOrders).TrueForAll(list => list.Count > 0),
                       "Precondition Fail: Every team in teams and orders should have at least one member.");
 
+        //Record the first unit of each team.
+        LinkedListNode<Unit>[] teamNextUnitNodes = new LinkedListNode<Unit>[teamsAndOrders.Count];
+
+        LinkedListNode<LinkedList<Unit>> currentTeamNode = teamsAndOrders.First;
+        for (int i = 0; i < teamNextUnitNodes.Length; i++)
+        {
+
+            teamNextUnitNodes[i] = currentTeamNode.Value.First;
+
+            currentTeamNode = currentTeamNode.Next;
+
+        }
+
 
         //Create an initial turn with the first team and unit.
-        currentTurn = new AlternatingPredeterminedOrderTurn(0, new HashSet<Unit>(new Unit[] { teamsAndOrders.First.Value.First.Value }), teamsAndOrders);
+        currentTurn = new AlternatingPredeterminedOrderTurn(0, new HashSet<Unit>(new Unit[] { teamsAndOrders.First.Value.First.Value }), 
+                                                            teamsAndOrders, teamNextUnitNodes);
 
 
         //Postconditions
         Assert.IsNotNull(currentTurn, "Postcondition Fail: The inherited field 'currentTurn' should not be null.");
+
 
     }
 
@@ -38,7 +54,8 @@ public class PredeterminedOrderFlow : CombatFlow {
         private LinkedList<Unit> currentTeamUnits;
 
 
-        public AlternatingPredeterminedOrderTurn(int team, HashSet<Unit> avaliableUnits, LinkedList<LinkedList<Unit>> teamsAndOrders) : base(team, avaliableUnits) {
+        public AlternatingPredeterminedOrderTurn(int team, HashSet<Unit> avaliableUnits, LinkedList<LinkedList<Unit>> teamsAndOrders,
+                                                 LinkedListNode<Unit>[] teamNextUnitNodes) : base(team, avaliableUnits) {
 
             //Preconditions
             Assert.AreEqual(avaliableUnits.Count, 1, "Precondition Fail: There should only be one avaliable unit.");
@@ -50,24 +67,13 @@ public class PredeterminedOrderFlow : CombatFlow {
                           "Precondition Fail: Every team in teams and orders should have at least one member.");
             Assert.IsFalse(new List<LinkedList<Unit>>(teamsAndOrders).TrueForAll(
                 t => new List<Unit>(t).TrueForAll( unit => unit.health <= 0 )
-            ), "Precondition Fail: There should be at least one unit with more than 0 health.");
+            ), "Precondition Fail: There should be at least one unit int teams and orders with more than 0 health.");
 
 
             this.teamsAndOrders = teamsAndOrders;
+            this.teamNextUnitNodes = teamNextUnitNodes;
 
-
-            //Record the first unit of each team.
-            teamNextUnitNodes = new LinkedListNode<Unit>[teamsAndOrders.Count];
-
-            LinkedListNode<LinkedList<Unit>> currentTeamNode = teamsAndOrders.First;
-            for(int i = 0; i < teamNextUnitNodes.Length; i++)
-            {
-
-                teamNextUnitNodes[i] = currentTeamNode.Value.First;
-
-                currentTeamNode = currentTeamNode.Next;
-
-            }
+            
 
 
             //Assertion only setup
@@ -91,7 +97,9 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             //Preconditions
             Assert.IsNotNull(turnTaker, "Precondition Fail: The argument 'subject' should not be null.");
-
+            Assert.IsFalse(new List<LinkedList<Unit>>(teamsAndOrders).TrueForAll(
+                t => new List<Unit>(t).TrueForAll(unit => unit.health <= 0)
+            ), "Precondition Fail: There should be at least one unit int teams and orders with more than 0 health.");
 
             //Variable recording for assertions.
             LinkedList<LinkedList<Unit>> teamsAndOrdersAtStart;
@@ -107,11 +115,12 @@ public class PredeterminedOrderFlow : CombatFlow {
             //Find the next node with a unit in the team that had more than 0 health, or set it to the same node if node exists.
             LinkedListNode<Unit> currentNode = teamNextUnitNodes[Team];
             LinkedListNode<Unit> newNode = currentNode.Next == null ? currentNode.List.First : currentNode.Next;
-            while ( newNode != currentNode && newNode.Value.health == 0)
+            while ( newNode != currentNode && newNode.Value.health <= 0)
                 newNode = newNode.Next == null ? newNode.List.First : newNode.Next;
 
             teamNextUnitNodes[Team] = newNode;
 
+            Debug.Log("teamNextUnitNodes: " + TestingUtil.PrintsItemsOf(teamNextUnitNodes));
 
             //Postconditions
             Assert.IsTrue(ClassInvaraintsHold());
@@ -130,9 +139,13 @@ public class PredeterminedOrderFlow : CombatFlow {
                            "Postcondition Fail: The avaliable unit for next turn should not have 0 health.");
             Assert.IsTrue(TeamAndOrdersReaminsUnchanged(teamsAndOrdersAtStart),
                           "Precondition Fail: 'teamsAndOrders' should remain unchanged.");
+            Assert.IsTrue(TestingUtil.CountItemsForWhichHolds(teamNextUnitNodes[Team].List, unit => unit.health < 0) <= 1 ||
+                          teamNextUnitNodes[Team] != currentNode,
+                          "Postcondition Fail: If there is more than one unit with more than 0 health in a team, the next node in that team to be made" +
+                          "avaliable should be diferent.");
 
             return new AlternatingPredeterminedOrderTurn(nextTeam, new HashSet<Unit>(new Unit[] { teamNextUnitNodes[nextTeam].Value }),
-                                                         teamsAndOrders);
+                                                         teamsAndOrders, teamNextUnitNodes);
 
         }
 
