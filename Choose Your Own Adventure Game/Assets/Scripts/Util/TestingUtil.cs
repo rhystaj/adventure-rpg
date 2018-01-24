@@ -8,6 +8,8 @@ using UnityEngine;
  */ 
 public class TestingUtil {
 
+    public delegate string Stringify<T>(T t); 
+
 	public static string PrintsItemsOf<T>(IEnumerable<T> set)
     {
 
@@ -22,9 +24,23 @@ public class TestingUtil {
 
     }
 
+    public static string PrintsItemsAs<T>(IEnumerable<T> set, Stringify<T> str)
+    {
+
+        string returnString = "\n";
+
+        foreach (T item in set)
+        {
+            returnString = returnString + "- " + str(item) + "\n";
+        }
+
+        return returnString;
+
+    }
+
     /**
      * Counts the number of items produced by the given Emumerable for which the given condition holds.
-     */ 
+     */
     public static int CountItemsForWhichHolds<T>(IEnumerable<T> collection, Predicate<T> condition)
     {
 
