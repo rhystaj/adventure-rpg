@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 
@@ -85,9 +86,12 @@ public abstract class CombatFlow {
             selectedUnit = unit;
         }
 
-
-
     }
+
+    /**
+     * An exception to be thrown when there are no valid turns left in the flow.
+     */ 
+    public class NoValidNextTurnException : Exception { }
 
 }
 
