@@ -157,7 +157,7 @@ public class PredeterminedOrderFlow : CombatFlow {
             Assert.IsNotNull(startNode, "Precondition Fail: startNode should not be null");
 
 
-            LinkedListNode<Unit> newNode = startNode;
+            LinkedListNode<Unit> newNode = startNode.Next == null ? startNode.List.First : startNode.Next; ;
 
             while (newNode != startNode && newNode.Value.health <= 0)
                 newNode = newNode.Next == null ? newNode.List.First : newNode.Next;
@@ -167,7 +167,7 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             //Postconditions
             Assert.IsTrue(ClassInvaraintsHold());
-            Assert.IsTrue(newNode.Value.health > 0, "Postcondition Fail: The returned node should not have a value of 0 or less.");
+            Assert.IsTrue(newNode == null || newNode.Value.health > 0, "Postcondition Fail: The returned node should not have a value of 0 or less.");
             Assert.IsTrue(newNode == null || new List<Unit>(newNode.List).TrueForAll(u => u.health > 0) || newNode.Previous == null ||
                    newNode.Previous.Value.health <= 0,
                    "Postcondition Fail: If the team contains values with 0, and the newNode has a previous node, the previous node should have heath of" +
@@ -176,8 +176,8 @@ public class PredeterminedOrderFlow : CombatFlow {
                    newNode.List.Last.Value.health <= 0,
                    "Postcondition Fail: If the team contains values with 0, and the newNode is the first node of the lis, the last node of the list" +
                    "should have a health of 0.");
-            Assert.IsTrue(newNode != null || new List<Unit>(newNode.List).TrueForAll(u => u.health <= 0) ||
-                         (TestingUtil.CountItemsForWhichHolds(newNode.List, u => u.health > 0) == 1 && startNode.Value.health > 0),
+            Assert.IsTrue(newNode != null || new List<Unit>(startNode.List).TrueForAll(u => u.health <= 0) ||
+                         (TestingUtil.CountItemsForWhichHolds(startNode.List, u => u.health > 0) == 1 && startNode.Value.health > 0),
                          "Postcondition Fail: If the new node is null, it should be because either no unit in the team has more than 0 health, " +
                          "or that only the given node has.");
 
