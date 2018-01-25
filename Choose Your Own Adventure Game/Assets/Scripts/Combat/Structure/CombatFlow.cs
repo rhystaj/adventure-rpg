@@ -67,4 +67,27 @@ public abstract class CombatFlow {
 
     }
 
+    /**
+     * A tuple for a selected team and unit.
+     */ 
+    protected class Selection
+    {
+
+        private int selectedTeam;
+        public int team { get { return selectedTeam; } }
+
+        private Unit selectedUnit;
+        public Unit unit { get { return selectedUnit; } }
+
+        public Selection(int team, Unit unit)
+        {
+            selectedTeam = team;
+            selectedUnit = unit;
+        }
+
+
+
+    }
+
 }
+
