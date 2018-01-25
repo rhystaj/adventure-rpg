@@ -31,8 +31,9 @@ public class PredeterminedOrderFlow : CombatFlow {
 
         Debug.Log("teamNextUnitNodes: " + TestingUtil.PrintsItemsAs(teamNextUnitNodes, n => n.Value.ToString() ));
 
-        //Create an initial turn with the first team and unit.
-        currentTurn = new AlternatingPredeterminedOrderTurn(0, new HashSet<Unit>(new Unit[] { teamsAndOrders.First.Value.First.Value }), 
+        //Create an initial turn with the first valid team and unit.
+        int firstTeam = AlternatingPredeterminedOrderTurn.CorrectNextNodesAndFindNextValidTeam(0, ref teamNextUnitNodes, teamsAndOrders);
+        currentTurn = new AlternatingPredeterminedOrderTurn(firstTeam, new HashSet<Unit>(new Unit[] { teamNextUnitNodes[firstTeam].Value }), 
                                                             teamsAndOrders, teamNextUnitNodes);
 
 
@@ -107,11 +108,7 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             //Find the next team with a living unit, and set its next unit to the nest living unit.
             int nextTeam = Team + 1 < teamsAndOrders.Count ? Team + 1 : 0;
-            while (teamNextUnitNodes[nextTeam].Value.health <= 0){
-                teamNextUnitNodes[nextTeam] = FindNextNodeWithLivingUnit(teamNextUnitNodes[nextTeam]);
-                if (teamNextUnitNodes[nextTeam] == null) break;
-                    nextTeam = Team + 1 < teamsAndOrders.Count ? Team + 1 : 0;
-            }
+            nextTeam = CorrectNextNodesAndFindNextValidTeam(nextTeam, ref teamNextUnitNodes, teamsAndOrders);
 
 
             //Find the next node with a unit in the team that had more than 0 health, or set it to the same node if node exists.
@@ -147,10 +144,48 @@ public class PredeterminedOrderFlow : CombatFlow {
 
         }
 
+        public static int CorrectNextNodesAndFindNextValidTeam(int startTeam, ref LinkedListNode<Unit>[] teamNextUnitNodes,
+                                                               LinkedList<LinkedList<Unit>> teamsAndOrders)
+        {
+
+            //Preconditions
+            Assert.IsTrue(startTeam >= 0 && startTeam < teamNextUnitNodes.Length,
+                    "Precondition Fail: startTeam should be a valid team number, i.e 0 or greater and less than the number of teams.");
+
+
+            int nextTeam = startTeam;
+
+            while (teamNextUnitNodes[nextTeam].Value.health <= 0)
+            {
+                teamNextUnitNodes[nextTeam] = FindNextNodeWithLivingUnit(teamNextUnitNodes[nextTeam]);
+                if (teamNextUnitNodes[nextTeam] == null)
+                    if (nextTeam + 1 == startTeam) throw new NoValidNextTurnException(); //There is no team with an avaliable unit.
+                    nextTeam = nextTeam + 1 < teamsAndOrders.Count ? nextTeam + 1 : 0;
+            }
+
+
+            //Postconditions
+            Assert.IsTrue(nextTeam >= 0 && nextTeam < teamNextUnitNodes.Length,
+                    "Postcondition Fail: nextTeam should be a valid team number, i.e 0 or greater and less than the number of teams.");
+            Assert.IsTrue(new List<LinkedListNode<Unit>>(teamNextUnitNodes).
+                   TrueForAll(node => new List<Unit>(node.List).TrueForAll(u => u.health <= 0) || node.Value.health > 0),
+                   "Postcondition Fail: All nodes in teamNextUnitNodes that belong to lists with nodes with units with more than 0 health, should" +
+                   " be have units with more than 0 health.");
+            Assert.IsTrue(nextTeam == startTeam || nextTeam == 0 || teamNextUnitNodes[nextTeam - 1].Value.health <= 0,
+                          "PostCondition Fail: If the team chosen is not the given team and the first team, then the previous team should not have" +
+                          "a unit with more than 0 health.");
+            Assert.IsTrue(nextTeam == startTeam || nextTeam != 0 || teamNextUnitNodes[teamNextUnitNodes.Length - 1].Value.health <= 0,
+                          "If the team chosen is not the start team, and is the first team, then the last team should not have a unit with more" +
+                          " than 0 health.");
+
+            return nextTeam;
+
+        }
+
         /**
          * Find the next unit in the team with health more than 0, or null if no such unit exists.
          */ 
-        public LinkedListNode<Unit> FindNextNodeWithLivingUnit(LinkedListNode<Unit> startNode)
+        public static LinkedListNode<Unit> FindNextNodeWithLivingUnit(LinkedListNode<Unit> startNode)
         {
 
             //Preconditions
@@ -166,7 +201,6 @@ public class PredeterminedOrderFlow : CombatFlow {
 
 
             //Postconditions
-            Assert.IsTrue(ClassInvaraintsHold());
             Assert.IsTrue(newNode == null || newNode.Value.health > 0, "Postcondition Fail: The returned node should not have a value of 0 or less.");
             Assert.IsTrue(newNode == null || new List<Unit>(newNode.List).TrueForAll(u => u.health > 0) || newNode.Previous == null ||
                    newNode.Previous.Value.health <= 0,
@@ -184,7 +218,6 @@ public class PredeterminedOrderFlow : CombatFlow {
             return newNode;
 
         }
-
 
         //Assertion methods
         private bool RecordFinalVariables()
