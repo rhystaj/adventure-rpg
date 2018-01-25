@@ -105,21 +105,19 @@ public class PredeterminedOrderFlow : CombatFlow {
             Assert.IsTrue(SetToCloneOfTeamsAndOrders(out teamsAndOrdersAtStart));
 
 
-            //Determine the next team to go - i.e the next team with their next unit to move with more than 0 health..
+            //Find the next team with a living unit, and set its next unit to the nest living unit.
             int nextTeam = Team + 1 < teamsAndOrders.Count ? Team + 1 : 0;
-            while (teamNextUnitNodes[nextTeam].Value.health <= 0)
-                nextTeam = Team + 1 < teamsAndOrders.Count ? Team + 1 : 0;
+            while (teamNextUnitNodes[nextTeam].Value.health <= 0){
+                teamNextUnitNodes[nextTeam] = FindNextNodeWithLivingUnit(teamNextUnitNodes[nextTeam]);
+                if (teamNextUnitNodes[nextTeam] == null) break;
+                    nextTeam = Team + 1 < teamsAndOrders.Count ? Team + 1 : 0;
+            }
 
 
             //Find the next node with a unit in the team that had more than 0 health, or set it to the same node if node exists.
             LinkedListNode<Unit> currentNode = teamNextUnitNodes[Team];
-            LinkedListNode<Unit> newNode = currentNode.Next == null ? currentNode.List.First : currentNode.Next;
-            while ( newNode != currentNode && newNode.Value.health <= 0)
-                newNode = newNode.Next == null ? newNode.List.First : newNode.Next;
-
-            teamNextUnitNodes[Team] = newNode;
-
-            Debug.Log("teamNextUnitNodes: " + TestingUtil.PrintsItemsAs(teamNextUnitNodes, n => n.Value.ToString()));
+            LinkedListNode<Unit> newNode = FindNextNodeWithLivingUnit(currentNode);
+            if(newNode != null)teamNextUnitNodes[Team] = newNode;
 
 
             //Postconditions
@@ -131,12 +129,12 @@ public class PredeterminedOrderFlow : CombatFlow {
                           "Postcondition Fail: If the previous team's number was the higest, the current team should be 0)");
             Assert.IsTrue(Team == teamsAndOrders.Count - 1 || nextTeam == Team + 1,
                           "Postcondition Fail: If the previous team's number wasn't the higest, the current team should be one more than the previous.");
-            Assert.IsTrue(currentNode.Next == null || teamNextUnitNodes[Team] == currentNode.Next,
-                          "Postcondition Fail: The node for the current team should now be the node with the team's next unit, if the current node" +
-                           "has none.");
-            Assert.IsTrue(currentNode.Next != null || teamNextUnitNodes[Team] == currentNode.List.First);
+            Assert.IsTrue(currentNode.Next == null || currentNode.Next.Value.health <= 0|| teamNextUnitNodes[Team] == currentNode.Next,
+                          "Postcondition Fail: The node for the current team should now be the node with the team's next unit, if the current node " +
+                           "has none and the next node is not equal to 0.");
+            Assert.IsTrue(currentNode.Next != null || currentNode.List.First.Value.health <= 0 || teamNextUnitNodes[Team] == currentNode.List.First);
             Assert.IsFalse(teamNextUnitNodes[nextTeam].Value.health <= 0,
-                           "Postcondition Fail: The avaliable unit for next turn should not have 0 health.");
+                           "Postcondition Fail: The avaliable unit for next turn should not have 0 health, if the first node it not equal to 0");
             Assert.IsTrue(TeamAndOrdersReaminsUnchanged(teamsAndOrdersAtStart),
                           "Precondition Fail: 'teamsAndOrders' should remain unchanged.");
             Assert.IsTrue(TestingUtil.CountItemsForWhichHolds(teamNextUnitNodes[Team].List, unit => unit.health < 0) <= 1 ||
@@ -146,6 +144,44 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             return new AlternatingPredeterminedOrderTurn(nextTeam, new HashSet<Unit>(new Unit[] { teamNextUnitNodes[nextTeam].Value }),
                                                          teamsAndOrders, teamNextUnitNodes);
+
+        }
+
+        /**
+         * Find the next unit in the team with health more than 0, or null if no such unit exists.
+         */ 
+        public LinkedListNode<Unit> FindNextNodeWithLivingUnit(LinkedListNode<Unit> startNode)
+        {
+
+            //Preconditions
+            Assert.IsNotNull(startNode, "Precondition Fail: startNode should not be null");
+
+
+            LinkedListNode<Unit> newNode = startNode;
+
+            while (newNode != startNode && newNode.Value.health <= 0)
+                newNode = newNode.Next == null ? newNode.List.First : newNode.Next;
+
+            if (newNode == startNode) newNode = null;
+
+
+            //Postconditions
+            Assert.IsTrue(ClassInvaraintsHold());
+            Assert.IsTrue(newNode.Value.health > 0, "Postcondition Fail: The returned node should not have a value of 0 or less.");
+            Assert.IsTrue(newNode == null || new List<Unit>(newNode.List).TrueForAll(u => u.health > 0) || newNode.Previous == null ||
+                   newNode.Previous.Value.health <= 0,
+                   "Postcondition Fail: If the team contains values with 0, and the newNode has a previous node, the previous node should have heath of" +
+                   " 0 or less.");
+            Assert.IsTrue(newNode == null || new List<Unit>(newNode.List).TrueForAll(u => u.health > 0) || newNode.Previous != null ||
+                   newNode.List.Last.Value.health <= 0,
+                   "Postcondition Fail: If the team contains values with 0, and the newNode is the first node of the lis, the last node of the list" +
+                   "should have a health of 0.");
+            Assert.IsTrue(newNode != null || new List<Unit>(newNode.List).TrueForAll(u => u.health <= 0) ||
+                         (TestingUtil.CountItemsForWhichHolds(newNode.List, u => u.health > 0) == 1 && startNode.Value.health > 0),
+                         "Postcondition Fail: If the new node is null, it should be because either no unit in the team has more than 0 health, " +
+                         "or that only the given node has.");
+
+            return newNode;
 
         }
 
