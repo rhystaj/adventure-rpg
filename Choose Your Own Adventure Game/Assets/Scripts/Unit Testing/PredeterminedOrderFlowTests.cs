@@ -121,6 +121,9 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
     }
 
+    /**
+     * Ensures that units are made avaliable when they should.
+     */ 
     [Test]
     public void CorrectUnitsAreSelectedAtTheRightTime()
     {
@@ -134,7 +137,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
             Unit expectedUnit = testUnits[unitNumber - 1];
             Assert.IsTrue(flow.UnitsAvaliableForTurn.Contains(expectedUnit),
-                          expectedUnit + " should be avaliable. /n" +
+                          expectedUnit + " should be avaliable. \n" +
                           "Avaliable Units: " + String.Format(TestingUtil.PrintsItemsOf(flow.UnitsAvaliableForTurn)));
 
             flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
@@ -143,13 +146,41 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
     }
 
- 
+    /**
+     * Ensures that a unit, somewhere in the team that is not first or last, is skipped when thier health is equal to 0.
+     */ 
+    [Test]
+    public void UnitWith0HealthInMiddleOfTeamIsSkipped()
+    {
+        TestUnitSkip(new int[] { 4 }, 4, 5);
+    }
+
+    [Test]
+    public void UnitWith0HealthAtTheStartOfIsSkipped()
+    {
+        TestUnitSkip(new int[] { 6 }, 2, 7);
+    }
+
+
     [TearDown]
     public void ResetHealthOfAllUnits()
     {
 
         foreach (LinkedList<Unit> team in testTeams)
             foreach (Unit unit in team) unit.health = unit.maxHealth;
+
+    }
+
+    private void TestUnitSkip(int[] numbersToSkip, int turnsToTake, int expectedUnit)
+    {
+
+        CombatFlow flow = new PredeterminedOrderFlow(testTeams);
+        foreach (int num in numbersToSkip) testUnits[num].health = 0;
+
+        for (int i = 0; i < turnsToTake; i++) flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+        Assert.IsTrue(flow.UnitsAvaliableForTurn.Contains(testUnits[expectedUnit]),
+               testUnits[expectedUnit] + " should be avaliable. \n" +
+                          "Avaliable Units: " + String.Format(TestingUtil.PrintsItemsOf(flow.UnitsAvaliableForTurn)));
 
     }
     
