@@ -122,10 +122,6 @@ public class PredeterminedOrderFlow : CombatFlow {
             Assert.IsTrue(nextTeam >= 0 && nextTeam < teamsAndOrders.Count,
                           "Postcondition Fail: The next team number (" + nextTeam + ") should be valid - i.e greater at least 0, and smaller than the " +
                           "number of teams (" + teamsAndOrders.Count + ").");
-            Assert.IsTrue(Team < teamsAndOrders.Count - 1 || nextTeam == 0,
-                          "Postcondition Fail: If the previous team's number was the higest, the current team should be 0)");
-            Assert.IsTrue(Team == teamsAndOrders.Count - 1 || nextTeam == Team + 1,
-                          "Postcondition Fail: If the previous team's number wasn't the higest, the current team should be one more than the previous.");
             Assert.IsTrue(currentNode.Next == null || currentNode.Next.Value.health <= 0|| teamNextUnitNodes[Team] == currentNode.Next,
                           "Postcondition Fail: The node for the current team should now be the node with the team's next unit, if the current node " +
                            "has none and the next node is not equal to 0.");
