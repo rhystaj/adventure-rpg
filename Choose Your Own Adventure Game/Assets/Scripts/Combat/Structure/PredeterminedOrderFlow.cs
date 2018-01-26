@@ -204,10 +204,11 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             //Postconditions
             Assert.IsTrue(newNode == null || newNode.Value.health > 0, "Postcondition Fail: The returned node should not have a value of 0 or less.");
-            Assert.IsTrue(newNode == null || new List<Unit>(newNode.List).TrueForAll(u => u.health > 0) || newNode.Previous == null ||
+            /*Assert.IsTrue(newNode == null || new List<Unit>(newNode.List).TrueForAll(u => u.health > 0) || newNode.Previous == null ||
                    newNode.Previous.Value.health <= 0,
                    "Postcondition Fail: If the team contains values with 0, and the newNode has a previous node, the previous node should have heath of" +
                    " 0 or less.");
+                   */
             Assert.IsTrue(newNode == null || new List<Unit>(newNode.List).TrueForAll(u => u.health > 0) || newNode.Previous != null ||
                    newNode.List.Last.Value.health <= 0,
                    "Postcondition Fail: If the team contains values with 0, and the newNode is the first node of the lis, the last node of the list" +
