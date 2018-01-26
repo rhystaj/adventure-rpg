@@ -16,8 +16,6 @@ public class PredeterminedOrderFlow : CombatFlow {
         Assert.IsTrue(new List<LinkedList<Unit>>(teamsAndOrders).TrueForAll(list => list.Count > 0),
                       "Precondition Fail: Every team in teams and orders should have at least one member.");
 
-        Debug.Log("Constructor");
-
         //Record the first unit of each team.
         LinkedListNode<Unit>[] teamNextUnitNodes = new LinkedListNode<Unit>[teamsAndOrders.Count];
 
@@ -34,13 +32,9 @@ public class PredeterminedOrderFlow : CombatFlow {
         currentTurn = new AlternatingPredeterminedOrderTurn(firstTeam, new HashSet<Unit>(new Unit[] { teamNextUnitNodes[firstTeam].Value }), 
                                                             teamsAndOrders, teamNextUnitNodes);
 
-       
-
 
         //Postconditions
         Assert.IsNotNull(currentTurn, "Postcondition Fail: The inherited field 'currentTurn' should not be null.");
-        Assert.IsTrue(TeamNextUnitNodesHasTheFirstUnitOfEachTeamInOrder(teamNextUnitNodes, teamsAndOrders),
-                          "Postcondition Fail: teamNextUnitNodes should have the first node of each of the teams, in order.");
 
 
     }
@@ -161,8 +155,6 @@ public class PredeterminedOrderFlow : CombatFlow {
                 }
                 else teamNextUnitNodes[nextTeam] = newNode;
             }
-
-            Debug.Log("teamNextUnitNodes: " + TestingUtil.PrintsItemsAs(teamNextUnitNodes, n => n.Value.ToString()));
 
             //Postconditions
             Assert.IsTrue(nextTeam >= 0 && nextTeam < teamNextUnitNodes.Length,
