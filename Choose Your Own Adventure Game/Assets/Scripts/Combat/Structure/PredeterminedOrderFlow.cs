@@ -91,9 +91,7 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             //Preconditions
             Assert.IsNotNull(turnTaker, "Precondition Fail: The argument 'subject' should not be null.");
-            Assert.IsFalse(new List<LinkedList<Unit>>(teamsAndOrders).TrueForAll(
-                t => new List<Unit>(t).TrueForAll(unit => unit.health <= 0)
-            ), "Precondition Fail: There should be at least one unit int teams and orders with more than 0 health.");
+
 
             //Variable recording for assertions.
             LinkedList<LinkedList<Unit>> teamsAndOrdersAtStart;
