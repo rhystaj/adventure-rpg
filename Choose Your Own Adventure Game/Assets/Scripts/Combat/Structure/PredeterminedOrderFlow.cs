@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -266,6 +267,90 @@ public class PredeterminedOrderFlow : CombatFlow {
                           "Postcondition Fail: The object referenced by 'teamIndexes' should not be changed runtime.");
 
             return true;
+
+        }
+
+    }
+
+    public class PDOAdaptor : Adaptor
+    {
+
+        private Vector2[] playerTeamOrder; //The order of the player's team, based on the units' positions.
+        private Vector2[] enemyTeamOrder; //The order of the enemy's team, based on the units' positions.
+
+        /**
+         * Takes the order in which the positions on the grid are selected.
+         */
+        public PDOAdaptor(Vector2[] playerTeamOrder, Vector2[] enemyTeamOrder)
+        {
+
+            //Precondtions
+            Assert.IsNotNull(playerTeamOrder, "Precondtion Fail: The argument 'playerTeamOrder should not be null.'");
+            Assert.IsTrue(TestingUtil.FindMinAs(playerTeamOrder, v => v.y) >= 0,
+                          "Precondition Fail: Add row values in 'playerTeamOrder' shoule be at least 0");
+            Assert.IsTrue(TestingUtil.FindMinAs(playerTeamOrder, v => v.x) >= 0,
+                          "Precondition Fail: All column values in 'playerTeamOrder' should be at least 0.");
+            Assert.IsNotNull(enemyTeamOrder, "Precondition Fail: The argument 'enemyTeamOrder' should not be null.");
+            Assert.IsTrue(TestingUtil.FindMinAs(enemyTeamOrder, v => v.y) >= 0,
+                          "Precondition Fail: Add row values in 'enemyTeamOrder' shoule be at least 0");
+            Assert.IsTrue(TestingUtil.FindMinAs(enemyTeamOrder, v => v.x) >= 0,
+                          "Precondition Fail: All column values in 'enemyTeamOrder' should be at least 0.");
+
+
+            this.playerTeamOrder = playerTeamOrder;
+            this.enemyTeamOrder = enemyTeamOrder;
+
+
+            //Postconditions
+            Assert.IsNotNull(this.playerTeamOrder, "Postcondtion Fail: The field 'playerTeamOrder should not be null.'");
+            Assert.IsNotNull(this.enemyTeamOrder, "Postcondition Fail: The field 'enemyTeamOrder' should not be null.");
+
+
+        }
+
+
+        public override CombatFlow Convert(Unit[,] playerTeam, CombatEncounter encounter)
+        {
+
+            //Preconditions
+            Assert.IsNotNull(playerTeam, "Precondtion Fail: The argument 'playerTeam' should not be null.");
+            Assert.IsTrue(playerTeam.GetLength(0) > TestingUtil.FindMaxAs(playerTeamOrder, v => v.y),
+                          "Precondition Fail: playerTeam should not have less rows than the max row value in playerTeamOrder.");
+            Assert.IsTrue(playerTeam.GetLength(1) > TestingUtil.FindMaxAs(playerTeamOrder, v => v.x),
+                          "Precondition Fail: playerTeam should not have less columns than the max column value in playerTeamOrder.");
+            Assert.IsNotNull(encounter, "Precondtion Fail: The argument 'playerTeam' should not be null.");
+            Assert.IsTrue(encounter.enemyConfiguration.Count / encounter.columnsPerSide >
+                          TestingUtil.FindMaxAs(enemyTeamOrder, v => v.y),
+                          "Precondition Fail: Precondition Fail: enemtyConfiguattion should not have less rows than the max row value in " +
+                          "enemyTeamOrder.");
+            Assert.IsTrue(encounter.enemyConfiguration.Count / encounter.rows >
+                          TestingUtil.FindMaxAs(enemyTeamOrder, v => v.x),
+                          "Precondition Fail: Precondition Fail: enemtyConfiguattion should not have less columns than the max colum value in " +
+                          "enemyTeamOrder.");
+
+
+            //Order the given player and enemy units, based on the playerTeamOrder and enemyTeamOrder fields.
+            LinkedList<Unit> playerTeamInOrder = new LinkedList<Unit>();
+            foreach (Vector2 v in playerTeamOrder) playerTeamInOrder.AddLast(playerTeam[(int)v.y, (int)v.x]);
+
+            LinkedList<Unit> enemyTeamInOrder = new LinkedList<Unit>();
+            foreach (Vector2 v in enemyTeamOrder)
+                enemyTeamInOrder.AddLast(encounter.enemyConfiguration[(int)(v.y + encounter.rows * v.x)]);
+
+
+            //Order the teams: players, then enemys and create the flow.
+            LinkedList<LinkedList<Unit>> teamsInOrder = new LinkedList<LinkedList<Unit>>();
+            teamsInOrder.AddLast(playerTeamInOrder);
+            teamsInOrder.AddLast(enemyTeamInOrder);
+
+            PredeterminedOrderFlow newFlow = new PredeterminedOrderFlow(teamsInOrder);
+
+
+            //Postconditions
+            Assert.IsNotNull(newFlow, "Postcondition Fail: null should not be returned.");
+
+
+            return newFlow;
 
         }
 
