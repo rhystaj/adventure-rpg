@@ -8,7 +8,8 @@ using UnityEngine;
  */ 
 public class TestingUtil {
 
-    public delegate string Stringify<T>(T t); 
+    public delegate string Stringify<T>(T t);
+    public delegate float Floatify<T>(T t);
 
 	public static string PrintsItemsOf<T>(IEnumerable<T> set)
     {
@@ -53,4 +54,22 @@ public class TestingUtil {
 
     }
 
+    /**
+     * Returns the max formatted float value of the given set.
+     */
+     public static float FindMaxAs<T>(IEnumerable<T> set, Floatify<T> flt)
+    {
+
+        float max = flt(set.GetEnumerator().Current);
+
+        foreach (T item in set)
+        {
+            float currentItemValue = flt(item);
+            if (currentItemValue > max) max = currentItemValue;
+        }
+
+        return max;
+
+    }
+    
 }
