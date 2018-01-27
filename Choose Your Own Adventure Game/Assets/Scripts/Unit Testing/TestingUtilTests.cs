@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,22 @@ public class TestingUtilTests {
         };
 
         Assert.IsTrue(TestingUtil.CountItemsForWhichHolds(strings, str => str.StartsWith("r")) == 3);
+
+    }
+
+    [Test]
+    public void FindMaxAsReturnsCorrectMax()
+    {
+
+        string[] strings = new string[]
+        {
+            "ab",
+            "abcdefg",
+            "a",
+            "abcde"
+        };
+
+        Assert.IsTrue(TestingUtil.FindMaxAs(strings, str => str.Length) == 7, "");
 
     }
 

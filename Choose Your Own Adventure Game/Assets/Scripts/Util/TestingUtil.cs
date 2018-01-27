@@ -57,19 +57,37 @@ public class TestingUtil {
     /**
      * Returns the max formatted float value of the given set.
      */
-     public static float FindMaxAs<T>(IEnumerable<T> set, Floatify<T> flt)
+     public static float FindMaxAs<T>(IEnumerable<T> set, Func<T, float> func)
     {
 
-        float max = flt(set.GetEnumerator().Current);
+        float max = func.Invoke(new List<T>(set)[0]);
 
         foreach (T item in set)
         {
-            float currentItemValue = flt(item);
+            float currentItemValue = func.Invoke(item);
             if (currentItemValue > max) max = currentItemValue;
         }
 
         return max;
 
     }
-    
+
+    /**
+    * Returns the min formatted float value of the given set.
+    */
+    public static float FindMinAs<T>(IEnumerable<T> set, Func<T, float> func)
+    {
+
+        float min = func.Invoke(new List<T>(set)[0]);
+
+        foreach (T item in set)
+        {
+            float currentItemValue = func.Invoke(item);
+            if (currentItemValue < min) min = currentItemValue;
+        }
+
+        return min;
+
+    }
+
 }
