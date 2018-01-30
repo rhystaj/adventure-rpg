@@ -22,4 +22,19 @@ public class UnitTests : MonoBehaviour {
 
     }
 
+    /**
+     * Ensures that a unit's health can not go below 0.
+     */ 
+    [Test]
+    public void UnitsHealthCanNotGoBelow0()
+    {
+
+        Unit testUnit = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 1");
+        testUnit.health -= 60;
+
+        Assert.IsTrue(testUnit.health == 0,
+                      "Units health should be set to 0, if the value would otherwise be negative.");
+
+    }
+
 }
