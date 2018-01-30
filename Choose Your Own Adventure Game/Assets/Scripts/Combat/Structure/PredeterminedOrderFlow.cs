@@ -287,7 +287,7 @@ public class PredeterminedOrderFlow : CombatFlow {
             //Precondtions
             Assert.IsNotNull(playerTeamOrder, "Precondtion Fail: The argument 'playerTeamOrder should not be null.'");
             Assert.IsTrue(TestingUtil.FindMinAs(playerTeamOrder, v => v.y) >= 0,
-                          "Precondition Fail: Add row values in 'playerTeamOrder' shoule be at least 0");
+                          "Precondition Fail: Add row values in 'playerTeamOrder' should be at least 0");
             Assert.IsTrue(TestingUtil.FindMinAs(playerTeamOrder, v => v.x) >= 0,
                           "Precondition Fail: All column values in 'playerTeamOrder' should be at least 0.");
             Assert.IsNotNull(enemyTeamOrder, "Precondition Fail: The argument 'enemyTeamOrder' should not be null.");
@@ -335,7 +335,7 @@ public class PredeterminedOrderFlow : CombatFlow {
 
             LinkedList<Unit> enemyTeamInOrder = new LinkedList<Unit>();
             foreach (Vector2 v in enemyTeamOrder)
-                enemyTeamInOrder.AddLast(encounter.enemyConfiguration[(int)(v.y + encounter.rows * v.x)]);
+                enemyTeamInOrder.AddLast(encounter.enemyConfiguration[(int)(v.y * encounter.columnsPerSide + v.x)]);
 
 
             //Order the teams: players, then enemys and create the flow.
