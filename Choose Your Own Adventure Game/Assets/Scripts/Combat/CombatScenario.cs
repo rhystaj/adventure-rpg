@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 /**
  * The back-end of combat.
  */
-public class CombatScenario<F> where F : CombatFlow
+public class CombatScenario
 {
 
     private Once<Unit[,]> board; //The grid of units.
