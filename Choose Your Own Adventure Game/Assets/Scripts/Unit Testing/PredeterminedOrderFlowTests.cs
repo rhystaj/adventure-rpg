@@ -130,19 +130,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
         CombatFlow flow = new PredeterminedOrderFlow(testTeams);
 
-        int[] mockTestUnitOrder = new int[] { 1, 4, 7, 2, 5, 8, 3, 6, 9, 1, 4, 10 };
-
-        foreach(int unitNumber in mockTestUnitOrder)
-        {
-
-            Unit expectedUnit = testUnits[unitNumber - 1];
-            Assert.IsTrue(flow.UnitsAvaliableForTurn.Contains(expectedUnit),
-                          expectedUnit + " should be avaliable. \n" +
-                          "Avaliable Units: " + String.Format(TestingUtil.PrintsItemsOf(flow.UnitsAvaliableForTurn)));
-
-            flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
-
-        }
+        TestUnitsAreSelectedInOrder(flow, new int[] { 1, 4, 7, 2, 5, 8, 3, 6, 9, 1, 4, 10 });
 
     }
 
@@ -245,6 +233,9 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
     }
 
+    /**
+     * Ensures that if there are no units left to move, the correct error is thrown.
+     */ 
     [Test]
     public void NoValidTurnExceptionIsThrownIfThereAreNoStandingUnits()
     {
@@ -264,6 +255,49 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
     }
 
 
+    [Test]
+    public void PDOAdaptorCreatesCorrectFlow()
+    {
+
+        //The mock teams to be given to the adaptor.
+        Unit[,] playerTeam = new Unit[,] { { testUnits[0], testUnits[2] }, { testUnits[3], testUnits[1] } };
+        Unit[] enemyTeam = new Unit[] { testUnits[4], testUnits[7], testUnits[5], testUnits[6] };
+
+
+        //Create CombatEncounter to be passed into Adaptor.
+        CombatEncounter encounter = ScriptableObject.CreateInstance<CombatEncounter>();
+        encounter.columnsPerSide = 2;
+        encounter.rows = 2;
+        encounter.enemyConfiguration = new List<Unit>(enemyTeam);
+
+
+        //Specify the order in which the units will be selected on the player and enemy teams;
+        Vector2[] playerOrder = new Vector2[]
+        {
+            new Vector2(0, 0),
+            new Vector2(1, 1),
+            new Vector2(1, 0),
+            new Vector2(0, 1)
+        };
+
+        Vector2[] enemyOrder = new Vector2[]
+        {
+            new Vector2(0, 0),
+            new Vector2(0, 1),
+            new Vector2(1, 1),
+            new Vector2(1, 0)
+        };
+
+
+        //Produce flow unsing adaptor and test.
+        PredeterminedOrderFlow.PDOAdaptor adaptor = new PredeterminedOrderFlow.PDOAdaptor(playerOrder, enemyOrder);
+        PredeterminedOrderFlow flow = adaptor.Convert(playerTeam, encounter) as PredeterminedOrderFlow;
+
+        TestUnitsAreSelectedInOrder(flow, new int[] { 1, 5, 2, 6, 3, 7, 4, 8 });
+
+    }
+
+
     [TearDown]
     public void ResetHealthOfAllUnits()
     {
@@ -273,6 +307,29 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
     }
 
+    /**
+     * Ensures that the given flow selected the units in the given order.
+     */ 
+    private void TestUnitsAreSelectedInOrder(CombatFlow flow, int[] mockTestUnitOrder)
+    {
+
+        foreach (int unitNumber in mockTestUnitOrder)
+        {
+
+            Unit expectedUnit = testUnits[unitNumber - 1];
+            Assert.IsTrue(flow.UnitsAvaliableForTurn.Contains(expectedUnit),
+                          expectedUnit + " should be avaliable. \n" +
+                          "Avaliable Units: " + String.Format(TestingUtil.PrintsItemsOf(flow.UnitsAvaliableForTurn)));
+
+            flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+
+        }
+
+    }
+
+    /**
+     * Skips the given units a newly created flow and check that the givenExpected unit is the current unit after the given amount of turns.
+     */
     private CombatFlow TestUnitSkip(int[] numbersToSkip, int turnsToTake, int expectedUnit)
     {
 
@@ -281,6 +338,9 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
     }
 
+    /**
+     * Skips the given units in the given flow, and check that the givenExpected unit is the current unit after the given amount of turns.
+     */ 
     private CombatFlow TestUnitSkip(CombatFlow flow, int[] numbersToSkip, int turnsToTake, int expectedUnit)
     {
 
