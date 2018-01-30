@@ -18,7 +18,8 @@ public class Weapon : Instrument {
         if (user.Alignment == target.Alignment) return false; //    A unit can not use a weapon on someone from thier own team.
         if (target.position < minRange || target.position > maxRange) return false; //  A unit can not use a weapon on someone out of range. 
 
-        target.maxHealth -= damage;
+        target.health -= damage;
+
         return true;
 
     }
