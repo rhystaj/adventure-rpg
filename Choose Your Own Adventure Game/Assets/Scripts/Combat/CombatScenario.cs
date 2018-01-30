@@ -43,14 +43,26 @@ public class CombatScenario
         //Create a new board
         board.Value = new Unit[encounter.rows, encounter.columnsPerSide * 2]; //Double as columns per side is the number of units on ONE of the TWO sides.
 
+        
+        //Copy the player units to the player's side and set thier positions based on how far they are away from the centre.
+        for(int i = 0; i < board.Value.GetLength(0); i++)
+        {
+            for(int j = 0; j < encounter.columnsPerSide; i++)
+            {
+                board.Value[i, j] = playerUnits[i, j];
+                board.Value[i, j].position = Mathf.Abs(j - (encounter.columnsPerSide - 1));
+            }
+        }
 
-        //Copy the enemy units from the encounter to the enemy side.
+
+        //Copy the enemy units from the encounter to the enemy side and set thier positions based on how far away they are from the centre.
         for (int i = 0; i < board.Value.GetLength(0); i++)
         {
             for (int j = encounter.columnsPerSide; j < board.Value.GetLength(1); j++)
             {
                 Unit enemy = encounter.enemyConfiguration[(j - encounter.columnsPerSide) + (encounter.columnsPerSide * i)];
                 board.Value[i, j] = Object.Instantiate(enemy) as Unit;
+                board.Value[i, j].position = Mathf.Abs(j - (encounter.columnsPerSide - 1));
             }
         }
 
@@ -73,6 +85,7 @@ public class CombatScenario
 
         //Preconditions
         Assert.IsNotNull(subject, "Precondition Fail: The argument 'subject' should not be null.");
+        Assert.IsTrue(subject.health > 0, "Precondition Fail: 'subject' should have more than 0 health.");
         Assert.IsNotNull(target, "Precondition Fail: The argument 'target' should not be null.");
 
 
