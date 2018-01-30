@@ -30,7 +30,19 @@ public class Unit : MonoBehaviour, IEquatable<Unit> {
     private SpriteRenderer spriteRenderer;
 
 
-    [HideInInspector] public float health; //The health of the unit.
+    private float _health; //The health of the unit.
+    public float health {
+        get
+        {
+            return _health;
+        }
+        set
+        {
+            if (value < 0) _health = 0;
+            else _health = value;
+        }
+    }
+
     public int Alignment { get { return alignment; } }
 
     private void OnEnable()
