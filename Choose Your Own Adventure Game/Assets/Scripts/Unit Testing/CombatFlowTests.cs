@@ -17,7 +17,7 @@ public class CombatFlowTests {
     {
 
         Unit targetUnit = GetFlowTestUnit("Flow Test Mock Unit 1");
-        HashSet<Unit> avalaibleUnits = new HashSet<Unit>(new Unit[] {
+        HashSet<IUnit> avalaibleUnits = new HashSet<IUnit>(new IUnit[] {
             targetUnit,
             GetFlowTestUnit("Flow Test Mock Unit 2"),
             GetFlowTestUnit("Flow Test Mock Unit 3")
@@ -36,7 +36,7 @@ public class CombatFlowTests {
     {
 
         Unit targetUnit = GetFlowTestUnit("Flow Test Mock Unit 1");
-        HashSet<Unit> avalaibleUnits = new HashSet<Unit>(new Unit[] {
+        HashSet<IUnit> avalaibleUnits = new HashSet<IUnit>(new IUnit[] {
             GetFlowTestUnit("Flow Test Mock Unit 2"),
             GetFlowTestUnit("Flow Test Mock Unit 3")
         });
@@ -51,7 +51,7 @@ public class CombatFlowTests {
     {
 
         Unit targetUnit = GetFlowTestUnit("Flow Test Mock Unit 1");
-        HashSet<Unit> avalaibleUnits = new HashSet<Unit>(new Unit[] {
+        HashSet<IUnit> avalaibleUnits = new HashSet<IUnit>(new IUnit[] {
             GetFlowTestUnit("Flow Test Mock Unit 2"),
             GetFlowTestUnit("Flow Test Mock Unit 3")
         });
@@ -59,7 +59,7 @@ public class CombatFlowTests {
         CombatFlow testFlow = new SingleEmptyTurnMockCombatFlow(1, avalaibleUnits);
 
 
-        HashSet<Unit> prevAvaliableUnits = testFlow.UnitsAvaliableForTurn;
+        HashSet<IUnit> prevAvaliableUnits = testFlow.UnitsAvaliableForTurn;
         int prevTeamNumber = testFlow.CurrentTeam;
 
         testFlow.TakeTurn(targetUnit);

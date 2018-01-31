@@ -21,13 +21,13 @@ public class MockWinTracker : CombatScenario.WinTracker
         this.afterTurns = turns;
     }
 
-    public int DetermineWinner(Unit[,] board)
+    public int DetermineWinner(IUnit[,] board)
     {
         if (turns < afterTurns) return -1;
         else return winner;
     }
 
-    public void Update(Unit[,] board)
+    public void Update(IUnit[,] board)
     {
         turns++;
     }

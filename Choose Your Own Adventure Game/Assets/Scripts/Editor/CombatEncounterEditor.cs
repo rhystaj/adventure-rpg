@@ -55,7 +55,7 @@ public class CombatEncounterEditor : Editor
             GUILayout.BeginHorizontal();
 
             for (int start = row * targetScenario.columnsPerSide; i - start < targetScenario.columnsPerSide; i++)
-                targetScenario.enemyConfiguration[i] = (Unit)EditorGUILayout.ObjectField(targetScenario.enemyConfiguration[i],
+                targetScenario.enemyConfiguration[i] = (Unit)EditorGUILayout.ObjectField((Unit)targetScenario.enemyConfiguration[i],
                                                                                    typeof(Unit), false, GUILayout.Width(UNIT_FIELD_WIDTH));
 
             GUILayout.EndHorizontal();

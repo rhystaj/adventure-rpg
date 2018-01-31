@@ -10,17 +10,17 @@ using UnityScript.Lang;
 
 public class PredeterminedOrderFlowTests : MonoBehaviour {
 
-    private Unit[] testUnits;
+    private IUnit[] testUnits;
     
 
-    private LinkedList<LinkedList<Unit>> testTeams = new LinkedList<LinkedList<Unit>>();
+    private LinkedList<LinkedList<IUnit>> testTeams = new LinkedList<LinkedList<IUnit>>();
 
     [OneTimeSetUp]
     public void PrepareForTests()
     {
 
         //Load in test units.
-        testUnits = new Unit[] {
+        testUnits = new IUnit[] {
             CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 1"),
             CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 2"),
             CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 3"),
@@ -35,20 +35,20 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
 
         //The default mock team setup.
-        List<List<Unit>> mockTeams = new List<List<Unit>>( new List<Unit>[] {
-            new List<Unit>( new Unit[] {
+        List<List<IUnit>> mockTeams = new List<List<IUnit>>( new List<IUnit>[] {
+            new List<IUnit>( new IUnit[] {
                 testUnits[0],
                 testUnits[1],
                 testUnits[2]
             }),
 
-            new List<Unit>( new Unit[] {
+            new List<IUnit>( new IUnit[] {
                 testUnits[3],
                 testUnits[4],
                 testUnits[5],
             }),
 
-            new List<Unit>( new Unit[] {
+            new List<IUnit>( new IUnit[] {
                 testUnits[6],
                 testUnits[7],
                 testUnits[8],
@@ -62,7 +62,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
         for (int i = 0; i < mockTeams.Count; i++)
         {
 
-            LinkedList<Unit> currentTeam = new LinkedList<Unit>();
+            LinkedList<IUnit> currentTeam = new LinkedList<IUnit>();
 
             for (int j = 0; j < mockTeams[i].Count; j++)
                 currentTeam.AddLast(mockTeams[i][j]);
@@ -87,7 +87,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
             int teamBefore = flow.CurrentTeam;
 
-            flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+            flow.TakeTurn(new List<IUnit>(flow.UnitsAvaliableForTurn)[0]);
 
             if (teamBefore == testTeams.Count - 1)
                 Assert.IsTrue(flow.CurrentTeam == 0, "The team number should loop back to 0 when the max is reached.");
@@ -115,7 +115,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
             Assert.AreEqual(1, flow.UnitsAvaliableForTurn.Count);
 
-            flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+            flow.TakeTurn(new List<IUnit>(flow.UnitsAvaliableForTurn)[0]);
 
         }
 
@@ -180,7 +180,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
         CombatFlow flow = TestUnitSkip(new int[] { 4 }, 4, 5);
 
         testUnits[4].health = 50;
-        for(int i = 0; i < 6; i++) flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+        for(int i = 0; i < 6; i++) flow.TakeTurn(new List<IUnit>(flow.UnitsAvaliableForTurn)[0]);
         Assert.IsTrue(flow.UnitsAvaliableForTurn.Contains(testUnits[4]),
                 testUnits[4] + " should be avaliable. \n" +
                           "Avaliable Units: " + String.Format(TestingUtil.PrintsItemsOf(flow.UnitsAvaliableForTurn)));
@@ -241,13 +241,13 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
     {
 
         CombatFlow flow = new PredeterminedOrderFlow(testTeams);
-        flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+        flow.TakeTurn(new List<IUnit>(flow.UnitsAvaliableForTurn)[0]);
 
-        foreach (Unit unit in testUnits) unit.health = 0;
+        foreach (IUnit unit in testUnits) unit.health = 0;
 
         try
         {
-            flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+            flow.TakeTurn(new List<IUnit>(flow.UnitsAvaliableForTurn)[0]);
             Assert.Fail("An error should be thrown when all units in a flow have 0 health.");
         }
         catch (CombatFlow.NoValidNextTurnException e){ }
@@ -260,15 +260,12 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
     {
 
         //The mock teams to be given to the adaptor.
-        Unit[,] playerTeam = new Unit[,] { { testUnits[0], testUnits[2] }, { testUnits[3], testUnits[1] } };
-        Unit[] enemyTeam = new Unit[] { testUnits[4], testUnits[7], testUnits[5], testUnits[6] };
+        IUnit[,] playerTeam = new IUnit[,] { { testUnits[0], testUnits[2] }, { testUnits[3], testUnits[1] } };
+        IUnit[] enemyTeam = new IUnit[] { testUnits[4], testUnits[7], testUnits[5], testUnits[6] };
 
 
         //Create CombatEncounter to be passed into Adaptor.
-        CombatEncounter encounter = ScriptableObject.CreateInstance<CombatEncounter>();
-        encounter.columnsPerSide = 2;
-        encounter.rows = 2;
-        encounter.enemyConfiguration = new List<Unit>(enemyTeam);
+        ICombatEncounter encounter = new MockCombatEncounter(2, 2, new List<IUnit>(enemyTeam));
 
 
         //Specify the order in which the units will be selected on the player and enemy teams;
@@ -302,7 +299,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
     public void ResetHealthOfAllUnits()
     {
 
-        foreach (LinkedList<Unit> team in testTeams)
+        foreach (LinkedList<IUnit> team in testTeams)
             foreach (Unit unit in team) unit.health = unit.maxHealth;
 
     }
@@ -316,12 +313,12 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
         foreach (int unitNumber in mockTestUnitOrder)
         {
 
-            Unit expectedUnit = testUnits[unitNumber - 1];
+            IUnit expectedUnit = testUnits[unitNumber - 1];
             Assert.IsTrue(flow.UnitsAvaliableForTurn.Contains(expectedUnit),
                           expectedUnit + " should be avaliable. \n" +
                           "Avaliable Units: " + String.Format(TestingUtil.PrintsItemsOf(flow.UnitsAvaliableForTurn)));
 
-            flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+            flow.TakeTurn(new List<IUnit>(flow.UnitsAvaliableForTurn)[0]);
 
         }
 
@@ -346,7 +343,7 @@ public class PredeterminedOrderFlowTests : MonoBehaviour {
 
         foreach (int num in numbersToSkip) testUnits[num].health = 0;
 
-        for (int i = 0; i < turnsToTake; i++) flow.TakeTurn(new List<Unit>(flow.UnitsAvaliableForTurn)[0]);
+        for (int i = 0; i < turnsToTake; i++) flow.TakeTurn(new List<IUnit>(flow.UnitsAvaliableForTurn)[0]);
         Assert.IsTrue(flow.UnitsAvaliableForTurn.Contains(testUnits[expectedUnit]),
                testUnits[expectedUnit] + " should be avaliable. \n" +
                           "Avaliable Units: " + String.Format(TestingUtil.PrintsItemsOf(flow.UnitsAvaliableForTurn)));

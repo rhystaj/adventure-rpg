@@ -96,7 +96,7 @@ public abstract class CombatFlow {
     /**
      * Creates a combat flow from the given, more specific than added to the constructor itself, information.
      */ 
-    public abstract class Adaptor { public abstract CombatFlow Convert(Unit[,] playerTeam, CombatEncounter encounter); }
+    public abstract class Adaptor { public abstract CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter); }
 
 }
 
