@@ -7,7 +7,8 @@ using UnityEngine.Assertions;
 /**
  * A piece that can be placed on the board during combat.
  */
-public class Unit : MonoBehaviour, IEquatable<Unit> {
+public class Unit : MonoBehaviour, IEquatable<Unit>, IUnit
+{
 
     //The path to the prefab used as a base for construted mock objects for testing.
     public const string MOCK_BASE_PATH = "Testing/Mock Prefabs/Combat/Mock Unit Base"; 
@@ -68,7 +69,7 @@ public class Unit : MonoBehaviour, IEquatable<Unit> {
 
     }
 
-    public bool UseInstrument(Unit target){
+    public virtual bool UseInstrument(Unit target){
         return instrument.Use(this, target);
     }
 
