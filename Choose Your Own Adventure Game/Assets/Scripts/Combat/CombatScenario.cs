@@ -62,7 +62,7 @@ public class CombatScenario
             {
                 IUnit enemy = encounter.enemyConfiguration[(j - encounter.columnsPerSide) + (encounter.columnsPerSide * i)];
                 board.Value[i, j] = enemy.InstantiateClone();
-                board.Value[i, j].position = Mathf.Abs(j - (encounter.columnsPerSide - 1));
+                board.Value[i, j].position = Mathf.Abs(j - (encounter.columnsPerSide));
             }
         }
 
