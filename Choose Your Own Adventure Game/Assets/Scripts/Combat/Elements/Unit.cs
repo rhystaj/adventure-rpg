@@ -78,4 +78,9 @@ public class Unit : MonoBehaviour, IEquatable<Unit>, IUnit
     {
         return name.Equals(other.name);
     }
+
+    public IUnit InstantiateClone()
+    {
+        return Instantiate(this);
+    }
 }

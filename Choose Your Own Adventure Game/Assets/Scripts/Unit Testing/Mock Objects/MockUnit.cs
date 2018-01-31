@@ -32,4 +32,8 @@ public class MockUnit : IUnit
         return ins.Use(this, target);
     }
 
+    public IUnit InstantiateClone()
+    {
+        return new MockUnit(_alignment, _health, _position, ins.Use(this, this));
+    }
 }
