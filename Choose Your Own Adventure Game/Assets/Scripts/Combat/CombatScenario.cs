@@ -30,7 +30,7 @@ public class CombatScenario
 
     }
 
-    public CombatScenario(IUnit[,] playerUnits, CombatEncounter encounter, CombatFlow.Adaptor flowAdaptor, WinTracker winTracker)
+    public CombatScenario(IUnit[,] playerUnits, ICombatEncounter encounter, CombatFlow.Adaptor flowAdaptor, WinTracker winTracker)
     {
 
         //Preconditions
