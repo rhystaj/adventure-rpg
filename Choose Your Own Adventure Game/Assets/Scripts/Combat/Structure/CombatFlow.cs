@@ -96,7 +96,27 @@ public abstract class CombatFlow {
     /**
      * Creates a combat flow from the given, more specific than added to the constructor itself, information.
      */ 
-    public abstract class Adaptor { public abstract CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter); }
+    public interface Adaptor { CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter); }
+
+    /**
+     * An adaptor that will simply produce the CombatFlow given to it. Used mainly for testing.
+     */ 
+    public class DirectAdaptor : Adaptor
+    {
+
+        CombatFlow flow;
+
+        public DirectAdaptor(CombatFlow flow)
+        {
+            this.flow = flow;
+        }
+
+        public CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter)
+        {
+            return flow;
+        }
+
+    }
 
 }
 
