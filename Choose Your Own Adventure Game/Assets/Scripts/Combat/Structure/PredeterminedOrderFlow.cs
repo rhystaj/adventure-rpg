@@ -309,7 +309,7 @@ public class PredeterminedOrderFlow : CombatFlow {
         }
 
 
-        public override CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter)
+        public CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter)
         {
 
             //Preconditions
