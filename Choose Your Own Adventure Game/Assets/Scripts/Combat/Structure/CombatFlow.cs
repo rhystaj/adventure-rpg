@@ -13,9 +13,9 @@ public abstract class CombatFlow {
     public int CurrentTeam { get { return currentTurn.Team; } } //Returns the team taking the current turn.
 
     //Returns the units avaliable for the current turn.
-    public HashSet<Unit> UnitsAvaliableForTurn { get { return new HashSet<Unit>(currentTurn.AvaliableUnits); } }
+    public HashSet<IUnit> UnitsAvaliableForTurn { get { return new HashSet<IUnit>(currentTurn.AvaliableUnits); } }
 
-    public void TakeTurn(Unit subject)
+    public virtual void TakeTurn(IUnit subject)
     {
         currentTurn = currentTurn.take(subject);
     }
@@ -23,7 +23,7 @@ public abstract class CombatFlow {
     /**
      * Determines whether the given unit can move during the current turn.
      */ 
-    public bool CanMoveDuringCurrentTurn(Unit unit)
+    public bool CanMoveDuringCurrentTurn(IUnit unit)
     {
         return currentTurn.CanMove(unit);
     }
@@ -34,12 +34,12 @@ public abstract class CombatFlow {
     protected abstract class Turn
     {
         private int team;
-        private HashSet<Unit> avaliableUnits;
+        private HashSet<IUnit> avaliableUnits;
 
         public int Team { get { return team; } }
-        public HashSet<Unit> AvaliableUnits { get { return avaliableUnits; } }
+        public HashSet<IUnit> AvaliableUnits { get { return avaliableUnits; } }
 
-        public Turn(int team, HashSet<Unit> avaliableUnits)
+        public Turn(int team, HashSet<IUnit> avaliableUnits)
         {
             this.team = team;
             this.avaliableUnits = avaliableUnits;
@@ -48,7 +48,7 @@ public abstract class CombatFlow {
         /**
          * Have the unit take the turn, if they are allowed to.
          */ 
-        public Turn take(Unit subject)
+        public Turn take(IUnit subject)
         {
 
             if (CanMove(subject)) return ProduceNextTurn(subject);
@@ -56,12 +56,12 @@ public abstract class CombatFlow {
 
         }
 
-        protected abstract Turn ProduceNextTurn(Unit turnTaker);
+        protected abstract Turn ProduceNextTurn(IUnit turnTaker);
 
         /**
          * Determins whether the given unit can move during the turn.
          */ 
-        public bool CanMove(Unit unit)
+        public bool CanMove(IUnit unit)
         {
             return avaliableUnits.Contains(unit);
         }
