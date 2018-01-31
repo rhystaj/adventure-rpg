@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MockUnit : IUnit
+public class MockUnit : IUnit, IEquatable<MockUnit>
 {
 
     private string name;
@@ -20,6 +20,8 @@ public class MockUnit : IUnit
 
     public MockUnit(string name, int alignment, float health, int position, bool attackSuccessful)
     {
+
+        this.name = name;
 
         _alignment = alignment;
         _health = health;
@@ -42,5 +44,10 @@ public class MockUnit : IUnit
     public override string ToString()
     {
         return name;
+    }
+
+    public bool Equals(MockUnit other)
+    {
+        return name.Equals(other.name);
     }
 }
