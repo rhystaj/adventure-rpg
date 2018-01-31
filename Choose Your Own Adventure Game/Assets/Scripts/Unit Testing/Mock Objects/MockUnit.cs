@@ -6,6 +6,8 @@ using UnityEngine;
 public class MockUnit : IUnit
 {
 
+    private string name;
+
     private int _alignment;
     private float _health;
     private int _position;
@@ -16,7 +18,7 @@ public class MockUnit : IUnit
     public float health{ get { return _health; } set { _health = value; } }
     public int position { get; set; }
 
-    public MockUnit(int alignment, float health, int position, bool attackSuccessful)
+    public MockUnit(string name, int alignment, float health, int position, bool attackSuccessful)
     {
 
         _alignment = alignment;
@@ -34,6 +36,11 @@ public class MockUnit : IUnit
 
     public IUnit InstantiateClone()
     {
-        return new MockUnit(_alignment, _health, _position, ins.Use(this, this));
+        return new MockUnit(name, _alignment, _health, _position, ins.Use(this, this));
+    }
+
+    public override string ToString()
+    {
+        return name;
     }
 }
