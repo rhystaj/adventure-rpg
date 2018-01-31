@@ -7,9 +7,9 @@ using UnityEngine.Assertions;
 public class CombatScenario
 {
 
-    private Once<IUnit[,]> board; //The grid of units.
-    private Once<CombatFlow> flow; //The struture of the progression of the combat.
-    private Once<WinTracker> winTracker; //Tracks the progress of the game to determine the winner.
+    private Once<IUnit[,]> board = new Once<IUnit[,]>(); //The grid of units.
+    private Once<CombatFlow> flow = new Once<CombatFlow>(); //The struture of the progression of the combat.
+    private Once<WinTracker> winTracker = new Once<WinTracker>(); //Tracks the progress of the game to determine the winner.
 
     public delegate void TeamEvent(int team);
     public TeamEvent OnTeamWin;
@@ -47,7 +47,7 @@ public class CombatScenario
         //Copy the player units to the player's side and set thier positions based on how far they are away from the centre.
         for(int i = 0; i < board.Value.GetLength(0); i++)
         {
-            for(int j = 0; j < encounter.columnsPerSide; i++)
+            for(int j = 0; j < encounter.columnsPerSide; j++)
             {
                 board.Value[i, j] = playerUnits[i, j];
                 board.Value[i, j].position = Mathf.Abs(j - (encounter.columnsPerSide - 1));
