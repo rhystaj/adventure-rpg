@@ -5,5 +5,13 @@ using UnityEngine;
 
 public class MockInstrument : Instrument
 {
-    public override bool Use(Unit user, Unit target){ return false; }
+
+    private bool successful;
+
+    public MockInstrument(bool successful)
+    {
+        this.successful = successful;
+    }
+
+    public override bool Use(IUnit user, IUnit target){ return successful; }
 }

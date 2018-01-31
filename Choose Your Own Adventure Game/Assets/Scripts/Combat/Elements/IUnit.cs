@@ -2,6 +2,7 @@
 {
     int Alignment { get; }
     float health { get; set; }
+    int position { get; set; }
 
-    bool UseInstrument(Unit target);
+    bool UseInstrument(IUnit target);
 }

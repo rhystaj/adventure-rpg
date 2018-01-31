@@ -5,18 +5,31 @@ using UnityEngine;
 
 public class MockUnit : IUnit
 {
-    public int Alignment
+
+    private int _alignment;
+    private float _health;
+    private int _position;
+
+    private MockInstrument ins;
+
+    public int Alignment{ get { return _alignment; } }
+    public float health{ get { return _health; } set { _health = value; } }
+    public int position { get; set; }
+
+    public MockUnit(int alignment, float health, int position, bool attackSuccessful)
     {
-        get
-        {
-            throw new NotImplementedException();
-        }
+
+        _alignment = alignment;
+        _health = health;
+        _position = position;
+
+        ins = new MockInstrument(attackSuccessful);
+
     }
 
-    public float health { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-    public bool UseInstrument(Unit target)
+    public bool UseInstrument(IUnit target)
     {
-        throw new NotImplementedException();
+        return ins.Use(this, target);
     }
+
 }

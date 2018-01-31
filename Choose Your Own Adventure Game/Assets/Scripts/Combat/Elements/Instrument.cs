@@ -10,6 +10,6 @@ public abstract class Instrument : ScriptableObject {
     /**
      * Attempt to perform the relevant action on the given target 
      */ 
-    public abstract bool Use(Unit user, Unit target);
+    public abstract bool Use(IUnit user, IUnit target);
 
 }

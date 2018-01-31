@@ -12,7 +12,7 @@ public class Weapon : Instrument {
     public int minRange; //The closest tile a weapon can hit.
     public int maxRange; //The furthest tile a weapon can hit. 
 
-    public override bool Use(Unit user, Unit target)
+    public override bool Use(IUnit user, IUnit target)
     {
 
         if (user.Alignment == target.Alignment) return false; //    A unit can not use a weapon on someone from thier own team.

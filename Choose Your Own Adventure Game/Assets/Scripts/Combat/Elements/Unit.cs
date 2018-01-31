@@ -26,7 +26,8 @@ public class Unit : MonoBehaviour, IEquatable<Unit>, IUnit
     [SerializeField] Sprite attakingSprite;
     [SerializeField] Sprite talkingDamageSprite;
 
-    [HideInInspector] public int position;
+    private int _position;
+    public int position { get; set; }
 
     private SpriteRenderer spriteRenderer;
 
@@ -69,7 +70,7 @@ public class Unit : MonoBehaviour, IEquatable<Unit>, IUnit
 
     }
 
-    public virtual bool UseInstrument(Unit target){
+    public virtual bool UseInstrument(IUnit target){
         return instrument.Use(this, target);
     }
 
