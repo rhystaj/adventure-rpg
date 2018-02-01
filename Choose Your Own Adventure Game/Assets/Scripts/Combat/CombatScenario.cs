@@ -69,6 +69,9 @@ public class CombatScenario
         flow.Value = flowAdaptor.Convert(playerUnits, encounter);
 
 
+        this.winTracker.Value = winTracker;
+
+
         //Postconditions
         Assert.IsNotNull(board, "Postcondition Fail: The field 'board' should not be null.");
         Assert.IsTrue(board.Value.Length == encounter.columnsPerSide * encounter.rows * 2);
@@ -87,6 +90,7 @@ public class CombatScenario
         Assert.IsNotNull(subject, "Precondition Fail: The argument 'subject' should not be null.");
         Assert.IsTrue(subject.health > 0, "Precondition Fail: 'subject' should have more than 0 health.");
         Assert.IsNotNull(target, "Precondition Fail: The argument 'target' should not be null.");
+        Assert.IsNotNull(OnTeamWin, "The delegate 'OnTeamWin' should not be null.");
 
 
         bool result = false;
