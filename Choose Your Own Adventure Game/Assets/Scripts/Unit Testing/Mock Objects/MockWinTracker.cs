@@ -18,7 +18,7 @@ public class MockWinTracker : CombatScenario.WinTracker
     public MockWinTracker(int winner, int afterTurns)
     {
         this.winner = winner;
-        this.afterTurns = turns;
+        this.afterTurns = afterTurns;
     }
 
     public int DetermineWinner(IUnit[,] board)
