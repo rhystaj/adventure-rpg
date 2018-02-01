@@ -5,9 +5,14 @@ using UnityEngine;
 
 public class CombatScenarioTests {
 
+    //General test fields.
     private IUnit[,] playerTeam;
     private MockCombatEncounter encounter;
 
+    //Fields for testing delegate.
+    private int winningTeam;
+    private int afterTurns;
+    private MockWinTracker mockWinTracker;
 
     [OneTimeSetUp][TearDown]
     public void GenerateTeams()
@@ -17,7 +22,7 @@ public class CombatScenarioTests {
         playerTeam = new IUnit[,]
         {
             { new MockUnit("Player Unit 1", 0, 50, 4, true), new MockUnit("Player Unit 2", 0, 76, 7, true)},
-            { new MockUnit("Player Unit 3", 0, 89, 3, true), new MockUnit("Player Unit 4", 0, 4, 2, true)}
+            { new MockUnit("Player Unit 3", 0, 89, 3, false), new MockUnit("Player Unit 4", 0, 4, 2, true)}
         };
 
 
@@ -51,6 +56,7 @@ public class CombatScenarioTests {
         CombatScenario combatScenario = new CombatScenario(playerTeam, encounter,
                                                            new CombatFlow.DirectAdaptor(new TurnChangeTrackerMockCombatFlow(0, new IUnit[] { })),
                                                            new MockWinTracker(0, 5));
+        combatScenario.OnTeamWin = OnTeamWinTestDelegate;
         IUnit[,] returned = combatScenario.Board;
 
 
@@ -81,6 +87,7 @@ public class CombatScenarioTests {
         CombatScenario combatScenario = new CombatScenario(playerTeam, encounter,
                                                            new CombatFlow.DirectAdaptor(new TurnChangeTrackerMockCombatFlow(0, new IUnit[] { })),
                                                            new MockWinTracker(0, 5));
+        combatScenario.OnTeamWin = OnTeamWinTestDelegate;
         IUnit[,] returned = combatScenario.Board;
 
 
@@ -93,6 +100,117 @@ public class CombatScenarioTests {
                        "instead it has the value " + returned[i, j].position + ".");
 
     }
+
+    /**
+     * Ensures the OnTeamWin delegate is fired at the right time with the right team.
+     */ 
+    [Test]
+    public void OnTeamDelegateFiredCorrectly()
+    {
+
+        winningTeam = 3;
+        afterTurns = 3;
+        mockWinTracker = new MockWinTracker(winningTeam, afterTurns);
+
+        CombatScenario combatScenario = new CombatScenario(playerTeam, encounter,
+                                                           new CombatFlow.DirectAdaptor(
+                                                               new TurnChangeTrackerMockCombatFlow(0, new IUnit[] { playerTeam[0,0] })
+                                                           ),
+                                                           mockWinTracker);
+        combatScenario.OnTeamWin = OnTeamWinTestDelegate;
+
+        for (int i = 0; i < afterTurns; i++)
+            combatScenario.UseInstrument(playerTeam[0,0], encounter.enemyConfiguration[0]);
+
+    }
+
+    private void OnTeamWinTestDelegate(int team)
+    {
+        Assert.IsTrue(mockWinTracker.turnsTaken == afterTurns,
+            "The delegate should be fired after " + afterTurns + " turns, instead it was fired after " + (mockWinTracker.turnsTaken) + " turns.");
+        Assert.IsTrue(team == winningTeam, "The winning team should be " + winningTeam + ", but it is " + team + " instead.");
+    }
+
+    /**
+     * Ensures a use of an intrument will not be considered sucessfull if the subject if not a unit avaliable to be moved.
+     */ 
+    [Test]
+    public void InstrumentUseNotSuccessfulIfGivenUserCantMove()
+    {
+        CombatScenario combatScenario = new CombatScenario(playerTeam, encounter,
+                                                           new CombatFlow.DirectAdaptor(
+                                                               new TurnChangeTrackerMockCombatFlow(0, new IUnit[] { playerTeam[0, 0] })
+                                                           ),
+                                                           new MockWinTracker(0, 5));
+        combatScenario.OnTeamWin = EmptyOnTeamWinDelegate;
+
+        Assert.IsFalse(combatScenario.UseInstrument(playerTeam[0, 1], encounter.enemyConfiguration[0]),
+                       "The turn should not be valid, as " + playerTeam[0,1] + " should not be avaliable.");
+
+    }
+
+    /**
+     * Ensures the use of al instruement will not be considered successful, if it is considered in any way invalid.
+     */ 
+    [Test]
+    public void InstrumentUseNotSuccessfulIfInvalid()
+    {
+
+        CombatScenario combatScenario = new CombatScenario(playerTeam, encounter,
+                                                           new CombatFlow.DirectAdaptor(
+                                                               new TurnChangeTrackerMockCombatFlow(0, new IUnit[] { playerTeam[1, 0] })
+                                                           ),
+                                                           new MockWinTracker(0, 5));
+        combatScenario.OnTeamWin = EmptyOnTeamWinDelegate;
+
+        Assert.IsFalse(combatScenario.UseInstrument(playerTeam[1,0], encounter.enemyConfiguration[0]),
+                       "The turns should not be valid, as " + playerTeam[1,0] + "'s use of their instrument is not valid.");
+
+
+    }
+
+    /**
+     * Enures the WinTracker will not be updated if the given turn is invalid.
+     */ 
+    [Test]
+    public void WinTrackerWillNotUpdateOnInvalidTurn()
+    {
+
+        mockWinTracker = new MockWinTracker(3, 3);
+
+        CombatScenario combatScenario = new CombatScenario(playerTeam, encounter,
+                                                           new CombatFlow.DirectAdaptor(
+                                                               new TurnChangeTrackerMockCombatFlow(0, new IUnit[] { playerTeam[1, 0] })
+                                                           ),
+                                                           mockWinTracker);
+        combatScenario.OnTeamWin = EmptyOnTeamWinDelegate;
+
+        Assert.IsFalse(combatScenario.UseInstrument(playerTeam[1, 0], encounter.enemyConfiguration[0]),
+                       "The turns should not be valid, as " + playerTeam[1, 0] + "'s use of their instrument is not valid.");
+        Assert.IsTrue(mockWinTracker.turnsTaken == 0, "The tracker should not have been uodated as the given move was invalid.");
+
+    }
+
+    /**
+     * Ensures the flow will not be progressed if the given turn is invalid.
+     */ 
+    [Test]
+    public void FlowNotProgressedOnInvalidTurn()
+    {
+
+        TurnChangeTrackerMockCombatFlow testFlow = new TurnChangeTrackerMockCombatFlow(0, new IUnit[] { playerTeam[1, 0] });
+
+        CombatScenario combatScenario = new CombatScenario(playerTeam, encounter, new CombatFlow.DirectAdaptor(testFlow), new MockWinTracker(0, 5));
+        combatScenario.OnTeamWin = EmptyOnTeamWinDelegate;
+
+        Assert.IsFalse(combatScenario.UseInstrument(playerTeam[1, 0], encounter.enemyConfiguration[0]),
+                       "The turns should not be valid, as " + playerTeam[1, 0] + "'s use of their instrument is not valid.");
+        Assert.IsTrue(testFlow.TurnsTaken == 0,
+                      "The flow should not be progessed as the turn was invalid.");
+
+    }
+   
+    private void EmptyOnTeamWinDelegate(int team) { }
 
 }
 
