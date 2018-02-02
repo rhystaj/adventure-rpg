@@ -22,20 +22,20 @@ public class LastTeamStandingWinTracker : CombatScenario.WinTracker
         //Units on the board into thier teams, so they can be analysed as a whole team.
         List<List<IUnit>> teams = new List<List<IUnit>>();
 
-        foreach (Unit u in board) {
+        foreach (IUnit u in board) {
 
             //Ensure u is a valid unit, and add it to the set of valid team numbers.
             if (u == null) continue;
-            teamNumbers.Add(u.alignment);
+            teamNumbers.Add(u.Alignment);
 
 
             //Ensure there is enough space for a unit to be put at the index of thier alignment, then add it there.
-            while (u.alignment >= teams.Count) teams.Add(new List<IUnit>());
+            while (u.Alignment >= teams.Count) teams.Add(new List<IUnit>());
 
-            Assert.IsTrue(u.alignment < teams.Count,
+            Assert.IsTrue(u.Alignment < teams.Count,
                           "Enough elements should be added to teams, that the units aignment should be a valid index.");
 
-            teams[u.alignment].Add(u);
+            teams[u.Alignment].Add(u);
 
         }
 
@@ -44,13 +44,15 @@ public class LastTeamStandingWinTracker : CombatScenario.WinTracker
         int defeatedTeams = 0;
         HashSet<int> standingTeams = new HashSet<int>();
 
-        foreach (List<IUnit> team in teams)
+        for(int team = 0; team < teams.Count; team++)
         {
 
-            Assert.IsNotNull(team, "There should be no null elements in 'teams'");
+            Assert.IsNotNull(teams[team], "There should be no null elements in 'teams'");
 
-            if (team.TrueForAll(u => u.health == 0))
+            if (teams[team].TrueForAll(u => u.health <= 0))
                 defeatedTeams++;
+            else standingTeams.Add(team);
+
         }
 
 
