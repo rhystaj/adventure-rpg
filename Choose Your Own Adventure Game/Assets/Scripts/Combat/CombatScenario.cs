@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 
-/**
- * The back-end of combat.
- */
-public class CombatScenario
+public class CombatScenario : ICombatScenario
 {
 
     private Once<IUnit[,]> board = new Once<IUnit[,]>(); //The grid of units.
