@@ -66,6 +66,7 @@ public class LastTeamStandingWinTracker : CombatScenario.WinTracker
             result = new List<int>(standingTeams)[0]; //Select the first unit, as there is only one anyway.
 
         }
+        else if (standingTeams.Count == 0) throw new NoTeamStandingException(); //If there are no teams standing, something may have wrong.
         else result = -1; //We don't have a winner otherwise.
 
 
@@ -81,5 +82,7 @@ public class LastTeamStandingWinTracker : CombatScenario.WinTracker
     }
 
     public void Update(IUnit[,] board){ /* Not applicable */ }
+
+    public class NoTeamStandingException : Exception { }
 
 }
