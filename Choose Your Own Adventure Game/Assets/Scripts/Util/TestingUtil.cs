@@ -5,18 +5,18 @@ using UnityEngine;
 
 /**
  * Contains static helper methods for testing.
- */ 
+ */
 public class TestingUtil {
 
     public delegate string Stringify<T>(T t);
     public delegate float Floatify<T>(T t);
 
-	public static string PrintsItemsOf<T>(IEnumerable<T> set)
+    public static string PrintsItemsOf<T>(IEnumerable<T> set)
     {
 
         string returnString = "\n";
 
-        foreach(T item in set)
+        foreach (T item in set)
         {
             returnString = returnString + "- " + item + "\n";
         }
@@ -57,7 +57,7 @@ public class TestingUtil {
     /**
      * Returns the max formatted float value of the given set.
      */
-     public static float FindMaxAs<T>(IEnumerable<T> set, Func<T, float> func)
+    public static float FindMaxAs<T>(IEnumerable<T> set, Func<T, float> func)
     {
 
         float max = func.Invoke(new List<T>(set)[0]);
@@ -90,4 +90,13 @@ public class TestingUtil {
 
     }
 
+    public static List<T> Convert2DArrayToList<T>(T[,] arr)
+    {
+
+        List<T> returnList = new List<T>();
+        foreach (T e in arr) returnList.Add(e);
+
+        return returnList;
+
+    }
 }
