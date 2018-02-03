@@ -15,12 +15,27 @@ public class CombatEncounter : ScriptableObject, ICombatEncounter
     [SerializeField] int _rows; //The number of rows the board has.
 
     [HideInInspector]
-    private List<IUnit> _enemyConfiguration = new List<IUnit>(); //The positioning of the units in the enemy team.
+    private List<Unit> _enemyConfiguration = new List<Unit>(); //The positioning of the units in the enemy team.
+    private List<Unit.IInstance> _instantiatedEnemyConfiguration;
 
 
     //Public getters.
     public int columnsPerSide { get { return _columnsPerSide; } set { _columnsPerSide = value; } }
     public int rows { get { return _rows; } set { _rows = value; } }
-    public List<IUnit> enemyConfiguration { get { return _enemyConfiguration; } }
+
+    public List<Unit> rawEnemyConfiguration { get { return _enemyConfiguration; } }
+    public List<Unit.IInstance> instantiatedEnemyConfiguration {
+        get {
+            if (_instantiatedEnemyConfiguration != null)
+                return _instantiatedEnemyConfiguration;
+            else
+                throw new System.Exception("Can not call this getter before enable.");
+        }
+    }
+
+    private void OnEnable()
+    {
+        _instantiatedEnemyConfiguration = _enemyConfiguration.ConvertAll<Unit.IInstance>(unit => new Unit.Instance(unit));
+    }
 
 }

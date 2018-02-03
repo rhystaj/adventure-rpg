@@ -29,10 +29,10 @@ public class CombatEncounterEditor : Editor
         if (targetScenario.columnsPerSide < 0) targetScenario.columnsPerSide = 0;
 
         //Adjust the length of targetScenario.enemyConfiguration if the number of rows and columns have changed.
-        while (targetScenario.enemyConfiguration.Count < targetScenario.rows * targetScenario.columnsPerSide)
-            targetScenario.enemyConfiguration.Add(null);
-        while (targetScenario.enemyConfiguration.Count > targetScenario.rows * targetScenario.columnsPerSide)
-            targetScenario.enemyConfiguration.Remove(null);
+        while (targetScenario.rawEnemyConfiguration.Count < targetScenario.rows * targetScenario.columnsPerSide)
+            targetScenario.rawEnemyConfiguration.Add(null);
+        while (targetScenario.rawEnemyConfiguration.Count > targetScenario.rows * targetScenario.columnsPerSide)
+            targetScenario.rawEnemyConfiguration.Remove(null);
 
 
         GUILayout.Space(10);
@@ -55,7 +55,7 @@ public class CombatEncounterEditor : Editor
             GUILayout.BeginHorizontal();
 
             for (int start = row * targetScenario.columnsPerSide; i - start < targetScenario.columnsPerSide; i++)
-                targetScenario.enemyConfiguration[i] = (Unit)EditorGUILayout.ObjectField((Unit)targetScenario.enemyConfiguration[i],
+                targetScenario.rawEnemyConfiguration[i] = (Unit)EditorGUILayout.ObjectField(targetScenario.rawEnemyConfiguration[i],
                                                                                    typeof(Unit), false, GUILayout.Width(UNIT_FIELD_WIDTH));
 
             GUILayout.EndHorizontal();

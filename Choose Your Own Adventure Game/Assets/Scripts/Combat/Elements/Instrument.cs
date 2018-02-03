@@ -5,11 +5,11 @@ using UnityEngine;
 /**
  * A unit's main item they use in combat.
  */ 
-public abstract class Instrument : ScriptableObject {
+public interface IInstrument {
 
     /**
      * Attempt to perform the relevant action on the given target 
      */ 
-    public abstract bool Use(IUnit user, IUnit target);
+    bool Use(Unit.IInstance user, Unit.IInstance target);
 
 }

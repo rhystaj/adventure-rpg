@@ -6,12 +6,12 @@ using UnityEngine.Assertions;
 
 public class LastTeamStandingWinTracker : CombatScenario.WinTracker
 {
-    public int DetermineWinner(IUnit[,] board)
+    public int DetermineWinner(Unit.IInstance[,] board)
     {
 
         //Preconditions
         Assert.IsNotNull(board, "Precondition Fail: The argument 'board' should not be null.");
-        Assert.IsTrue(TestingUtil.Convert2DArrayToList(board).TrueForAll(u => u.Alignment != -1),
+        Assert.IsTrue(TestingUtil.Convert2DArrayToList(board).TrueForAll(u => u.alignment != -1),
                       "Precondition Fail: The argument 'board' should not contain a unit with alignment -1.");
 
 
@@ -20,22 +20,22 @@ public class LastTeamStandingWinTracker : CombatScenario.WinTracker
 
 
         //Units on the board into thier teams, so they can be analysed as a whole team.
-        List<List<IUnit>> teams = new List<List<IUnit>>();
+        List<List<Unit.IInstance>> teams = new List<List<Unit.IInstance>>();
 
-        foreach (IUnit u in board) {
+        foreach (Unit.IInstance u in board) {
 
             //Ensure u is a valid unit, and add it to the set of valid team numbers.
             if (u == null) continue;
-            teamNumbers.Add(u.Alignment);
+            teamNumbers.Add(u.alignment);
 
 
             //Ensure there is enough space for a unit to be put at the index of thier alignment, then add it there.
-            while (u.Alignment >= teams.Count) teams.Add(new List<IUnit>());
+            while (u.alignment >= teams.Count) teams.Add(new List<Unit.IInstance>());
 
-            Assert.IsTrue(u.Alignment < teams.Count,
+            Assert.IsTrue(u.alignment < teams.Count,
                           "Enough elements should be added to teams, that the units aignment should be a valid index.");
 
-            teams[u.Alignment].Add(u);
+            teams[u.alignment].Add(u);
 
         }
 
@@ -83,7 +83,7 @@ public class LastTeamStandingWinTracker : CombatScenario.WinTracker
 
     }
 
-    public void Update(IUnit[,] board){ /* Not applicable */ }
+    public void Update(Unit.IInstance[,] board){ /* Not applicable */ }
 
     public class NoTeamStandingException : Exception { }
 

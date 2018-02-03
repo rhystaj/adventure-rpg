@@ -13,9 +13,9 @@ public abstract class CombatFlow {
     public int CurrentTeam { get { return currentTurn.Team; } } //Returns the team taking the current turn.
 
     //Returns the units avaliable for the current turn.
-    public HashSet<IUnit> UnitsAvaliableForTurn { get { return new HashSet<IUnit>(currentTurn.AvaliableUnits); } }
+    public HashSet<Unit.IInstance> UnitsAvaliableForTurn { get { return new HashSet<Unit.IInstance>(currentTurn.AvaliableUnits); } }
 
-    public virtual void TakeTurn(IUnit subject)
+    public virtual void TakeTurn(Unit.IInstance subject)
     {
         currentTurn = currentTurn.take(subject);
     }
@@ -23,7 +23,7 @@ public abstract class CombatFlow {
     /**
      * Determines whether the given unit can move during the current turn.
      */ 
-    public bool CanMoveDuringCurrentTurn(IUnit unit)
+    public bool CanMoveDuringCurrentTurn(Unit.IInstance unit)
     {
         return currentTurn.CanMove(unit);
     }
@@ -34,12 +34,12 @@ public abstract class CombatFlow {
     protected abstract class Turn
     {
         private int team;
-        private HashSet<IUnit> avaliableUnits;
+        private HashSet<Unit.IInstance> avaliableUnits;
 
         public int Team { get { return team; } }
-        public HashSet<IUnit> AvaliableUnits { get { return avaliableUnits; } }
+        public HashSet<Unit.IInstance> AvaliableUnits { get { return avaliableUnits; } }
 
-        public Turn(int team, HashSet<IUnit> avaliableUnits)
+        public Turn(int team, HashSet<Unit.IInstance> avaliableUnits)
         {
             this.team = team;
             this.avaliableUnits = avaliableUnits;
@@ -48,7 +48,7 @@ public abstract class CombatFlow {
         /**
          * Have the unit take the turn, if they are allowed to.
          */ 
-        public Turn take(IUnit subject)
+        public Turn take(Unit.IInstance subject)
         {
 
             if (CanMove(subject)) return ProduceNextTurn(subject);
@@ -56,12 +56,12 @@ public abstract class CombatFlow {
 
         }
 
-        protected abstract Turn ProduceNextTurn(IUnit turnTaker);
+        protected abstract Turn ProduceNextTurn(Unit.IInstance turnTaker);
 
         /**
          * Determins whether the given unit can move during the turn.
          */ 
-        public bool CanMove(IUnit unit)
+        public bool CanMove(Unit.IInstance unit)
         {
             return avaliableUnits.Contains(unit);
         }
@@ -77,10 +77,10 @@ public abstract class CombatFlow {
         private int selectedTeam;
         public int team { get { return selectedTeam; } }
 
-        private Unit selectedUnit;
-        public Unit unit { get { return selectedUnit; } }
+        private Unit.IInstance selectedUnit;
+        public Unit.IInstance unit { get { return selectedUnit; } }
 
-        public Selection(int team, Unit unit)
+        public Selection(int team, Unit.IInstance unit)
         {
             selectedTeam = team;
             selectedUnit = unit;
@@ -96,7 +96,7 @@ public abstract class CombatFlow {
     /**
      * Creates a combat flow from the given, more specific than added to the constructor itself, information.
      */ 
-    public interface Adaptor { CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter); }
+    public interface Adaptor { CombatFlow Convert(Unit.IInstance[,] playerTeam, ICombatEncounter encounter); }
 
     /**
      * An adaptor that will simply produce the CombatFlow given to it. Used mainly for testing.
@@ -111,7 +111,7 @@ public abstract class CombatFlow {
             this.flow = flow;
         }
 
-        public CombatFlow Convert(IUnit[,] playerTeam, ICombatEncounter encounter)
+        public CombatFlow Convert(Unit.IInstance[,] playerTeam, ICombatEncounter encounter)
         {
             return flow;
         }

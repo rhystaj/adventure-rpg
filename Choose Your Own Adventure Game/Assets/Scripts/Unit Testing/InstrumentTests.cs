@@ -34,8 +34,8 @@ public class InstrumentTests {
     public void TestDamageIsSubtractedFromValidTarget()
     {
 
-        Unit testUser = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 1");
-        Unit testTarget = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 4");
+        Unit.IInstance testUser = new MockUnit("Unit 1", 0, 50, 0, true);
+        Unit.IInstance testTarget = new MockUnit("Unit 2", 1, 50, 0, true);
 
         float targetHealthBeforeAttack = testTarget.health;
 
@@ -53,8 +53,8 @@ public class InstrumentTests {
     public void TestUnitsCanNotAttackTargetsOfTheSameAlignment()
     {
 
-        Unit testUser = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 1");
-        Unit testTarget = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 2");
+        Unit.IInstance testUser = new MockUnit("Unit 1", 0, 50, 0, true);
+        Unit.IInstance testTarget = new MockUnit("Unit 2", 0, 50, 0, true);
 
         Assert.IsFalse(strongShortRange.Use(testUser, testTarget));
 
@@ -67,10 +67,10 @@ public class InstrumentTests {
     public void UnitCanHitAnywhereInItsRange()
     {
 
-        Unit testUser = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 1");
-        Unit testTarget = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 4");
+        Unit.IInstance testUser = new MockUnit("Unit 1", 0, 50, 0, true);
+        Unit.IInstance testTarget = new MockUnit("Unit 2", 1, 50, 0, true);
 
-        for(int pos = weakLongRange.minRange; pos <= weakLongRange.maxRange; pos++)
+        for (int pos = weakLongRange.minRange; pos <= weakLongRange.maxRange; pos++)
         {
             testTarget.position = pos;
             Assert.IsTrue(weakLongRange.Use(testUser, testTarget),
@@ -87,18 +87,18 @@ public class InstrumentTests {
     public void TestUnitsCantHitTargetsOutOfRange()
     {
 
-        Unit testUser = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 1");
+        Unit.IInstance testUser = new MockUnit("Unit 1", 0, 50, 0, true);
 
 
         //Test weapon can't hot under its range.
-        Unit testTarget = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 4");
+        Unit.IInstance testTarget = new MockUnit("Unit 2", 1, 50, 0, true);
         testTarget.position = 1;
 
         Assert.IsFalse(weakLongRange.Use(testUser, testTarget), "A weapon can not attack a target below its range.");
 
 
         //Test weapon can't hit over its range.
-        testTarget = CombatFlowTests.GetFlowTestUnit("Flow Test Mock Unit 5");
+        testTarget = new MockUnit("Unit 3", 1, 50, 0, true);
         testTarget.position = 7;
 
         Assert.IsFalse(weakLongRange.Use(testUser, testTarget));

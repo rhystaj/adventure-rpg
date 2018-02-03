@@ -12,21 +12,21 @@ public class LastTeamStandingWinTrackerTests {
     public void DeterminesCorrectWinner()
     {
 
-        CheckWinner(1, new IUnit[,]
+        CheckWinner(1, new Unit.IInstance[,]
         {
             { new MockUnit("Test Unit 1", 0, 0, 0, true), new MockUnit("Test Unit 2", 1, 0, 0, true), new MockUnit("Test Unit 3", 2, 0, 0, true)},
             { new MockUnit("Test Unit 4", 0, 0, 0, true), new MockUnit("Test Unit 5", 1, 3, 0, true), new MockUnit("Test Unit 6", 2, 0, 0, true) },
             { new MockUnit("Test Unit 7", 0, 0, 0, true), new MockUnit("Test Unit 8", 1, 78, 0, true), new MockUnit("Test Unit 9", 2, 0, 0, true) }
         });
 
-        CheckWinner(2, new IUnit[,]
+        CheckWinner(2, new Unit.IInstance[,]
         {
             { new MockUnit("Test Unit 1", 0, 0, 0, true), new MockUnit("Test Unit 2", 1, 0, 0, true), new MockUnit("Test Unit 3", 2, 2, 0, true)},
             { new MockUnit("Test Unit 4", 0, 0, 0, true), new MockUnit("Test Unit 5", 1, 0, 0, true), new MockUnit("Test Unit 6", 2, 0, 0, true) },
             { new MockUnit("Test Unit 7", 0, 0, 0, true), new MockUnit("Test Unit 8", 1, -3, 0, true), new MockUnit("Test Unit 9", 2, 0, 0, true) }
         });
 
-        CheckWinner(6, new IUnit[,]
+        CheckWinner(6, new Unit.IInstance[,]
         {
             { new MockUnit("Test Unit 1", 0, 0, 0, true), new MockUnit("Test Unit 2", 1, 0, 0, true), new MockUnit("Test Unit 3", 2, 0, 0, true)},
             { new MockUnit("Test Unit 4", 0, 0, 0, true), new MockUnit("Test Unit 5", 1, 0, 0, true), new MockUnit("Test Unit 6", 2, 0, 0, true) },
@@ -38,7 +38,7 @@ public class LastTeamStandingWinTrackerTests {
     /**
      * Assert that the given winner can be determined from the given board.
      */ 
-    private void CheckWinner(int expectedWinner, IUnit[,] board)
+    private void CheckWinner(int expectedWinner, Unit.IInstance[,] board)
     {
         int actualWinner = new LastTeamStandingWinTracker().DetermineWinner(board);
         Assert.AreEqual(expectedWinner, actualWinner, "Team " + expectedWinner + " should have won, but Team " + actualWinner + " did instead.");
@@ -51,14 +51,14 @@ public class LastTeamStandingWinTrackerTests {
     public void DeterminesWhenThereIsNoWinnerCorrectly()
     {
 
-        CheckNoWinner(new IUnit[,]
+        CheckNoWinner(new Unit.IInstance[,]
         {
             { new MockUnit("Test Unit 1", 0, 9, 0, true), new MockUnit("Test Unit 2", 1, 0, 0, true), new MockUnit("Test Unit 3", 2, 0, 0, true)},
             { new MockUnit("Test Unit 4", 0, 0, 0, true), new MockUnit("Test Unit 5", 1, 3, 0, true), new MockUnit("Test Unit 6", 2, 0, 0, true) },
             { new MockUnit("Test Unit 7", 0, 56, 0, true), new MockUnit("Test Unit 8", 1, 78, 0, true), new MockUnit("Test Unit 9", 2, 0, 0, true) }
         });
 
-        CheckNoWinner(new IUnit[,]
+        CheckNoWinner(new Unit.IInstance[,]
         {
             { new MockUnit("Test Unit 1", 0, 9, 0, true), new MockUnit("Test Unit 2", 1, 0, 0, true), new MockUnit("Test Unit 3", 2, 7, 0, true)},
             { new MockUnit("Test Unit 4", 0, 0, 0, true), new MockUnit("Test Unit 5", 1, 0, 0, true), new MockUnit("Test Unit 6", 2, 0, 0, true) },
@@ -69,7 +69,7 @@ public class LastTeamStandingWinTrackerTests {
     /**
      * Assert that the given board does not produce a winner.
      */ 
-    private void CheckNoWinner(IUnit[,] board)
+    private void CheckNoWinner(Unit.IInstance[,] board)
     {
         int actualWinner = new LastTeamStandingWinTracker().DetermineWinner(board);
         Assert.AreEqual(-1, actualWinner, "Team " + actualWinner + " is said to have won, but there should be no winner.");
@@ -82,14 +82,14 @@ public class LastTeamStandingWinTrackerTests {
     public void ExcpetionThrownWhenNoTeamIsStanding()
     {
 
-        CheckNoTeamStandingException(new IUnit[,]
+        CheckNoTeamStandingException(new Unit.IInstance[,]
         {
             { new MockUnit("Test Unit 1", 0, 0, 0, true), new MockUnit("Test Unit 2", 1, 0, 0, true), new MockUnit("Test Unit 3", 2, 0, 0, true)},
             { new MockUnit("Test Unit 4", 0, 0, 0, true), new MockUnit("Test Unit 5", 1, 0, 0, true), new MockUnit("Test Unit 6", 2, 0, 0, true) },
             { new MockUnit("Test Unit 7", 0, 0, 0, true), new MockUnit("Test Unit 8", 1, 0, 0, true), new MockUnit("Test Unit 9", 2, 0, 0, true) }
         });
 
-        CheckNoTeamStandingException(new IUnit[,]
+        CheckNoTeamStandingException(new Unit.IInstance[,]
         {
             { new MockUnit("Test Unit 1", 0, 0, 0, true), new MockUnit("Test Unit 2", 1, -1, 0, true), new MockUnit("Test Unit 3", 2, 0, 0, true)},
             { new MockUnit("Test Unit 4", 0, 0, 0, true), new MockUnit("Test Unit 5", 1, 0, 0, true), new MockUnit("Test Unit 6", 2, 0, 0, true) },
@@ -101,7 +101,7 @@ public class LastTeamStandingWinTrackerTests {
     /**
      * Asserts that the given board will cause a NoTeamStandingException to be thrown.
      */ 
-    private void CheckNoTeamStandingException(IUnit[,] board)
+    private void CheckNoTeamStandingException(Unit.IInstance[,] board)
     {
         try
         {

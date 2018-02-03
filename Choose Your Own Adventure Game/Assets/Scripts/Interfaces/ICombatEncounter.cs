@@ -3,6 +3,6 @@
 public interface ICombatEncounter
 {
     int columnsPerSide { get; set; }
-    List<IUnit> enemyConfiguration { get; }
+    List<Unit.IInstance> instantiatedEnemyConfiguration { get; }
     int rows { get; set; }
 }

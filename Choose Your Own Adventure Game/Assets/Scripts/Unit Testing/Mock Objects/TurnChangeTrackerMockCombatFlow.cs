@@ -10,9 +10,9 @@ public class TurnChangeTrackerMockCombatFlow : CombatFlow {
 
     public int TurnsTaken { get { return ((TrackedTurn)currentTurn).turnsTaken; } }
 
-    public TurnChangeTrackerMockCombatFlow(int team, IUnit[] avaliableUnits)
+    public TurnChangeTrackerMockCombatFlow(int team, Unit.IInstance[] avaliableUnits)
     {
-        currentTurn = new TrackedTurn(team, new HashSet<IUnit>(new List<IUnit>(avaliableUnits)), 0);
+        currentTurn = new TrackedTurn(team, new HashSet<Unit.IInstance>(new List<Unit.IInstance>(avaliableUnits)), 0);
     }
 
     private class TrackedTurn : Turn
@@ -20,12 +20,12 @@ public class TurnChangeTrackerMockCombatFlow : CombatFlow {
 
         public int turnsTaken;
 
-        public TrackedTurn(int team, HashSet<IUnit> avaliableUnits, int turnsTaken) : base(team, avaliableUnits)
+        public TrackedTurn(int team, HashSet<Unit.IInstance> avaliableUnits, int turnsTaken) : base(team, avaliableUnits)
         {
             this.turnsTaken = turnsTaken;
         }
 
-        protected override Turn ProduceNextTurn(IUnit turnTaker)
+        protected override Turn ProduceNextTurn(Unit.IInstance turnTaker)
         {
             return new TrackedTurn(Team, AvaliableUnits, turnsTaken++);
         }

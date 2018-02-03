@@ -3,20 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MockUnit : IUnit, IEquatable<MockUnit>
+public class MockUnit : Unit.IInstance, IEquatable<MockUnit>
 {
 
     private string name;
 
+    private float _maxHealth;
     private int _alignment;
     private float _health;
     private int _position;
 
     private MockInstrument ins;
 
-    public int Alignment{ get { return _alignment; } }
+    public int alignment{ get { return _alignment; } }
     public float health{ get { return _health; } set { _health = value; } }
     public int position { get; set; }
+
+    public float maxHealth { get { return _maxHealth; } }
+
+    public MockUnit(string name, int alignment, float maxHealth, float health, int position, bool attackSuccessful)
+    {
+
+        this.name = name;
+
+        _maxHealth = maxHealth;
+        _alignment = alignment;
+        _health = health;
+        _position = position;
+
+        ins = new MockInstrument(attackSuccessful);
+
+    }
 
     public MockUnit(string name, int alignment, float health, int position, bool attackSuccessful)
     {
@@ -31,14 +48,9 @@ public class MockUnit : IUnit, IEquatable<MockUnit>
 
     }
 
-    public bool UseInstrument(IUnit target)
+    public bool UseInstrument(Unit.IInstance target)
     {
         return ins.Use(this, target);
-    }
-
-    public IUnit InstantiateClone()
-    {
-        return new MockUnit(name, _alignment, _health, _position, ins.Use(this, this));
     }
 
     public override string ToString()

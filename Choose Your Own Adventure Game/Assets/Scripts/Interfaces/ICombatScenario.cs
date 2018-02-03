@@ -3,7 +3,7 @@
  */
 public interface ICombatScenario
 {
-    IUnit[,] Board { get; }
+    Unit.IInstance[,] Board { get; }
 
-    bool UseInstrument(IUnit subject, IUnit target);
+    bool UseInstrument(Unit.IInstance subject, Unit.IInstance target);
 }

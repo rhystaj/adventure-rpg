@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using NUnit.Framework;
+using System;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 /**
- * A piece that can be placed on the board during combat.
- */
-public class Unit : MonoBehaviour, IEquatable<Unit>, IUnit
+ * Represents the specs of a single unit in gameplay.
+ */ 
+public class Unit : ScriptableObject
 {
 
-    //The path to the prefab used as a base for construted mock objects for testing.
-    public const string MOCK_BASE_PATH = "Testing/Mock Prefabs/Combat/Mock Unit Base"; 
-
     [Header("Stats")]
-    public Instrument instrument; //The main item the unit uses when moving.
-    public float maxHealth; //The max health points of the unit.
-    public float effectiveness; //The unit's ability with thier instrument.
-    public int alignment; //The team this unit belongs to.
-    public int turnCooldown; //The number of turns after this unit has been used before they can be used again.
+    [SerializeField] private IInstrument instrument; //The main item the unit uses when moving.
+    [SerializeField] private float maxHealth; //The max health points of the unit.
+    [SerializeField] private float effectiveness; //The unit's ability with thier instrument.
+    [SerializeField] private int alignment; //The team this unit belongs to.
+    [SerializeField] private int turnCooldown; //The number of turns after this unit has been used before they can be used again.
     [Space(10)]
 
     [Header("Graphics")]
@@ -26,61 +21,78 @@ public class Unit : MonoBehaviour, IEquatable<Unit>, IUnit
     [SerializeField] Sprite attakingSprite;
     [SerializeField] Sprite talkingDamageSprite;
 
-    private int _position;
-    public int position { get; set; }
+    public interface IInstance
+    {
 
-    private SpriteRenderer spriteRenderer;
+        float maxHealth { get; }
+        int alignment { get; }
 
 
-    private float _health; //The health of the unit.
-    public float health {
-        get
+        float health { get; set; }
+        int position { get; set; }
+
+        bool UseInstrument(IInstance target);
+
+    }
+
+    /**
+    * A piece that can be placed on the board during combat.
+    */
+    public class Instance : IInstance, IEquatable<Instance>
+    {
+
+        private Unit unit;
+
+        public float maxHealth { get { return unit.maxHealth; } }
+        public int alignment { get { return unit.alignment; } }
+
+
+        private float _health; //The health of the unit.
+        public float health
         {
-            return _health;
+            get
+            {
+                return _health;
+            }
+            set
+            {
+                if (value < 0) _health = 0;
+                else _health = value;
+            }
         }
-        set
+
+        private int _position;
+        public int position { get; set; }
+
+ 
+
+        public Instance(Unit unit)
         {
-            if (value < 0) _health = 0;
-            else _health = value;
+
+            //Preconditions
+            Assert.IsNotNull(unit, "Precondition Fail: The argument unit should not be null.");
+            Assert.IsNotNull(unit.instrument, "Precondition Fail: The given unit should have an instrument.");
+
+            this.unit = unit;
+
+            health = unit.maxHealth > 0 ? unit.maxHealth : 0;
+
+        }
+
+        public virtual bool UseInstrument(IInstance target)
+        {
+            return unit.instrument.Use(this, target);
+        }
+
+        public bool Equals(Instance other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return unit.name;
         }
     }
 
-    public int Alignment { get { return alignment; } }
-
-    private void OnEnable()
-    {
-
-        //Preconditions
-        Assert.IsNotNull(instrument, "Precondition Fail: The property 'instrument' should not be null.");
-
-
-        //Get the respective game object's sprite render, or throw an error if it doesn't have one.
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null) Debug.LogError("The unit " + name + " does not have a renderer attatched.");
-        spriteRenderer.sprite = neutralSprite;
-
-        
-        //Ensure stats aren't negative.
-        if (maxHealth < 0) maxHealth = 0;
-        if (effectiveness < 0) effectiveness = 0;
-
-
-        health = maxHealth;
-
-
-    }
-
-    public virtual bool UseInstrument(IUnit target){
-        return instrument.Use(this, target);
-    }
-
-    public bool Equals(Unit other)
-    {
-        return name.Equals(other.name);
-    }
-
-    public IUnit InstantiateClone()
-    {
-        return Instantiate(this);
-    }
 }

@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 public class CombatScenario : ICombatScenario
 {
 
-    private Once<IUnit[,]> board = new Once<IUnit[,]>(); //The grid of units.
+    private Once<Unit.IInstance[,]> board = new Once<Unit.IInstance[,]>(); //The grid of units.
     private Once<CombatFlow> flow = new Once<CombatFlow>(); //The struture of the progression of the combat.
     private Once<WinTracker> winTracker = new Once<WinTracker>(); //Tracks the progress of the game to determine the winner.
 
@@ -14,11 +14,11 @@ public class CombatScenario : ICombatScenario
     /**
      * Return a copy of the board.
      */
-    public IUnit[,] Board {
+    public Unit.IInstance[,] Board {
 
         get {
 
-            IUnit[,] clone = new IUnit[board.Value.GetLength(0), board.Value.GetLength(1)];
+            Unit.IInstance[,] clone = new Unit.IInstance[board.Value.GetLength(0), board.Value.GetLength(1)];
             System.Array.Copy(board.Value, clone, clone.Length);
 
             return clone;
@@ -27,7 +27,7 @@ public class CombatScenario : ICombatScenario
 
     }
 
-    public CombatScenario(IUnit[,] playerUnits, ICombatEncounter encounter, CombatFlow.Adaptor flowAdaptor, WinTracker winTracker)
+    public CombatScenario(Unit.IInstance[,] playerUnits, ICombatEncounter encounter, CombatFlow.Adaptor flowAdaptor, WinTracker winTracker)
     {
 
         //Preconditions
@@ -38,7 +38,7 @@ public class CombatScenario : ICombatScenario
         Assert.IsNotNull(winTracker, "Precondition Fail: The argument 'winTracker' should not be null.");
 
         //Create a new board
-        board.Value = new IUnit[encounter.rows, encounter.columnsPerSide * 2]; //Double as columns per side is the number of units on ONE of the TWO sides.
+        board.Value = new Unit.IInstance[encounter.rows, encounter.columnsPerSide * 2]; //Double as columns per side is the number of units on ONE of the TWO sides.
 
         
         //Copy the player units to the player's side and set thier positions based on how far they are away from the centre.
@@ -57,8 +57,7 @@ public class CombatScenario : ICombatScenario
         {
             for (int j = encounter.columnsPerSide; j < board.Value.GetLength(1); j++)
             {
-                IUnit enemy = encounter.enemyConfiguration[(j - encounter.columnsPerSide) + (encounter.columnsPerSide * i)];
-                board.Value[i, j] = enemy.InstantiateClone();
+                board.Value[i, j] = encounter.instantiatedEnemyConfiguration[(j - encounter.columnsPerSide) + (encounter.columnsPerSide * i)];
                 board.Value[i, j].position = Mathf.Abs(j - (encounter.columnsPerSide));
             }
         }
@@ -80,7 +79,7 @@ public class CombatScenario : ICombatScenario
     /**
      * Try to register a turn in which a unit uses their instrument on another.
      */
-    public bool UseInstrument(IUnit subject, IUnit target)
+    public bool UseInstrument(Unit.IInstance subject, Unit.IInstance target)
     {
 
         //Preconditions
@@ -116,12 +115,12 @@ public class CombatScenario : ICombatScenario
         /**
          * Updates the status of the tracker that will go towards determining the winner.
          */ 
-        void Update(IUnit[,] board);
+        void Update(Unit.IInstance[,] board);
 
         /**
          * Returns the winning team, or -1 if there is none.
          */ 
-        int DetermineWinner(IUnit[,] board);
+        int DetermineWinner(Unit.IInstance[,] board);
 
     }
 

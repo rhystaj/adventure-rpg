@@ -6,16 +6,16 @@ using UnityEngine;
 /**
  * An instrument that damages an enemy unit.
  */ 
-public class Weapon : Instrument {
+public class Weapon : ScriptableObject, IInstrument {
 
     public int damage;
     public int minRange; //The closest tile a weapon can hit.
     public int maxRange; //The furthest tile a weapon can hit. 
 
-    public override bool Use(IUnit user, IUnit target)
+    public bool Use(Unit.IInstance user, Unit.IInstance target)
     {
 
-        if (user.Alignment == target.Alignment) return false; //    A unit can not use a weapon on someone from thier own team.
+        if (user.alignment == target.alignment) return false; //    A unit can not use a weapon on someone from thier own team.
         if (target.position < minRange || target.position > maxRange) return false; //  A unit can not use a weapon on someone out of range. 
 
         target.health -= damage;
