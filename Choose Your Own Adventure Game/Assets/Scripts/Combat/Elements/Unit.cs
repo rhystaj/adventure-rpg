@@ -32,6 +32,7 @@ public class Unit : ScriptableObject
         int position { get; set; }
 
         bool UseInstrument(IInstance target);
+        bool CanUseInstrumentOn(IInstance target);
 
     }
 
@@ -82,6 +83,11 @@ public class Unit : ScriptableObject
         public virtual bool UseInstrument(IInstance target)
         {
             return unit.instrument.Use(this, target);
+        }
+
+        public bool CanUseInstrumentOn(IInstance target)
+        {
+            return unit.instrument.CanUse(this, target);
         }
 
         public bool Equals(Instance other)

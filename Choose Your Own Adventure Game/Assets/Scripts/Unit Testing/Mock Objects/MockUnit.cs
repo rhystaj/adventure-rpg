@@ -53,6 +53,11 @@ public class MockUnit : Unit.IInstance, IEquatable<MockUnit>
         return ins.Use(this, target);
     }
 
+    public bool CanUseInstrumentOn(Unit.IInstance target)
+    {
+        return ins.CanUse(this, target);
+    }
+
     public override string ToString()
     {
         return name;
