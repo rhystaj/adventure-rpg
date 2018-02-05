@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 public class CombatScenario : ICombatScenario
@@ -26,6 +27,8 @@ public class CombatScenario : ICombatScenario
         }
 
     }
+
+    public HashSet<Unit.IInstance> AvaliableUnits { get { return flow.Value.UnitsAvaliableForTurn; } }
 
     public CombatScenario(Unit.IInstance[,] playerUnits, ICombatEncounter encounter, CombatFlow.Adaptor flowAdaptor, WinTracker winTracker)
     {
