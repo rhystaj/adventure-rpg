@@ -10,6 +10,6 @@ public interface IController{
     /**
      * Perform an action on the given combat if possible.
      */ 
-     ICombatAction MakeMove(ICombatScenario scenario);
+     ICombatAction DetermineMove(Unit.IInstance[,] board, HashSet<Unit.IInstance> avaliableUnits);
 
 }
