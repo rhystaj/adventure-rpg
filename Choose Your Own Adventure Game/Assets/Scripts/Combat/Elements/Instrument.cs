@@ -12,4 +12,9 @@ public interface IInstrument {
      */ 
     bool Use(Unit.IInstance user, Unit.IInstance target);
 
+    /**
+     * Returns whether the given user can use the instrument on the given target.
+     */ 
+    bool CanUse(Unit.IInstance user, Unit.IInstance target); 
+
 }

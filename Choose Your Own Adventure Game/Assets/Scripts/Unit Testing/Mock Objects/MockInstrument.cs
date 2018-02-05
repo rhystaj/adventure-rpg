@@ -13,5 +13,7 @@ public class MockInstrument : IInstrument
         this.successful = successful;
     }
 
+    public bool CanUse(Unit.IInstance user, Unit.IInstance target) { return successful; }
+
     public bool Use(Unit.IInstance user, Unit.IInstance target){ return successful; }
 }
