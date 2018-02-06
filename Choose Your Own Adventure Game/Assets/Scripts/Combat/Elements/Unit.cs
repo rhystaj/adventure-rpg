@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /**
@@ -17,9 +18,16 @@ public class Unit : ScriptableObject
     [Space(10)]
 
     [Header("Graphics")]
-    [SerializeField] Sprite neutralSprite;
+    [SerializeField] Sprite idleSprite;
     [SerializeField] Sprite attakingSprite;
     [SerializeField] Sprite talkingDamageSprite;
+    [SerializeField] Sprite generalActionSprite;
+    [SerializeField] Sprite incapacitatedSprite;
+
+    public enum State
+    {
+        Idle, Attacking, TakingDamage, GeneralAction, Incapacitated
+    }
 
     public interface IInstance
     {
@@ -30,9 +38,11 @@ public class Unit : ScriptableObject
 
         float health { get; set; }
         int position { get; set; }
+        State state { get; }
 
         bool UseInstrument(IInstance target);
         bool CanUseInstrumentOn(IInstance target);
+        Sprite GetImageForState(State state);
 
     }
 
@@ -42,11 +52,11 @@ public class Unit : ScriptableObject
     public class Instance : IInstance, IEquatable<Instance>
     {
 
-        private Unit unit;
+        private Once<Unit> unit = new Once<Unit>();
+        private Once<Dictionary<State, Sprite>> imagesForStates = new Once<Dictionary<State, Sprite>>();
 
-        public float maxHealth { get { return unit.maxHealth; } }
-        public int alignment { get { return unit.alignment; } }
-
+        public float maxHealth { get { return unit.Value.maxHealth; } }
+        public int alignment { get { return unit.Value.alignment; } }
 
         private float _health; //The health of the unit.
         public float health
@@ -65,7 +75,15 @@ public class Unit : ScriptableObject
         private int _position;
         public int position { get; set; }
 
- 
+        public State state
+        {
+            //Only Incapacitated and Idle, are persitant, the other states are fleeting and used for the purposes of animation.
+            get
+            {
+                if (health <= 0) return State.Incapacitated;
+                else return State.Idle;
+            }
+        }
 
         public Instance(Unit unit)
         {
@@ -74,20 +92,29 @@ public class Unit : ScriptableObject
             Assert.IsNotNull(unit, "Precondition Fail: The argument unit should not be null.");
             Assert.IsNotNull(unit.instrument, "Precondition Fail: The given unit should have an instrument.");
 
-            this.unit = unit;
+            this.unit.Value = unit;
 
             health = unit.maxHealth > 0 ? unit.maxHealth : 0;
+
+
+            //Store images.
+            imagesForStates.Value = new Dictionary<State, Sprite>();
+            imagesForStates.Value.Add(State.Idle, unit.idleSprite);
+            imagesForStates.Value.Add(State.Attacking, unit.attakingSprite);
+            imagesForStates.Value.Add(State.TakingDamage, unit.talkingDamageSprite);
+            imagesForStates.Value.Add(State.GeneralAction, unit.generalActionSprite);
+            imagesForStates.Value.Add(State.Incapacitated, unit.incapacitatedSprite);
 
         }
 
         public virtual bool UseInstrument(IInstance target)
         {
-            return unit.instrument.Use(this, target);
+            return unit.Value.instrument.Use(this, target);
         }
 
         public bool CanUseInstrumentOn(IInstance target)
         {
-            return unit.instrument.CanUse(this, target);
+            return unit.Value.instrument.CanUse(this, target);
         }
 
         public bool Equals(Instance other)
@@ -97,7 +124,11 @@ public class Unit : ScriptableObject
 
         public override string ToString()
         {
-            return unit.name;
+            return unit.Value.name;
+        }
+
+        public Sprite GetImageForState(State state) { 
+            return imagesForStates.Value[state];
         }
     }
 
