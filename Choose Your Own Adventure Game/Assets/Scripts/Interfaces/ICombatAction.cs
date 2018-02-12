@@ -1,6 +1,8 @@
-﻿/**
-    * An action performed on the combat scenario.
-    */
+﻿
+using System.Collections;
+/**
+* An action performed on the combat scenario.
+*/
 public interface ICombatAction {
 
     /**
@@ -11,6 +13,6 @@ public interface ICombatAction {
     /**
      * Visulise the action with the given animator.
      */ 
-    void Animate(ICombatAnimator animator);
+    IEnumerator Animate(ICombatAnimator animator);
 
 }

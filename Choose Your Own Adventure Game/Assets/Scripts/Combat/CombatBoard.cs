@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+/**
+ * The user interface for controlling and displaying a combat scenario.
+ */ 
 public class CombatBoard : MonoBehaviour, IController {
-
-    [SerializeField] Camera cam; //The main camera used to view the board.
 
     [SerializeField] Vector2 distancesBetweenUnits;
     [SerializeField] float centreGapWidth;
+
+    private CombatScenario currentScenario; //The scenario being displayed on the board.
+    private CombatAnimator animator;
 
     private UnitVessel subject; //The unit taking the turn.
     private UnitVessel target; //The unit the turn's action is being performed on.
@@ -133,9 +137,49 @@ public class CombatBoard : MonoBehaviour, IController {
 
         }
 
+        public void SetPose(Unit.State poseState)
+        {
+            sprRenderer.sprite = _unit.GetImageForState(poseState);
+        }
+
         private void OnMouseDown()
         {
             parent.SelectUnit(this);
+        }
+
+    }
+
+    private class CombatAnimator : ICombatAnimator
+    {
+
+        private Dictionary<Unit.IInstance, UnitVessel> vessels = new Dictionary<Unit.IInstance, UnitVessel>(); //The instances of units mapped to the vessels that house them.
+
+        public CombatAnimator(UnitVessel[] vessels)
+        {
+
+            //Preconditions
+            Assert.IsNotNull(vessels, "The argument 'vessels' should not be null.");
+
+
+            foreach (UnitVessel vessel in vessels)
+                this.vessels.Add(vessel.unit, vessel);
+
+
+        }
+
+
+        public IEnumerator PoseUnit(Unit.IInstance unit, Unit.State poseState)
+        {
+
+            //Preconditions
+            Assert.IsNotNull(unit, "Precondition Fail: The argument 'unit' should not be null.");
+            Assert.IsTrue(vessels.ContainsKey(unit),
+                          "Precondition Fail: The given unit should be a key in state.");
+
+
+            vessels[unit].SetPose(poseState);
+            yield return null;
+
         }
 
     }

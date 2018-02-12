@@ -36,7 +36,23 @@ public class InstrumentUse : ICombatAction
 
     }
 
-    public void Animate(ICombatAnimator animator) {
+    public IEnumerator Animate(ICombatAnimator animator) {
+
+        //Preconditions
+        Assert.IsNotNull(animator, "Precondition Fail: The argument 'animator' should not be null");
+
+
+        animator.PoseUnit(user.Value, Unit.State.Attacking);
+        yield return new WaitForSeconds(0.5f);
+
+        animator.PoseUnit(target.Value, Unit.State.TakingDamage);
+        yield return new WaitForSeconds(0.5f);
+
+        animator.PoseUnit(user.Value, Unit.State.Idle);
+        yield return new WaitForSeconds(0.5f);
+
+        animator.PoseUnit(target.Value, Unit.State.Idle);
+
 
         //Postconditions
         Assert.IsTrue(ClassInvariantsHold());
