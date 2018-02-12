@@ -5,14 +5,15 @@ using UnityEngine;
 
 /**
  * An instrument that damages an enemy unit.
- */ 
-public class Weapon : ScriptableObject, IInstrument {
+ */
+[CreateAssetMenu]
+public class Weapon : Instrument {
 
     public int damage;
     public int minRange; //The closest tile a weapon can hit.
     public int maxRange; //The furthest tile a weapon can hit. 
 
-    public bool CanUse(Unit.IInstance user, Unit.IInstance target)
+    public override bool CanUse(Unit.IInstance user, Unit.IInstance target)
     {
         if (user.alignment == target.alignment) return false; //    A unit can not use a weapon on someone from thier own team.
         if (target.position < minRange || target.position > maxRange) return false; //  A unit can not use a weapon on someone out of range. 
@@ -21,7 +22,7 @@ public class Weapon : ScriptableObject, IInstrument {
 
     }
 
-    public bool Use(Unit.IInstance user, Unit.IInstance target)
+    public override bool Use(Unit.IInstance user, Unit.IInstance target)
     {
 
         if (!CanUse(user, target)) return false;
@@ -31,4 +32,5 @@ public class Weapon : ScriptableObject, IInstrument {
         return true;
 
     }
+
 }

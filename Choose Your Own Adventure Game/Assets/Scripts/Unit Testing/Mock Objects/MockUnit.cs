@@ -21,6 +21,14 @@ public class MockUnit : Unit.IInstance, IEquatable<MockUnit>
 
     public float maxHealth { get { return _maxHealth; } }
 
+    public Unit.State state
+    {
+        get
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public MockUnit(string name, int alignment, float maxHealth, float health, int position, bool attackSuccessful)
     {
 
@@ -66,5 +74,10 @@ public class MockUnit : Unit.IInstance, IEquatable<MockUnit>
     public bool Equals(MockUnit other)
     {
         return name.Equals(other.name);
+    }
+
+    public Sprite GetImageForState(Unit.State state)
+    {
+        throw new NotImplementedException();
     }
 }

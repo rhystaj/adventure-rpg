@@ -6,11 +6,12 @@ using UnityEngine;
 /**
  * Represents the specs of a single unit in gameplay.
  */ 
+[CreateAssetMenu]
 public class Unit : ScriptableObject
 {
 
     [Header("Stats")]
-    [SerializeField] private IInstrument instrument; //The main item the unit uses when moving.
+    [SerializeField] private Instrument instrument; //The main item the unit uses when moving.
     [SerializeField] private float maxHealth; //The max health points of the unit.
     [SerializeField] private float effectiveness; //The unit's ability with thier instrument.
     [SerializeField] private int alignment; //The team this unit belongs to.

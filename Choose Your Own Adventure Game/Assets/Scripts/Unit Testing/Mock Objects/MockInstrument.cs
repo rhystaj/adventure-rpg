@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MockInstrument : IInstrument
+public class MockInstrument : Instrument
 {
 
     private bool successful;
@@ -13,7 +13,7 @@ public class MockInstrument : IInstrument
         this.successful = successful;
     }
 
-    public bool CanUse(Unit.IInstance user, Unit.IInstance target) { return successful; }
+    public override bool CanUse(Unit.IInstance user, Unit.IInstance target) { return successful; }
 
-    public bool Use(Unit.IInstance user, Unit.IInstance target){ return successful; }
+    public override bool Use(Unit.IInstance user, Unit.IInstance target){ return successful; }
 }
