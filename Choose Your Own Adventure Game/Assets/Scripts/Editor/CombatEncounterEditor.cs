@@ -62,6 +62,8 @@ public class CombatEncounterEditor : Editor
 
         }
 
+        EditorUtility.SetDirty(targetScenario);
+
     }
 
 }

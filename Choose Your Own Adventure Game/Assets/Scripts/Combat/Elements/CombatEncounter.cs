@@ -15,7 +15,7 @@ public class CombatEncounter : ScriptableObject, ICombatEncounter
     [SerializeField] int _rows; //The number of rows the board has.
 
     [HideInInspector]
-    private List<Unit> _enemyConfiguration = new List<Unit>(); //The positioning of the units in the enemy team.
+    [SerializeField] private List<Unit> _enemyConfiguration = new List<Unit>(); //The positioning of the units in the enemy team.
     private List<Unit.IInstance> _instantiatedEnemyConfiguration;
 
 
@@ -35,7 +35,11 @@ public class CombatEncounter : ScriptableObject, ICombatEncounter
 
     private void OnEnable()
     {
+
+        
+
         _instantiatedEnemyConfiguration = _enemyConfiguration.ConvertAll<Unit.IInstance>(unit => new Unit.Instance(unit));
+
     }
 
 }

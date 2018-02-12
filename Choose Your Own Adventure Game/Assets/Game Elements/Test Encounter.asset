@@ -13,3 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _columnsPerSide: 2
   _rows: 2
+  _enemyConfiguration:
+  - {fileID: 11400000, guid: ce059dbc5c658344594b81a7e346677a, type: 2}
+  - {fileID: 11400000, guid: ce059dbc5c658344594b81a7e346677a, type: 2}
+  - {fileID: 11400000, guid: ce059dbc5c658344594b81a7e346677a, type: 2}
+  - {fileID: 11400000, guid: ce059dbc5c658344594b81a7e346677a, type: 2}
