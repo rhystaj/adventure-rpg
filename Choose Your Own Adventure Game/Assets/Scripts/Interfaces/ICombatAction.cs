@@ -8,11 +8,6 @@ public interface ICombatAction {
     /**
      * Performt the action.
      */ 
-    void Perform(ICombatScenario scenario);
-
-    /**
-     * Visulise the action with the given animator.
-     */ 
-    IEnumerator Animate(ICombatAnimator animator);
+    IEnumerator Perform(ICombatAnimator animator, ICombatScenario scenario);
 
 }

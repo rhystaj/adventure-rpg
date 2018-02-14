@@ -36,35 +36,10 @@ public class InstrumentUse : ICombatAction
 
     }
 
-    public IEnumerator Animate(ICombatAnimator animator) {
+    public IEnumerator Perform(ICombatAnimator animator, ICombatScenario scenario) {
 
         //Preconditions
         Assert.IsNotNull(animator, "Precondition Fail: The argument 'animator' should not be null");
-
-        Debug.Log("Animating Instrument Use");
-
-        yield return animator.PoseUnit(user.Value, Unit.State.Attacking);
-        yield return new WaitForSeconds(0.1f);
-
-        yield return animator.PoseUnit(target.Value, Unit.State.TakingDamage);
-        yield return animator.UpdateUnitOverlay(target.Value);
-        yield return new WaitForSeconds(0.1f);
-
-        yield return animator.PoseUnit(user.Value, Unit.State.Idle);
-        yield return new WaitForSeconds(0.5f);
-
-        yield return animator.PoseUnit(target.Value, Unit.State.Idle);
-
-
-        //Postconditions
-        Assert.IsTrue(ClassInvariantsHold());
-
-    }
-
-    public void Perform(ICombatScenario scenario)
-    {
-
-        //Preconditions
         Assert.IsNotNull(scenario, "Precondition Fail: The argument 'scenario' should not be null.");
         Assert.IsNotNull(user.Value, "Precondition Fail: The field 'user' should not be null.");
         Assert.IsNotNull(target.Value, "Precondition Fail: The field 'target' should not be null.");
@@ -75,8 +50,20 @@ public class InstrumentUse : ICombatAction
         Assert.IsTrue(scenario.unitsAvaliableToMove.Contains(user.Value),
                       "Preconditon Fail: The 'user' should be avaliable in the given scenario.");
 
+        Debug.Log("Animating Instrument Use");
 
+        yield return animator.PoseUnit(user.Value, Unit.State.Attacking);
+        yield return new WaitForSeconds(0.1f);
+
+        yield return animator.PoseUnit(target.Value, Unit.State.TakingDamage);
         scenario.UseInstrument(user.Value, target.Value);
+        yield return animator.UpdateUnitOverlay(target.Value);
+        yield return new WaitForSeconds(0.1f);
+
+        yield return animator.PoseUnit(user.Value, Unit.State.Idle);
+        yield return new WaitForSeconds(0.5f);
+
+        yield return animator.PoseUnit(target.Value, Unit.State.Idle);
 
 
         //Postconditions

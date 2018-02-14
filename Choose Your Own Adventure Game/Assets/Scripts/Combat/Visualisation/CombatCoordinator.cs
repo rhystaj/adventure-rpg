@@ -41,8 +41,6 @@ public class CombatCoordinator : MonoBehaviour {
 
         while (true) {
 
-            Debug.Log("Team Moving: " + scenario.teamMoving);
-
             //Wait unil an action has been decided on unit continuing. AIs will never have to be waited on, this is to wait for user input. 
             ICombatAction action = null;
             while (action == null)
@@ -51,13 +49,9 @@ public class CombatCoordinator : MonoBehaviour {
                 action = controllers[scenario.teamMoving].DetermineMove(scenario.Board, scenario.unitsAvaliableToMove);
             }
 
-            Debug.Log("Animating");
 
             //Animate the action and wait unit it is done.
-            yield return action.Animate(animator);
-            action.Perform(scenario);
-
-            Debug.Log("Done Animating");
+            yield return action.Perform(animator, scenario);
 
         }
 

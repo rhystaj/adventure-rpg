@@ -90,7 +90,6 @@ public class CombatBoard : MonoBehaviour, IController {
     public ICombatAction DetermineMove(Unit.IInstance[,] board, HashSet<Unit.IInstance> avaliableUnits)
     {
         if (subject != null && target != null) {
-            Debug.Log("Moving");
 
             ICombatAction action = new InstrumentUse(subject.unit, target.unit); ;
             subject = null;
