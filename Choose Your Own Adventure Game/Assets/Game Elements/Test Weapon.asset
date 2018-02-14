@@ -13,4 +13,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   minRange: 0
-  maxRange: 0
+  maxRange: 10
