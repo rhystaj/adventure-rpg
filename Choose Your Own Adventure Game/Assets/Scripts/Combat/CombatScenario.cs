@@ -30,6 +30,10 @@ public class CombatScenario : ICombatScenario
 
     public HashSet<Unit.IInstance> AvaliableUnits { get { return flow.Value.UnitsAvaliableForTurn; } }
 
+    public int teamMoving { get { return flow.Value.CurrentTeam; } }
+
+    public HashSet<Unit.IInstance> unitsAvaliableToMove { get { return flow.Value.UnitsAvaliableForTurn; } }
+
     public CombatScenario(Unit.IInstance[,] playerUnits, ICombatEncounter encounter, CombatFlow.Adaptor flowAdaptor, WinTracker winTracker)
     {
 
@@ -77,6 +81,11 @@ public class CombatScenario : ICombatScenario
         Assert.IsNotNull(flow, "Postcondition Fail: The field 'flowAdaptor' should not be null.");
         Assert.IsNotNull(winTracker, "Postcondition Fail: The field 'winTracker' should not be null.");
 
+    }
+
+    public void SetOnWinAction(TeamEvent action)
+    {
+        OnTeamWin = action;
     }
 
     /**
