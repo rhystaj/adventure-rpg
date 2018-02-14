@@ -8,7 +8,7 @@ public interface ICombatAction {
     /**
      * Performt the action.
      */ 
-    void Perform(CombatScenario scenario);
+    void Perform(ICombatScenario scenario);
 
     /**
      * Visulise the action with the given animator.
