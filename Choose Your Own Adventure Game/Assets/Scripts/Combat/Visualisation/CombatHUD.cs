@@ -9,8 +9,10 @@ using UnityEngine.UI;
  */ 
 public class CombatHUD : MonoBehaviour {
 
-    private const float HEALTH_TEXT_CENTRE_OFFEST_X = 10; //How far along the x axis from the centre of a unit it's health is displayed.
-    private const float HEALTH_TEXT_CENTRE_OFFEST_Y = 10; //How far along the y axis from the centre of a unit it's health is displayed.
+    private const float HEALTH_TEXT_CENTRE_OFFEST_X = 0; //How far along the x axis from the centre of a unit it's health is displayed.
+    private const float HEALTH_TEXT_CENTRE_OFFEST_Y = 0; //How far along the y axis from the centre of a unit it's health is displayed.
+
+    [SerializeField] Text healthTextBase; //The text object the health text is based on.
 
     private Dictionary<CombatBoard.UnitVessel, ConsistentStatOverlay> statOverlays = new Dictionary<CombatBoard.UnitVessel, ConsistentStatOverlay>();
 
@@ -25,7 +27,7 @@ public class CombatHUD : MonoBehaviour {
         Assert.IsNotNull(GetComponent<Canvas>(), "Precondition Fail: This component's GameObject should also have a Canvas attatched.");
 
 
-        if (!statOverlays.ContainsKey(vessel)) statOverlays.Add(vessel, new ConsistentStatOverlay(vessel, GetComponent<Canvas>()));
+        if (!statOverlays.ContainsKey(vessel)) statOverlays.Add(vessel, new ConsistentStatOverlay(vessel, healthTextBase, GetComponent<Canvas>()));
         else statOverlays[vessel].UpdateStatsFor();
 
 
@@ -38,10 +40,10 @@ public class CombatHUD : MonoBehaviour {
     {
 
         private Once<Canvas> parentCanvas = new Once<Canvas>(); //The canvas displaying the text.
-        private Once<CombatBoard.UnitVessel> vessel; //The vessel this overlay is displaying the stats for.
+        private Once<CombatBoard.UnitVessel> vessel = new Once<CombatBoard.UnitVessel>(); //The vessel this overlay is displaying the stats for.
         private Once<Text> healthText = new Once<Text>(); //The text displaying the unit's current health.
 
-        public ConsistentStatOverlay(CombatBoard.UnitVessel vessel, Canvas parent)
+        public ConsistentStatOverlay(CombatBoard.UnitVessel vessel, Text healthTextBase, Canvas parent)
         {
 
             //Preconditions
@@ -50,19 +52,20 @@ public class CombatHUD : MonoBehaviour {
 
 
             parentCanvas.Value = parent;
+            this.vessel.Value = vessel;
 
 
             //Create the Text component with the given text and position it correctly in relation to the unit.
-            healthText.Value = GameObjectFatory.CreateText(vessel.name + " Health", parent.transform, vessel.unit.health + "");
+            healthText.Value = Instantiate(healthTextBase, parent.transform);
+            healthText.Value.text = vessel.unit.health + "";
 
             RepositionStats(vessel);
 
 
             //Postconditions
             Assert.IsNotNull(healthText.Value, "The field 'healthText' should not be null.");
-            Assert.IsTrue(healthText.Value.text.Equals(vessel.unit.health),
+            Assert.IsTrue(healthText.Value.text.Equals(vessel.unit.health + ""),
                           "Precondition Fail: 'healthTest' should be correctly displaying the unit's health.");
-            Assert.IsNotNull(this.vessel.Value, "The field 'vessel' should not be null.");
 
         }
 
