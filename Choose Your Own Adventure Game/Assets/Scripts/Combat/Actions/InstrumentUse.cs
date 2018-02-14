@@ -10,8 +10,8 @@ using UnityEngine.Assertions;
 public class InstrumentUse : ICombatAction
 {
 
-    private Once<Unit.IInstance> user;
-    private Once<Unit.IInstance> target;
+    private Once<Unit.IInstance> user = new Once<Unit.IInstance>();
+    private Once<Unit.IInstance> target = new Once<Unit.IInstance>();
 
     public InstrumentUse(Unit.IInstance user, Unit.IInstance target)
     {
@@ -41,17 +41,18 @@ public class InstrumentUse : ICombatAction
         //Preconditions
         Assert.IsNotNull(animator, "Precondition Fail: The argument 'animator' should not be null");
 
+        Debug.Log("Animating Instrument Use");
 
-        animator.PoseUnit(user.Value, Unit.State.Attacking);
+        yield return animator.PoseUnit(user.Value, Unit.State.Attacking);
+        yield return new WaitForSeconds(0.1f);
+
+        yield return animator.PoseUnit(target.Value, Unit.State.TakingDamage);
+        yield return new WaitForSeconds(0.1f);
+
+        yield return animator.PoseUnit(user.Value, Unit.State.Idle);
         yield return new WaitForSeconds(0.5f);
 
-        animator.PoseUnit(target.Value, Unit.State.TakingDamage);
-        yield return new WaitForSeconds(0.5f);
-
-        animator.PoseUnit(user.Value, Unit.State.Idle);
-        yield return new WaitForSeconds(0.5f);
-
-        animator.PoseUnit(target.Value, Unit.State.Idle);
+        yield return animator.PoseUnit(target.Value, Unit.State.Idle);
 
 
         //Postconditions
@@ -59,7 +60,7 @@ public class InstrumentUse : ICombatAction
 
     }
 
-    public void Perform(CombatScenario scenario)
+    public void Perform(ICombatScenario scenario)
     {
 
         //Preconditions
@@ -70,7 +71,7 @@ public class InstrumentUse : ICombatAction
                       "Precondition Fail: The board of the given scenario should contain 'user'");
         Assert.IsTrue(TestingUtil.Convert2DArrayToList(scenario.Board).Contains(target.Value),
                       "Precondition Fail: The board of the given scenario should contain 'target'");
-        Assert.IsTrue(scenario.AvaliableUnits.Contains(user.Value),
+        Assert.IsTrue(scenario.unitsAvaliableToMove.Contains(user.Value),
                       "Preconditon Fail: The 'user' should be avaliable in the given scenario.");
 
 
