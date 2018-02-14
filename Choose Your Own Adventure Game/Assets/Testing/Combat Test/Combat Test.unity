@@ -135,7 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b4784ad8535bda4880221c31143c311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 958552387}
   distancesBetweenUnits: {x: 3, y: 2}
   centreGapWidth: 1
 --- !u!4 &606934074
@@ -264,12 +263,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1001370901}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 929de2a4c7e2e404a8b6717e04bde342, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cdd2cb55a108784c95be46663fe9251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 606934073}
-  encounter: {fileID: 11400000, guid: 36b8e53a14abc5c40807c6727e98eb4a, type: 2}
   playerUnit: {fileID: 11400000, guid: 7a2467b8dc4922b47ae2328cd3f33c1b, type: 2}
+  encounter: {fileID: 11400000, guid: 36b8e53a14abc5c40807c6727e98eb4a, type: 2}
 --- !u!4 &1001370903
 Transform:
   m_ObjectHideFlags: 0
