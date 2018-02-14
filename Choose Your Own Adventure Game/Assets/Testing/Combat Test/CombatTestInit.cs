@@ -21,7 +21,7 @@ public class CombatTestInit : MonoBehaviour {
                                                      new CombatFlow.DirectAdaptor(new SingleEmptyTurnMockCombatFlow(0, null)),
                                                      new MockWinTracker(0, 5));
 
-        board.DisplayScenario(scenario);
+        board.Display(scenario.Board);
 
     }
 
