@@ -8,6 +8,7 @@ using UnityEngine;
 public class CombatCoordinator : MonoBehaviour {
 
     [SerializeField] CombatBoard board; //The visual representation of combat being manipulated to display the combat.
+    [SerializeField] CombatHUD overlay; //The GUI overlay that display the various stats.
     public Unit playerUnit;
     public CombatEncounter encounter;
 
@@ -29,7 +30,7 @@ public class CombatCoordinator : MonoBehaviour {
         scenario.SetOnWinAction(i => { });
 
         board.Display(scenario.Board);
-        animator = new CombatAnimator(board.vessels);
+        animator = new CombatAnimator(board.vessels, overlay);
 
         StartCoroutine(Run(new IController[] { board, new RandomAI() }));
 

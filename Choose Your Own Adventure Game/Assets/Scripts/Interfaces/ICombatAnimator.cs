@@ -9,4 +9,9 @@ public interface ICombatAnimator {
      */ 
     IEnumerator PoseUnit(Unit.IInstance unit, Unit.State poseState);
 
+    /**
+     * Updates the display of the unit's stats.
+     */ 
+    IEnumerator UpdateUnitOverlay(Unit.IInstance unit);
+
 }

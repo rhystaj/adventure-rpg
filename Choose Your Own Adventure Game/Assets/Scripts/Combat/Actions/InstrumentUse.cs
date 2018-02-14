@@ -47,6 +47,7 @@ public class InstrumentUse : ICombatAction
         yield return new WaitForSeconds(0.1f);
 
         yield return animator.PoseUnit(target.Value, Unit.State.TakingDamage);
+        yield return animator.UpdateUnitOverlay(target.Value);
         yield return new WaitForSeconds(0.1f);
 
         yield return animator.PoseUnit(user.Value, Unit.State.Idle);
