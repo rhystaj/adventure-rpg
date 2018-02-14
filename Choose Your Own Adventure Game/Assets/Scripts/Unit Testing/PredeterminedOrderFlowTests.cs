@@ -2,9 +2,7 @@
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
-using NSubstitute;
 using System.Collections.Generic;
-using UnityEditor;
 using System;
 using UnityScript.Lang;
 

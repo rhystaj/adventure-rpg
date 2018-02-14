@@ -2,7 +2,6 @@
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
-using NSubstitute;
 using System.Collections.Generic;
 
 public class CombatFlowTests {
