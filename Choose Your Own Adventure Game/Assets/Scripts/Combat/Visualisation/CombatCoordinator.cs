@@ -24,12 +24,21 @@ public class CombatCoordinator : MonoBehaviour {
             { new Unit.Instance(playerUnit), new Unit.Instance(playerUnit) }
         };
 
+
+        //Create a CombatScenario, which determines the underlying structure of the match, from whan units can move to what counts as a win.
         scenario = new CombatScenario(playerUnits, encounter,
                                      new AllUnitsAvaliableFlow.AllAdaptor(),
                                      new MockWinTracker(0, 5));
         scenario.SetOnWinAction(i => { });
 
+
+        //Set up the board, based on the configuration of units in the sceanrio, and add interaction listeners.
         board.Display(scenario.Board);
+        board.VesselHighlightBegins = vessel => overlay.HighlightUnit(vessel);
+        board.VesselHighlightEnds = () => overlay.HideHighlight();
+        board.VesselSelected = vessel => overlay.SelectUnit(vessel);
+
+
         animator = new CombatAnimator(board.vessels, overlay);
 
         StartCoroutine(Run(new IController[] { board, new RandomAI() }));
@@ -52,6 +61,9 @@ public class CombatCoordinator : MonoBehaviour {
 
             //Animate the action and wait unit it is done.
             yield return action.Perform(animator, scenario);
+
+
+            overlay.HideSelection();
 
         }
 

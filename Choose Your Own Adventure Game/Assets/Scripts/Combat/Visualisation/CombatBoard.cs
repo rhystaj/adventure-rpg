@@ -12,8 +12,15 @@ public class CombatBoard : MonoBehaviour, IController {
     [SerializeField] Vector2 distancesBetweenUnits;
     [SerializeField] float centreGapWidth;
 
+    public delegate void VesselInteraction(UnitVessel vessel);
+    public VesselInteraction VesselHighlightBegins;
+    public Action VesselHighlightEnds;
+    public VesselInteraction VesselSelected;
+
     private UnitVessel subject; //The unit taking the turn.
     private UnitVessel target; //The unit the turn's action is being performed on.
+
+    private UnitVessel lastVesselHighlighted;
 
     private bool locked; //When true, the board can not be interacted with.
 
@@ -71,19 +78,52 @@ public class CombatBoard : MonoBehaviour, IController {
 
     }
 
+    /**
+     * Have the unit be considered selected.
+     */ 
     private void SelectUnit(UnitVessel vessel)
     {
 
         //Preconditions
         Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' is not null.");
 
+
         if (!locked)
         {
 
-            if (subject == null) subject = vessel;
+            if (subject == null)
+            {
+                subject = vessel;
+                VesselSelected(subject);
+            }
             else if (target == null) target = vessel;
 
         }
+
+    }
+
+    private void HightlightUnit(UnitVessel vessel)
+    {
+
+        //Preconditions
+        Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' should not be null.");
+        Assert.IsNotNull(VesselHighlightBegins, "Precondition Fail: The delegate 'vesselHighlightBegins' must have a method assigned.");
+
+
+        if (!locked)
+        {
+            lastVesselHighlighted = vessel;
+            VesselHighlightBegins(vessel);
+        }
+
+    }
+
+    private void UnhighlightUnit(UnitVessel vessel)
+    {
+
+        //As OnMouseDown is called before OnMouseOver, if the last unit to be highlighted hasn't changed, then the mouse is not on a vessel.
+        if (lastVesselHighlighted == vessel) VesselHighlightEnds();
+        lastVesselHighlighted = null;
 
     }
 
@@ -156,6 +196,16 @@ public class CombatBoard : MonoBehaviour, IController {
         private void OnMouseDown()
         {
             parent.SelectUnit(this);
+        }
+
+        private void OnMouseEnter()
+        {
+            parent.HightlightUnit(this);
+        }
+
+        private void OnMouseExit()
+        {
+            parent.UnhighlightUnit(this);
         }
 
     }
