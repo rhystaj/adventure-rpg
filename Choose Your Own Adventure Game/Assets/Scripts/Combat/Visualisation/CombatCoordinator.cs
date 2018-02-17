@@ -27,7 +27,9 @@ public class CombatCoordinator : MonoBehaviour {
 
         //Create a CombatScenario, which determines the underlying structure of the match, from whan units can move to what counts as a win.
         scenario = new CombatScenario(playerUnits, encounter,
-                                     new AllUnitsAvaliableFlow.AllAdaptor(),
+                                     new PredeterminedOrderFlow.PDOAdaptor(
+                                         new Vector2[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1), new Vector2(1, 1) }, 
+                                         new Vector2[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1), new Vector2(1, 1) }),
                                      new MockWinTracker(0, 5));
         scenario.SetOnWinAction(i => { });
 
@@ -52,6 +54,10 @@ public class CombatCoordinator : MonoBehaviour {
 
             //Wait unil an action has been decided on unit continuing. AIs will never have to be waited on, this is to wait for user input. 
             ICombatAction action = null;
+            board.SpecifyValidUnits(u => scenario.unitsAvaliableToMove.Contains(u));
+
+            if (ReferenceEquals(controllers[scenario.teamMoving], board)) board.locked = false;
+
             while (action == null)
             {
                 yield return new WaitForEndOfFrame();
@@ -60,6 +66,7 @@ public class CombatCoordinator : MonoBehaviour {
 
 
             //Animate the action and wait unit it is done.
+            board.locked = true;
             yield return action.Perform(animator, scenario);
 
 
