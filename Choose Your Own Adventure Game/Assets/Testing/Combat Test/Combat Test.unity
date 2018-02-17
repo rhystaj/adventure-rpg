@@ -137,6 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distancesBetweenUnits: {x: 3, y: 2}
   centreGapWidth: 1
+  unavaliableUnitOpacityChange: 0.6
 --- !u!4 &606934074
 Transform:
   m_ObjectHideFlags: 0
