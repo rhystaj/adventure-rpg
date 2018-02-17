@@ -11,6 +11,7 @@ public class CombatBoard : MonoBehaviour, IController {
 
     [SerializeField] Vector2 distancesBetweenUnits;
     [SerializeField] float centreGapWidth;
+    [SerializeField] float unavaliableUnitOpacityChange;
 
     public delegate void VesselInteraction(UnitVessel vessel);
     public VesselInteraction VesselHighlightBegins;
@@ -22,9 +23,21 @@ public class CombatBoard : MonoBehaviour, IController {
 
     private UnitVessel lastVesselHighlighted;
 
-    private bool locked; //When true, the board can not be interacted with.
+    private bool _locked; //When true, the board can not be interacted with.
+    public bool locked
+    {
+        get { return _locked; }
+
+        set {
+            if(value) SpecifyValidUnits(v => true); //If the board is locked, emphasise all units.
+            _locked = value;
+        }
+
+    }
 
     public UnitVessel[] vessels { get { return transform.GetComponentsInChildren<UnitVessel>(); } }
+
+    public HashSet<Unit.IInstance> validUnits = new HashSet<Unit.IInstance>();
 
     public void Display(Unit.IInstance[,] board)
     {
@@ -88,16 +101,47 @@ public class CombatBoard : MonoBehaviour, IController {
         Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' is not null.");
 
 
-        if (!locked)
+        if (!locked && validUnits.Contains(vessel.unit))
         {
 
             if (subject == null)
             {
                 subject = vessel;
                 VesselSelected(subject);
+                SpecifyValidUnits(u => subject.unit.CanUseInstrumentOn(u));
             }
             else if (target == null) target = vessel;
 
+        }
+
+    }
+
+    /**
+     * Makes all units that fulfill the given condition valid to be selected for a move, and viduslly distingushes them.
+     */ 
+    public void SpecifyValidUnits(Predicate<Unit.IInstance> condition)
+    {
+
+        //Preconditions
+        Assert.IsNotNull(condition, "Precondition Fail: The argument 'condition' should not be null.");
+        Assert.IsTrue(new List<UnitVessel>(GetComponentsInChildren<UnitVessel>()).TrueForAll(v => v.GetComponent<SpriteRenderer>() != null),
+                      "Precondition Fail: All units on the board should have a sprite renderer attatched.");
+
+
+        //Clear the set of valid units to make way for a new one of units that satisfy the new condition.
+        validUnits.Clear();
+
+
+        //Iterate over each of the vessels on the board to determine which fulfill the given condition and therefore should be highlighted.
+        foreach (UnitVessel v in GetComponentsInChildren<UnitVessel>())
+        {
+            SpriteRenderer renderer = v.GetComponent<SpriteRenderer>();
+            if (condition.Invoke(v.unit))
+            {
+                renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 1);
+                validUnits.Add(v.unit);
+            }
+            else renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, unavaliableUnitOpacityChange);
         }
 
     }
