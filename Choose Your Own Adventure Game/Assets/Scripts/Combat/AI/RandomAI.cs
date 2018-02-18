@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -47,5 +46,9 @@ public class RandomAI : IController
         return action;
 
     }
+
+    public void PostMove(Unit.IInstance[,] board, HashSet<Unit.IInstance> avaliableUnits) { /* Not Applicable */ }
+
+    public void PrepareForMove(Unit.IInstance[,] board, HashSet<Unit.IInstance> avaliableUnits) { /* Not Applicable */ }
 
 }

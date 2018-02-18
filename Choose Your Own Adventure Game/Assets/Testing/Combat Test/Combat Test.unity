@@ -135,9 +135,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b4784ad8535bda4880221c31143c311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overlay: {fileID: 681100985}
   distancesBetweenUnits: {x: 3, y: 2}
   centreGapWidth: 1
-  unavaliableUnitOpacityChange: 0.6
+  invalidUnitOpacityChange: 0.6
 --- !u!4 &606934074
 Transform:
   m_ObjectHideFlags: 0
@@ -381,7 +382,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 606934073}
-  overlay: {fileID: 681100985}
   playerUnit: {fileID: 11400000, guid: 7a2467b8dc4922b47ae2328cd3f33c1b, type: 2}
   encounter: {fileID: 11400000, guid: 36b8e53a14abc5c40807c6727e98eb4a, type: 2}
 --- !u!4 &1001370903

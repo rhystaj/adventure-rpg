@@ -7,21 +7,24 @@ using UnityEngine.Assertions;
 /**
  * The user interface for controlling and displaying a combat scenario.
  */ 
-public class CombatBoard : MonoBehaviour, IController {
+public class CombatBoard : MonoBehaviour {
 
-    [SerializeField] Vector2 distancesBetweenUnits;
-    [SerializeField] float centreGapWidth;
-    [SerializeField] float unavaliableUnitOpacityChange;
+    [SerializeField] CombatHUD overlay; //The GUI that displays further information about the state of the board
+    [Space(10)]
+    [SerializeField] Vector2 distancesBetweenUnits; //The distances alonlg the x and y axis the CENTRES of the units are from each other.
+    [SerializeField] float centreGapWidth; //The size of the vertical gab between the two halves of the board.
+    [Space(10)]
+    [SerializeField] float invalidUnitOpacityChange; //The opacity of any unit not specified as valid for selection.
 
-    public delegate void VesselInteraction(UnitVessel vessel);
-    public VesselInteraction VesselHighlightBegins;
-    public Action VesselHighlightEnds;
-    public VesselInteraction VesselSelected;
+    public delegate void UnitVesselEvent(UnitVessel vessel);
+    private UnitVesselEvent _UnitVesselSelected;
+    public UnitVesselEvent UnitVesselSelected
+    {
+        get { return _UnitVesselSelected; }
+        set { _UnitVesselSelected = value; }
+    }
 
-    private UnitVessel subject; //The unit taking the turn.
-    private UnitVessel target; //The unit the turn's action is being performed on.
-
-    private UnitVessel lastVesselHighlighted;
+    private UnitVessel lastVesselHighlighted; //The most recent vessel to be moused-over.
 
     private bool _locked; //When true, the board can not be interacted with.
     public bool locked
@@ -29,8 +32,19 @@ public class CombatBoard : MonoBehaviour, IController {
         get { return _locked; }
 
         set {
-            if(value) SpecifyValidUnits(v => true); //If the board is locked, emphasise all units.
+
+            if (value) //If the board is locked, emphasise all units, and hide all highlights.
+            {
+
+                overlay.HideHighlight();
+                overlay.HideSelection();
+
+                SpecifyValidUnits(v => true);
+
+             };
+
             _locked = value;
+
         }
 
     }
@@ -67,7 +81,7 @@ public class CombatBoard : MonoBehaviour, IController {
                     typeof(SpriteRenderer), typeof(BoxCollider), typeof(UnitVessel)
                 });
                 UnitVessel vessel = vesselBase.GetComponent<UnitVessel>();
-                vessel.parent = this;
+                vessel.parent.Value = this;
                 vessel.unit = board[row, column];
 
 
@@ -81,6 +95,8 @@ public class CombatBoard : MonoBehaviour, IController {
                     (board.GetLength(0) - 1) * distancesBetweenUnits.y / 2 - row * distancesBetweenUnits.y,
                     -row
                 );
+
+                overlay.UpdateStatsFor(vessel);
            
             }
         }
@@ -92,33 +108,8 @@ public class CombatBoard : MonoBehaviour, IController {
     }
 
     /**
-     * Have the unit be considered selected.
-     */ 
-    private void SelectUnit(UnitVessel vessel)
-    {
-
-        //Preconditions
-        Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' is not null.");
-
-
-        if (!locked && validUnits.Contains(vessel.unit))
-        {
-
-            if (subject == null)
-            {
-                subject = vessel;
-                VesselSelected(subject);
-                SpecifyValidUnits(u => subject.unit.CanUseInstrumentOn(u));
-            }
-            else if (target == null) target = vessel;
-
-        }
-
-    }
-
-    /**
      * Makes all units that fulfill the given condition valid to be selected for a move, and viduslly distingushes them.
-     */ 
+     */
     public void SpecifyValidUnits(Predicate<Unit.IInstance> condition)
     {
 
@@ -141,47 +132,61 @@ public class CombatBoard : MonoBehaviour, IController {
                 renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 1);
                 validUnits.Add(v.unit);
             }
-            else renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, unavaliableUnitOpacityChange);
+            else renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, invalidUnitOpacityChange);
+        }
+    }
+
+    /**
+     * Have the unit be considered selected.
+     */
+    private void SelectUnit(UnitVessel vessel)
+    {
+
+        //Preconditions
+        Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' is not null.");
+
+
+        if (!locked && validUnits.Contains(vessel.unit))
+        {
+            overlay.SelectUnit(vessel);
+            _UnitVesselSelected(vessel);
         }
 
+    }
+
+    private void UpdateStatsFor(UnitVessel vessel)
+    {
+        overlay.UpdateStatsFor(vessel);
     }
 
     private void HightlightUnit(UnitVessel vessel)
     {
 
         //Preconditions
-        Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' should not be null.");
-        Assert.IsNotNull(VesselHighlightBegins, "Precondition Fail: The delegate 'vesselHighlightBegins' must have a method assigned.");
-
+        Assert.IsNotNull(vessel, "The argument 'vessel' should not be null.");
 
         if (!locked)
         {
             lastVesselHighlighted = vessel;
-            VesselHighlightBegins(vessel);
+            overlay.HighlightUnit(vessel);
         }
+
 
     }
 
     private void UnhighlightUnit(UnitVessel vessel)
     {
 
-        //As OnMouseDown is called before OnMouseOver, if the last unit to be highlighted hasn't changed, then the mouse is not on a vessel.
-        if (lastVesselHighlighted == vessel) VesselHighlightEnds();
-        lastVesselHighlighted = null;
+        //Preconditions
+        Assert.IsNotNull(vessel, "Precondition Fail: the arguemnt 'vessel' should not be null.");
 
-    }
 
-    public ICombatAction DetermineMove(Unit.IInstance[,] board, HashSet<Unit.IInstance> avaliableUnits)
-    {
-        if (subject != null && target != null) {
-
-            ICombatAction action = new InstrumentUse(subject.unit, target.unit); ;
-            subject = null;
-            target = null;
-
-            return action;
+        if (ReferenceEquals(lastVesselHighlighted, vessel))
+        {
+            overlay.HideHighlight();
+            lastVesselHighlighted = null;
         }
-        else return null;
+
     }
 
     /**
@@ -189,10 +194,10 @@ public class CombatBoard : MonoBehaviour, IController {
      */
     public class UnitVessel : MonoBehaviour
     {
-        public CombatBoard parent;
+        public Once<CombatBoard> parent = new Once<CombatBoard>(); //The board hosting this vessel.
 
-        private SpriteRenderer sprRenderer; //The renderer used to render the unit's visuals.
-        private BoxCollider bCollider;
+        private Once<SpriteRenderer> sprRenderer = new Once<SpriteRenderer>(); //The renderer used to render the unit's visuals.
+        private Once<BoxCollider> bCollider = new Once<BoxCollider>(); //The collider used to detect mouse usages.
 
         private Unit.IInstance _unit;
         public Unit.IInstance unit
@@ -201,30 +206,30 @@ public class CombatBoard : MonoBehaviour, IController {
             {
 
                 //Preconditions
-                Assert.IsNotNull(parent, "The field 'parent' should not be null.");
+                Assert.IsNotNull(parent.Value, "The field 'parent' should not be null.");
                 Assert.IsNotNull(value, "The given value should not be null.");
 
 
                 //Set up a render to display the unit's sprite.
-                sprRenderer = GetComponent<SpriteRenderer>();
-                sprRenderer.sprite = value.GetImageForState(Unit.State.Idle);
+                sprRenderer.Value = GetComponent<SpriteRenderer>();
+                sprRenderer.Value.sprite = value.GetImageForState(Unit.State.Idle);
 
 
                 //Configure the collider that will detect mouse clicks.
-                bCollider = GetComponent<BoxCollider>();
-                bCollider.size = sprRenderer.size;
+                bCollider.Value = GetComponent<BoxCollider>();
+                bCollider.Value.size = sprRenderer.Value.size;
 
                 _unit = value;
 
 
                 //Postcondition
-                Assert.IsNotNull(sprRenderer, "Postconditon Fail: The field 'sprRenderer' should not be null");
+                Assert.IsNotNull(sprRenderer.Value, "Postconditon Fail: The field 'sprRenderer' should not be null");
                 Assert.IsNotNull(GetComponent<SpriteRenderer>(), "Postcondition Fail: The vessel's game object should have a sprite renderer attatched.");
-                Assert.IsNotNull(sprRenderer.sprite, "Postcondition Fail: sprRenderer should be displaying a sprite.");
-                Assert.IsNotNull(bCollider, "Postcondition Fail: The field bCollider should not be null.");
+                Assert.IsNotNull(sprRenderer.Value.sprite, "Postcondition Fail: sprRenderer should be displaying a sprite.");
+                Assert.IsNotNull(bCollider.Value, "Postcondition Fail: The field bCollider should not be null.");
                 Assert.IsNotNull(GetComponent<BoxCollider>(), "Postcondition Fail: The vessel's GameObject should have a BoxCollider attached.");
-                Assert.IsFalse(bCollider.size.Equals(Vector3.zero), "Postcondition Fail: The collider's size should not be 0");
-                Assert.IsTrue(bCollider.center.Equals(Vector3.zero), "Postcondition Fail: The collider should be centred on the vessel.");
+                Assert.IsFalse(bCollider.Value.size.Equals(Vector3.zero), "Postcondition Fail: The collider's size should not be 0");
+                Assert.IsTrue(bCollider.Value.center.Equals(Vector3.zero), "Postcondition Fail: The collider should be centred on the vessel.");
 
             }
 
@@ -232,24 +237,29 @@ public class CombatBoard : MonoBehaviour, IController {
 
         }
 
+        public void UpdateStats()
+        {
+            parent.Value.UpdateStatsFor(this);
+        }
+
         public void SetPose(Unit.State poseState)
         {
-            sprRenderer.sprite = _unit.GetImageForState(poseState);
+            sprRenderer.Value.sprite = _unit.GetImageForState(poseState);
         }
 
         private void OnMouseDown()
         {
-            parent.SelectUnit(this);
+            parent.Value.SelectUnit(this);
         }
 
         private void OnMouseEnter()
         {
-            parent.HightlightUnit(this);
+            parent.Value.HightlightUnit(this);
         }
 
         private void OnMouseExit()
         {
-            parent.UnhighlightUnit(this);
+            parent.Value.UnhighlightUnit(this);
         }
 
     }

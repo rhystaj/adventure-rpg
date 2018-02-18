@@ -7,23 +7,17 @@ using UnityEngine.Assertions;
 public class CombatAnimator : ICombatAnimator
 {
 
-    private Once<CombatHUD> overlay = new Once<CombatHUD>();
-
     private Dictionary<Unit.IInstance, CombatBoard.UnitVessel> vessels = new Dictionary<Unit.IInstance, CombatBoard.UnitVessel>(); //The instances of units mapped to the vessels that house them.
 
-    public CombatAnimator(CombatBoard.UnitVessel[] vessels, CombatHUD overlay)
+    public CombatAnimator(CombatBoard.UnitVessel[] vessels)
     {
 
         //Preconditions
         Assert.IsNotNull(vessels, "The argument 'vessels' should not be null.");
-        Assert.IsNotNull(overlay, "Precondition Fail: The argument 'overlay' should not be null.");
-
-        this.overlay.Value = overlay;
 
         foreach (CombatBoard.UnitVessel vessel in vessels)
         {
             this.vessels.Add(vessel.unit, vessel);
-            this.overlay.Value.UpdateStatsFor(vessel);
         }
 
 
@@ -37,7 +31,7 @@ public class CombatAnimator : ICombatAnimator
         Assert.IsTrue(vessels.ContainsKey(unit),
                       "Precondition Fail: The given unit should be a key in state.");
 
-        overlay.Value.UpdateStatsFor(vessels[unit]);
+        vessels[unit].UpdateStats();
 
         yield return null;
 
