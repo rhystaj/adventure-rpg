@@ -12,15 +12,12 @@ public class CombatHUD : MonoBehaviour {
     private const float HEALTH_TEXT_CENTRE_OFFEST_X = 0; //How far along the x axis from the centre of a unit it's health is displayed.
     private const float HEALTH_TEXT_CENTRE_OFFEST_Y = 0; //How far along the y axis from the centre of a unit it's health is displayed.
 
-    [SerializeField] Text healthTextBase; //The text object the health text is based on.
-    [SerializeField] Vector2 healthTextCentreOffset; //The distance the unit's health test is from the centre of the unit.
-    [Space(10)]
-    [SerializeField] RawImage unitHighlightCursor; //The cursor that shows over a moused over unit.
-    [SerializeField] RawImage unitSelectedCursor; //The cursor that shows over a selcted unit.
-    [SerializeField] Vector2 unitCursorCentreOffset; //The distance the unit's cursor if from the centre of the unit.
+    [SerializeField] StatDisplay healthDisplay; //The text object the health text is based on.
+    [SerializeField] VesselCursor unitHighlightCursor; //The cursor that shows over a moused over unit.
+    [SerializeField] VesselCursor unitSelectedCursor; //The cursor that shows over a selcted unit.
 
 
-    private Dictionary<CombatBoard.UnitVessel, ConsistentStatOverlay> statOverlays = new Dictionary<CombatBoard.UnitVessel, ConsistentStatOverlay>();
+    private Dictionary<CombatBoard.UnitVessel, StatDisplay> healthDisplays = new Dictionary<CombatBoard.UnitVessel, StatDisplay>();
 
     private void Start()
     {
@@ -58,9 +55,9 @@ public class CombatHUD : MonoBehaviour {
         Assert.IsNotNull(GetComponent<Canvas>(), "Precondition Fail: This component's GameObject should also have a Canvas attatched.");
 
 
-        if (!statOverlays.ContainsKey(vessel)) statOverlays.Add(vessel, new ConsistentStatOverlay(vessel, healthTextBase, 
-                                                                                                  healthTextCentreOffset, GetComponent<Canvas>()));
-        else statOverlays[vessel].UpdateStatsFor();
+        if (!healthDisplays.ContainsKey(vessel)) healthDisplays.Add(vessel, Instantiate(healthDisplay, transform));
+        healthDisplays[vessel].ReconfigureAppearance(GetComponent<Canvas>().worldCamera, vessel);
+        healthDisplays[vessel].VisualiseStat(vessel.unit.health, vessel.unit.maxHealth);
 
     }
 
@@ -75,11 +72,9 @@ public class CombatHUD : MonoBehaviour {
         Assert.IsNotNull(unitSelectedCursor, "Precondition Fail: The property 'unitSelectedCursor' should not be null.");
 
 
-        Debug.Log("Highlighting: " + unit.name);
-
-        
-        RepositionCursorOverUnit(unitHighlightCursor, unit);
-        if (unitHighlightCursor.transform.position == unitSelectedCursor.transform.position)
+        unitHighlightCursor.ReconfigureAppearance(GetComponent<Canvas>().worldCamera, unit);
+        if (unitSelectedCursor.vesselCurrentlyHighlighting != null && 
+            ReferenceEquals(unitSelectedCursor.vesselCurrentlyHighlighting, unitHighlightCursor.vesselCurrentlyHighlighting))
             unitHighlightCursor.gameObject.SetActive(false);
 
 
@@ -113,7 +108,7 @@ public class CombatHUD : MonoBehaviour {
         Assert.IsNotNull(unitSelectedCursor, "Precondition Fail: The property 'unitSelectedCursor' should not be null.");
 
 
-        RepositionCursorOverUnit(unitSelectedCursor, unit);
+        unitSelectedCursor.ReconfigureAppearance(GetComponent<Canvas>().worldCamera, unit);
         if (unitHighlightCursor.transform.position == unitSelectedCursor.transform.position)
             unitHighlightCursor.gameObject.SetActive(false);
 
@@ -134,99 +129,6 @@ public class CombatHUD : MonoBehaviour {
 
         unitSelectedCursor.transform.position = Vector3.zero;
         unitSelectedCursor.gameObject.SetActive(false);
-
-    }
-
-    /**
-     * Place the given cursor over the given unit.
-     */
-    private void RepositionCursorOverUnit(RawImage cursorImage, CombatBoard.UnitVessel target)
-    {
-
-        //Preconditions
-        Assert.IsNotNull(cursorImage, "Precondition Fail: The argument 'cursorImage' should not be null.");
-        Assert.IsNotNull(target, "Precondition Fail: The argument 'target' should not be null.");
-        Assert.IsTrue(statOverlays.ContainsKey(target), "Precondition Fail: The given unit should have a stat overlay.");
-
-        cursorImage.gameObject.SetActive(true);
-        cursorImage.transform.position = statOverlays[target].unitPositionOnScreen + unitCursorCentreOffset;
-
-    }
-
-    /**
-     * A tuple housing the UI elements that are consitently displayed on the screen, positioned in relation to thier respective unit.
-     */ 
-    private class ConsistentStatOverlay
-    {
-
-        private Once<Canvas> parentCanvas = new Once<Canvas>(); //The canvas displaying the text.
-        private Once<CombatBoard.UnitVessel> vessel = new Once<CombatBoard.UnitVessel>(); //The vessel this overlay is displaying the stats for.
-        private Once<Text> healthText = new Once<Text>(); //The text displaying the unit's current health.
-        private Vector2 healthTextCentreOffset;
-
-        public Vector2 unitPositionOnScreen
-        {
-            get { return parentCanvas.Value.worldCamera.WorldToScreenPoint(vessel.Value.transform.position); }
-        }
-
-        public ConsistentStatOverlay(CombatBoard.UnitVessel vessel, Text healthTextBase, Vector2 healthTextCentreOffset, Canvas parent)
-        {
-
-            //Preconditions
-            Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' should not be null.");
-            Assert.IsNotNull(vessel.unit, "Precondition Fail: The given vessel should house a unit.");
-
-
-            parentCanvas.Value = parent;
-            this.vessel.Value = vessel;
-
-
-            //Create the Text component with the given text and position it correctly in relation to the unit.
-            healthText.Value = Instantiate(healthTextBase, parent.transform);
-            healthText.Value.text = vessel.unit.health + "";
-
-            RepositionStats();
-
-
-            //Postconditions
-            Assert.IsNotNull(healthText.Value, "The field 'healthText' should not be null.");
-            Assert.IsTrue(healthText.Value.text.Equals(vessel.unit.health + ""),
-                          "Precondition Fail: 'healthTest' should be correctly displaying the unit's health.");
-
-        }
-
-        /**
-         * Updates the position and display of the stats.
-         */ 
-        public void UpdateStatsFor()
-        {
-
-            //Preconditions
-            Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' should not be null.");
-            Assert.IsNotNull(healthText.Value, "Precondition Fail: The field 'healthText' should not be null.");
-
-
-            healthText.Value.text = vessel.Value.unit.health + "";
-            RepositionStats();
-
-
-        }
-
-        /**
-         * Repositions the stats of the given unit on the screen.
-         */ 
-        private void RepositionStats()
-        {
-
-            //Preconditions
-            Assert.IsNotNull(vessel, "Precondition Fail: The argument 'vessel' should not be null.");
-            Assert.IsNotNull(parentCanvas.Value, "Precondition Fail The field 'parentCanvas' should not be null.");
-
-            Debug.Log("Health Text Centre Offset: " + healthTextCentreOffset);
-            healthText.Value.transform.position = unitPositionOnScreen + healthTextCentreOffset;
-
-
-        }
 
     }
 

@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 224110353368769546}
   - component: {fileID: 222982606018959662}
   - component: {fileID: 114500553946439542}
+  - component: {fileID: 114102429670507838}
   m_Layer: 5
   m_Name: Unit Health Text
   m_TagString: Untagged
@@ -28,6 +29,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114102429670507838
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1849286971945074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80a247e5514f00f46a936467f74f3b80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114500553946439542
 MonoBehaviour:
   m_ObjectHideFlags: 1
