@@ -78,7 +78,7 @@ public class CombatBoard : MonoBehaviour {
                 //Create a new gameObject with the vessel component and other required components, and comfigure the unit.
                 GameObject vesselBase = new GameObject("Test Unit @ (" + column + ", " + row + ")", new Type[]
                 {
-                    typeof(SpriteRenderer), typeof(BoxCollider), typeof(UnitVessel)
+                    typeof(SpriteRenderer), typeof(BoxCollider), typeof(UnitVessel), typeof(Animator)
                 });
                 UnitVessel vessel = vesselBase.GetComponent<UnitVessel>();
                 vessel.parent.Value = this;
@@ -196,8 +196,9 @@ public class CombatBoard : MonoBehaviour {
     {
         public Once<CombatBoard> parent = new Once<CombatBoard>(); //The board hosting this vessel.
 
-        private Once<SpriteRenderer> sprRenderer = new Once<SpriteRenderer>(); //The renderer used to render the unit's visuals.
-        private Once<BoxCollider> bCollider = new Once<BoxCollider>(); //The collider used to detect mouse usages.
+        private Animator animator;
+        private SpriteRenderer sprRenderer;
+        private BoxCollider bCollider; //The collider used to detect mouse usages.
 
         private Unit.IInstance _unit;
         public Unit.IInstance unit
@@ -208,28 +209,32 @@ public class CombatBoard : MonoBehaviour {
                 //Preconditions
                 Assert.IsNotNull(parent.Value, "The field 'parent' should not be null.");
                 Assert.IsNotNull(value, "The given value should not be null.");
+                Assert.IsNotNull(GetComponent<Animator>(), 
+                                 "Precondition Fail: This component's game object should have an Animator component attatched.");
 
 
-                //Set up a render to display the unit's sprite.
-                sprRenderer.Value = GetComponent<SpriteRenderer>();
-                sprRenderer.Value.sprite = value.GetImageForState(Unit.State.Idle);
+                transform.localScale = value.scaleOnBoard;
+
+                //Configure the animator.
+                animator = GetComponent<Animator>();
+                animator.runtimeAnimatorController = value.animatorController;
 
 
                 //Configure the collider that will detect mouse clicks.
-                bCollider.Value = GetComponent<BoxCollider>();
-                bCollider.Value.size = sprRenderer.Value.size;
+                sprRenderer = GetComponent<SpriteRenderer>();
+                bCollider = GetComponent<BoxCollider>();
+
 
                 _unit = value;
 
 
                 //Postcondition
-                Assert.IsNotNull(sprRenderer.Value, "Postconditon Fail: The field 'sprRenderer' should not be null");
+                Assert.IsNotNull(animator, "Postconditon Fail: The field 'animator' should not be null");
                 Assert.IsNotNull(GetComponent<SpriteRenderer>(), "Postcondition Fail: The vessel's game object should have a sprite renderer attatched.");
-                Assert.IsNotNull(sprRenderer.Value.sprite, "Postcondition Fail: sprRenderer should be displaying a sprite.");
-                Assert.IsNotNull(bCollider.Value, "Postcondition Fail: The field bCollider should not be null.");
+                Assert.IsNotNull(bCollider, "Postcondition Fail: The field bCollider should not be null.");
                 Assert.IsNotNull(GetComponent<BoxCollider>(), "Postcondition Fail: The vessel's GameObject should have a BoxCollider attached.");
-                Assert.IsFalse(bCollider.Value.size.Equals(Vector3.zero), "Postcondition Fail: The collider's size should not be 0");
-                Assert.IsTrue(bCollider.Value.center.Equals(Vector3.zero), "Postcondition Fail: The collider should be centred on the vessel.");
+                Assert.IsFalse(bCollider.size.Equals(Vector3.zero), "Postcondition Fail: The collider's size should not be 0");
+                Assert.IsTrue(bCollider.center.Equals(Vector3.zero), "Postcondition Fail: The collider should be centred on the vessel.");
 
             }
 
@@ -237,14 +242,20 @@ public class CombatBoard : MonoBehaviour {
 
         }
 
+        private void OnAnimatorMove()
+        {
+            if(sprRenderer.sprite != null)
+                bCollider.size = sprRenderer.sprite.bounds.size;
+        }
+
         public void UpdateStats()
         {
             parent.Value.UpdateStatsFor(this);
         }
 
-        public void SetPose(Unit.State poseState)
+        public void SetPose(Unit.Pose pose)
         {
-            sprRenderer.Value.sprite = _unit.GetImageForState(poseState);
+            animator.SetInteger("Pose", (int)pose);
         }
 
         private void OnMouseDown()

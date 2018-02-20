@@ -37,7 +37,7 @@ public class CombatAnimator : ICombatAnimator
 
     }
 
-    public IEnumerator PoseUnit(Unit.IInstance unit, Unit.State poseState)
+    public IEnumerator PoseUnit(Unit.IInstance unit, Unit.Pose pose)
     {
 
         //Preconditions
@@ -45,9 +45,7 @@ public class CombatAnimator : ICombatAnimator
         Assert.IsTrue(vessels.ContainsKey(unit),
                       "Precondition Fail: The given unit should be a key in state.");
 
-        Debug.Log("Posing: " + unit);
-
-        vessels[unit].SetPose(poseState);
+        vessels[unit].SetPose(pose);
         yield return null;
 
     }

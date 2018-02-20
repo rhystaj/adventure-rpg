@@ -52,18 +52,8 @@ public class InstrumentUse : ICombatAction
 
         Debug.Log("Animating Instrument Use");
 
-        yield return animator.PoseUnit(user.Value, Unit.State.Attacking);
-        yield return new WaitForSeconds(0.1f);
-
-        yield return animator.PoseUnit(target.Value, Unit.State.TakingDamage);
-        scenario.UseInstrument(user.Value, target.Value);
-        yield return animator.UpdateUnitOverlay(target.Value);
-        yield return new WaitForSeconds(0.1f);
-
-        yield return animator.PoseUnit(user.Value, Unit.State.Idle);
-        yield return new WaitForSeconds(0.5f);
-
-        yield return animator.PoseUnit(target.Value, Unit.State.Idle);
+        yield return animator.PoseUnit(user.Value, Unit.Pose.Attacking);
+        yield return animator.PoseUnit(target.Value, Unit.Pose.TakingDamage);
 
 
         //Postconditions

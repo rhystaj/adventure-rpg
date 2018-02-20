@@ -7,7 +7,7 @@ public interface ICombatAnimator {
     /**
      * Puts the vessel of the given unit in the pose associated with the given state, for the given length of time.
      */ 
-    IEnumerator PoseUnit(Unit.IInstance unit, Unit.State poseState);
+    IEnumerator PoseUnit(Unit.IInstance unit, Unit.Pose pose);
 
     /**
      * Updates the display of the unit's stats.

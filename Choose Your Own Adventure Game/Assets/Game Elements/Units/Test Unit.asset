@@ -11,14 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0fbe8a15b8e23943942f16f5085809e, type: 3}
   m_Name: Test Unit
   m_EditorClassIdentifier: 
+  scaleOnBoard: {x: 0.5, y: 0.5, z: 0}
   instrument: {fileID: 11400000, guid: 0eadf20df5f8ad54881785445da9bdba, type: 2}
   maxHealth: 50
   effectiveness: 10
   alignment: 0
   turnCooldown: 0
-  idleSprite: {fileID: 21300000, guid: 5727a292e2b26b745af3222f0da11a00, type: 3}
-  attakingSprite: {fileID: 21300000, guid: ebe0464bd9019f64483e7b4a681fab64, type: 3}
-  talkingDamageSprite: {fileID: 21300000, guid: d8dcf20cb8311ac4abcaa3315ae8f5dc,
-    type: 3}
-  generalActionSprite: {fileID: 0}
-  incapacitatedSprite: {fileID: 0}
+  animatorController: {fileID: 9100000, guid: 620612c330eb62048b4dbce7099332e1, type: 2}

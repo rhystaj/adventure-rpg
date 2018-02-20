@@ -15,17 +15,18 @@ public class MockUnit : Unit.IInstance, IEquatable<MockUnit>
 
     private MockInstrument ins;
 
+    public Vector3 scaleOnBoard { get { return Vector3.one; } }
     public int alignment{ get { return _alignment; } }
     public float health{ get { return _health; } set { _health = value; } }
     public int position { get; set; }
 
     public float maxHealth { get { return _maxHealth; } }
 
-    public Unit.State state
+    public RuntimeAnimatorController animatorController
     {
         get
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 
@@ -76,8 +77,4 @@ public class MockUnit : Unit.IInstance, IEquatable<MockUnit>
         return name.Equals(other.name);
     }
 
-    public Sprite GetImageForState(Unit.State state)
-    {
-        throw new NotImplementedException();
-    }
 }

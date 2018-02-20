@@ -5,12 +5,13 @@ using UnityEngine;
 
 /**
  * Represents the specs of a single unit in gameplay.
- */ 
+ */
 [CreateAssetMenu]
 public class Unit : ScriptableObject
 {
 
     [Header("Stats")]
+    [SerializeField] private Vector3 scaleOnBoard; //The sclae of the unit's respective vessel when drawn to the board.
     [SerializeField] private Instrument instrument; //The main item the unit uses when moving.
     [SerializeField] private float maxHealth; //The max health points of the unit.
     [SerializeField] private float effectiveness; //The unit's ability with thier instrument.
@@ -19,16 +20,7 @@ public class Unit : ScriptableObject
     [Space(10)]
 
     [Header("Graphics")]
-    [SerializeField] Sprite idleSprite;
-    [SerializeField] Sprite attakingSprite;
-    [SerializeField] Sprite talkingDamageSprite;
-    [SerializeField] Sprite generalActionSprite;
-    [SerializeField] Sprite incapacitatedSprite;
-
-    public enum State
-    {
-        Idle, Attacking, TakingDamage, GeneralAction, Incapacitated
-    }
+    [SerializeField] RuntimeAnimatorController animatorController; //Coordinates the animations in combat.
 
     public interface IInstance
     {
@@ -37,14 +29,19 @@ public class Unit : ScriptableObject
         int alignment { get; }
 
 
+        Vector3 scaleOnBoard { get; }
         float health { get; set; }
         int position { get; set; }
-        State state { get; }
+        RuntimeAnimatorController animatorController { get; }
 
         bool UseInstrument(IInstance target);
         bool CanUseInstrumentOn(IInstance target);
-        Sprite GetImageForState(State state);
 
+    }
+
+    public enum Pose
+    {
+        Idle = 0, Attacking = 1, TakingDamage = 2
     }
 
     /**
@@ -54,8 +51,9 @@ public class Unit : ScriptableObject
     {
 
         private Once<Unit> unit = new Once<Unit>();
-        private Once<Dictionary<State, Sprite>> imagesForStates = new Once<Dictionary<State, Sprite>>();
+        private Once<RuntimeAnimatorController> _animatorController = new Once<RuntimeAnimatorController>();
 
+        public Vector3 scaleOnBoard { get { return unit.Value.scaleOnBoard; } }
         public float maxHealth { get { return unit.Value.maxHealth; } }
         public int alignment { get { return unit.Value.alignment; } }
 
@@ -76,15 +74,7 @@ public class Unit : ScriptableObject
         private int _position;
         public int position { get; set; }
 
-        public State state
-        {
-            //Only Incapacitated and Idle, are persitant, the other states are fleeting and used for the purposes of animation.
-            get
-            {
-                if (health <= 0) return State.Incapacitated;
-                else return State.Idle;
-            }
-        }
+        public RuntimeAnimatorController animatorController { get { return _animatorController.Value; } }
 
         public Instance(Unit unit)
         {
@@ -98,13 +88,7 @@ public class Unit : ScriptableObject
             health = unit.maxHealth > 0 ? unit.maxHealth : 0;
 
 
-            //Store images.
-            imagesForStates.Value = new Dictionary<State, Sprite>();
-            imagesForStates.Value.Add(State.Idle, unit.idleSprite);
-            imagesForStates.Value.Add(State.Attacking, unit.attakingSprite);
-            imagesForStates.Value.Add(State.TakingDamage, unit.talkingDamageSprite);
-            imagesForStates.Value.Add(State.GeneralAction, unit.generalActionSprite);
-            imagesForStates.Value.Add(State.Incapacitated, unit.incapacitatedSprite);
+            _animatorController.Value = unit.animatorController;
 
         }
 
@@ -128,9 +112,6 @@ public class Unit : ScriptableObject
             return unit.Value.name;
         }
 
-        public Sprite GetImageForState(State state) { 
-            return imagesForStates.Value[state];
-        }
     }
 
 }

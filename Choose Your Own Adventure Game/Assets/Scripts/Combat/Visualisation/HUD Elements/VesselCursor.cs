@@ -10,8 +10,6 @@ public class VesselCursor : VesselCentredHUDElement {
     public override void ReconfigureAppearance(Camera viewingCamera, CombatBoard.UnitVessel targetVessel)
     {
 
-        Debug.Log("Vessel Cursor");
-
         gameObject.SetActive(true);
         _vesselCurretlyHighlighting = targetVessel;
 

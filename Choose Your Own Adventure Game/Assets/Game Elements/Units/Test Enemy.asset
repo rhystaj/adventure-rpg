@@ -16,9 +16,4 @@ MonoBehaviour:
   effectiveness: 10
   alignment: 1
   turnCooldown: 0
-  idleSprite: {fileID: 21300000, guid: 1855a07f74ab37946a2b954ea0719eed, type: 3}
-  attakingSprite: {fileID: 21300000, guid: 0cbdc3262e56e9c42bdf232349c70997, type: 3}
-  talkingDamageSprite: {fileID: 21300000, guid: cfe355b71967a864f8c77792e3235a6c,
-    type: 3}
-  generalActionSprite: {fileID: 0}
-  incapacitatedSprite: {fileID: 0}
+  animatorController: {fileID: 9100000, guid: 6ff89390cbd42c74e9ed7a26c32ea71f, type: 2}
