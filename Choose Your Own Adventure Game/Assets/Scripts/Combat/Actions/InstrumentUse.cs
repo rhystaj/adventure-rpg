@@ -36,7 +36,7 @@ public class InstrumentUse : ICombatAction
 
     }
 
-    public IEnumerator Perform(ICombatAnimator animator, ICombatScenario scenario) {
+    public IEnumerator Perform(CombatAnimator animator, ICombatScenario scenario) {
 
         //Preconditions
         Assert.IsNotNull(animator, "Precondition Fail: The argument 'animator' should not be null");
@@ -50,10 +50,16 @@ public class InstrumentUse : ICombatAction
         Assert.IsTrue(scenario.unitsAvaliableToMove.Contains(user.Value),
                       "Preconditon Fail: The 'user' should be avaliable in the given scenario.");
 
-        Debug.Log("Animating Instrument Use");
-
-        yield return animator.PoseUnit(user.Value, Unit.Pose.Attacking);
-        yield return animator.PoseUnit(target.Value, Unit.Pose.TakingDamage);
+        yield return animator.RetrieveUnitAttackAnimation(true, () => { }, user.Value,
+                                                     animator.RetrieveEventlessAnimation(
+                                                        false,
+                                                        () =>
+                                                        {
+                                                            scenario.UseInstrument(user.Value, target.Value);
+                                                            animator.UpdateUnitOverlay(target.Value);
+                                                        },
+                                                        target.Value, Unit.Pose.TakingDamage
+                                                     ));
 
 
         //Postconditions

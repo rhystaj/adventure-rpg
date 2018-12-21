@@ -11,6 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0fbe8a15b8e23943942f16f5085809e, type: 3}
   m_Name: Test Enemy
   m_EditorClassIdentifier: 
+  scaleOnBoard: {x: 0.4, y: 0.4, z: 0}
   instrument: {fileID: 11400000, guid: 0eadf20df5f8ad54881785445da9bdba, type: 2}
   maxHealth: 50
   effectiveness: 10

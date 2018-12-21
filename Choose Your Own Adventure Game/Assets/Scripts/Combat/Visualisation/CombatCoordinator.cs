@@ -14,7 +14,7 @@ public class CombatCoordinator : MonoBehaviour {
     public CombatEncounter encounter;
 
     private ICombatScenario scenario; //The scenario being visualised.
-    private ICombatAnimator animator; //The animator used to manipulate the pieces on the board.
+    private CombatAnimator animator; //The animator used to manipulate the pieces on the board.
 
     private void Start()
     {

@@ -78,7 +78,7 @@ public class CombatBoard : MonoBehaviour {
                 //Create a new gameObject with the vessel component and other required components, and comfigure the unit.
                 GameObject vesselBase = new GameObject("Test Unit @ (" + column + ", " + row + ")", new Type[]
                 {
-                    typeof(SpriteRenderer), typeof(BoxCollider), typeof(UnitVessel), typeof(Animator)
+                    typeof(SpriteRenderer), typeof(BoxCollider), typeof(UnitVessel), typeof(Animator), typeof(CombatAnimationEventHandler)
                 });
                 UnitVessel vessel = vesselBase.GetComponent<UnitVessel>();
                 vessel.parent.Value = this;
@@ -192,7 +192,7 @@ public class CombatBoard : MonoBehaviour {
     /**
      * Represents a single interactable unit on the board.
      */
-    public class UnitVessel : MonoBehaviour
+    public class UnitVessel : CombatAnimationEventHandler
     {
         public Once<CombatBoard> parent = new Once<CombatBoard>(); //The board hosting this vessel.
 
@@ -271,6 +271,34 @@ public class CombatBoard : MonoBehaviour {
         private void OnMouseExit()
         {
             parent.Value.UnhighlightUnit(this);
+        }
+
+        public Action OnAttackConnectAnimationEvent;
+        public override void OnAttackConnect() {
+
+            //Preconditions
+            Assert.IsNotNull(OnAttackConnectAnimationEvent, 
+                             "Precondition Fail: The delegate OnAttackConnectAnimationEvent should have a delegate assigned.");
+
+
+            Debug.Log(name + " attacks!");
+
+            OnAttackConnectAnimationEvent();
+
+        }
+
+        public Action OnMoveEndAnimationEvent;
+        public override void OnMoveEnd(){
+
+            //Preconditions
+            Assert.IsNotNull(OnMoveEndAnimationEvent,
+                             "Precondition Fail: The delegate OnMoveEndAnimationEvent should have a delegate assigned.");
+
+
+            Debug.Log(name + " finishes move");
+
+            OnMoveEndAnimationEvent();
+
         }
 
     }
